@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
+import 'screens/login.dart';
 
 class App extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class App extends StatelessWidget {
         brightness: Brightness.dark,
       ),
       
-      home: MainPage(),
+      home: Login(),
     
     );
   }
