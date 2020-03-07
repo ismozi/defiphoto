@@ -3,6 +3,7 @@ import 'fabbottomappbar.dart';
 import 'menu.dart';
 import 'fabwithicons.dart';
 import 'layout.dart';
+import 'listViewWidget.dart';
 
 Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontSize: 15));
@@ -84,12 +85,7 @@ class Home extends State<MainPage> {
           actions: <Widget>[
             IconButton(icon: Icon(Icons.search), onPressed: () {})
           ]),
-      body: Center(
-        child: Text(
-          show,
-          style: TextStyle(fontSize: 32.0),
-        ),
-      ),
+      body: listViewWidget(),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,
         selectedColor: Colors.cyanAccent,
@@ -102,8 +98,8 @@ class Home extends State<MainPage> {
           FABBottomAppBarItem(text: "R"),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: _buildFab(context),
+      
+      
     );
   }
 

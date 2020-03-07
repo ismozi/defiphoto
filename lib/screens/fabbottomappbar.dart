@@ -56,10 +56,10 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         onPressed: _updateIndex,
       );
     });
-    items.insert(items.length >> 1, _buildMiddleTabItem());
+    
 // comment test pour la branchhe 
     return BottomAppBar(
-      shape: CircularNotchedRectangle(),
+      
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,

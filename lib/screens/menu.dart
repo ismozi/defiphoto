@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'login.dart';
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,10 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: ()  {
+                      Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => Login()));
+                    },
           ),
         ],
       ),
