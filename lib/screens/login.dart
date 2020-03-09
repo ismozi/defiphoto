@@ -35,6 +35,7 @@ class Login extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.0)),
               child: TextField(
+                style: new TextStyle(fontSize:20,color: Colors.black),
                 decoration: InputDecoration(
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                     prefixIcon: Icon(
@@ -55,6 +56,7 @@ class Login extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.0)),
               child: TextField(
+                style: new TextStyle(fontSize:20,color: Colors.black),
                 obscureText: true,
                 decoration: InputDecoration(
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
@@ -82,7 +84,7 @@ class Login extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
-                color: Colors.cyanAccent,
+                color: Colors.cyan,
                 child: Text(
                   'CONNEXION',
                   style: TextStyle(

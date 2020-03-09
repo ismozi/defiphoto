@@ -10,7 +10,7 @@ class App extends StatelessWidget {
 
       theme: new ThemeData(
         primarySwatch: Colors.cyan,
-        brightness: Brightness.dark,
+        brightness: Brightness.dark
       ),
       
       home: Login(),
