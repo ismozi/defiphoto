@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'screens/home.dart';
+import 'screens/login.dart';
 
 class App extends StatelessWidget {
   @override
@@ -9,10 +10,10 @@ class App extends StatelessWidget {
 
       theme: new ThemeData(
         primarySwatch: Colors.cyan,
-        brightness: Brightness.dark,
+        brightness: Brightness.dark
       ),
       
-      home: MainPage(),
+      home: Login(),
     
     );
   }
