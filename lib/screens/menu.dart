@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:test_flutter/screens/Progression.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -39,7 +40,11 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Progression()),
+            ),
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings),
