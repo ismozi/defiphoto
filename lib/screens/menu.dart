@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'login.dart';
+import 'progression.dart';
+import 'home.dart';
+
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -38,12 +41,14 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Tableau de bord'),
-            onTap: () => {},
+            onTap: () {Navigator.of(context).push(
+                    CupertinoPageRoute(builder: (context) => MainPage()));},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () {Navigator.of(context).push(
+                    CupertinoPageRoute(builder: (context) => Progression()));},
           ),
           ListTile(
             leading: Icon(Icons.settings),
