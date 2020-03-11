@@ -90,7 +90,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                       child: InkWell(
                         child: Icon(
                           Icons.keyboard_voice,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                         onLongPress: () {
                           setState(() {});

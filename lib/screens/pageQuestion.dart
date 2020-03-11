@@ -59,7 +59,7 @@ class pageQuestionState extends State<pageQuestion> {
                               child: TextField(
                                 style: new TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
-                                    hintText: "Répondre",
+                                    hintText: "Question",
                                      hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
                                     border: InputBorder.none),
                               ),
@@ -84,7 +84,7 @@ class pageQuestionState extends State<pageQuestion> {
                       child: InkWell(
                         child: Icon(
                           Icons.keyboard_voice,
-                          color: Colors.white,
+                          color: Colors.black,
                         ),
                         onLongPress: () {
                           setState(() {});

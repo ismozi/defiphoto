@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'fabbottomappbar.dart';
 import 'menu.dart';
 import 'fabwithicons.dart';
@@ -103,7 +104,7 @@ class Home extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
+      drawer: Container(color:Colors.grey[900],child:NavDrawer()),
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
           title: Column(
@@ -143,7 +144,7 @@ class Home extends State<MainPage> {
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => (pageQuestion())));
+                CupertinoPageRoute(builder: (context) => (pageQuestion())));
           },
           backgroundColor: Colors.cyan,
           child: Icon(Icons.question_answer)),

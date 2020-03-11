@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'pageCommentaire.dart';
+import 'fadeRoute.dart';
 
 class listViewWidget extends StatefulWidget {
   final int nbItem;
@@ -41,7 +43,7 @@ class listViewWidgetState extends State<listViewWidget> {
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).push(CupertinoPageRoute(
                       builder: (context) =>
                           (pageCommentaire(txt: widget.txt[position]))));
                 },
