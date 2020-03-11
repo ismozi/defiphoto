@@ -6,9 +6,11 @@ import 'fadeRoute.dart';
 class listViewWidget extends StatefulWidget {
   final int nbItem;
   final List<String> txt;
+   int d;
 
   listViewWidget({this.nbItem, this.txt}) {
     txt.length = nbItem;
+    d=1;
   }
 
   @override
