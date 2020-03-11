@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'login.dart';
-import 'progression.dart';
-import 'home.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Drawer(child:
-      Container(color:Colors.grey[900],
+    return Drawer(
       child: ListView(
-        
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
             child: Stack(
-              
               children: <Widget>[
                 Align(
                   alignment: Alignment.centerRight,
@@ -41,14 +34,12 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Tableau de bord'),
-            onTap: () {Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => MainPage()));},
+            onTap: () => {},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () {Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => Progression()));},
+            onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
             leading: Icon(Icons.settings),
@@ -58,13 +49,10 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter'),
-            onTap: ()  {
-                      Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => Login()));
-                    },
+            onTap: () => {Navigator.of(context).pop()},
           ),
         ],
-      )),
+      ),
     );
   }
 }

@@ -57,10 +57,9 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
       );
     });
     items.insert(items.length >> 1, _buildMiddleTabItem());
-    
 // comment test pour la branchhe 
     return BottomAppBar(
-      shape: widget.notchedShape,
+      shape: CircularNotchedRectangle(),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -80,8 +79,8 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
           children: <Widget>[
             SizedBox(height: widget.iconSize),
             Text(
-              widget.centerItemText ?? "QUESTION",
-              style: TextStyle(color: widget.color, fontSize:10.65),
+              widget.centerItemText ?? "",
+              style: TextStyle(color: widget.color),
             ),
           ],
         ),
