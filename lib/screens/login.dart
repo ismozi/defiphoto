@@ -105,10 +105,7 @@ class Login extends StatelessWidget {
                         width: double.infinity,
                         child: RaisedButton(
                           elevation: 5.0,
-                          onPressed: () {
-                            Navigator.of(context).push(CupertinoPageRoute(
-                                builder: (context) => MainPage()));
-                          },
+                          onPressed: () => {Navigator.of(context).pushReplacementNamed('/screen2')},
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),

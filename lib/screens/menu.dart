@@ -41,14 +41,12 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Tableau de bord'),
-            onTap: () {Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => MainPage()));},
+            onTap: () => {Navigator.of(context).pushReplacementNamed('/screen2')},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () {Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => Progression()));},
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).push(CupertinoPageRoute(builder: (context) => Progression()))},
           ),
           ListTile(
             leading: Icon(Icons.settings),
@@ -58,10 +56,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter'),
-            onTap: ()  {
-                      Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => Login()));
-                    },
+            onTap: () => {Navigator.of(context).pushReplacementNamed('/screen1')}
           ),
         ],
       )),

@@ -231,13 +231,13 @@ class Progression extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 28.0,
                     fontWeight: FontWeight.w800,
-                    color: Colors.redAccent,
+                    color: Colors.blueGrey,
                     decoration: TextDecoration.underline,
                   ),
                 ),
                 CircularPercentIndicator(
                   radius: 160.0,
-                  progressColor: Colors.redAccent,
+                  progressColor: Colors.blueGrey,
                   percent: 0.5,
                   animation: true,
                   lineWidth: 30.0,
@@ -245,7 +245,7 @@ class Progression extends StatelessWidget {
                     '50%',
                     style: TextStyle(
                       fontSize: 35.0,
-                      color: Colors.redAccent,
+                      color: Colors.blueGrey,
                     ),
                   ),
                   circularStrokeCap: CircularStrokeCap.round,
