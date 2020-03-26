@@ -7,7 +7,6 @@ class Progression extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Container(color:Colors.grey[900],child:NavDrawer()),
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
           title: Column(
@@ -42,7 +41,7 @@ class Progression extends StatelessWidget {
                     width: 230.0,
                     lineHeight: 14.0,
                     percent: percentage/100,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[400],
                     progressColor: Colors.cyan,
                   ),
                   Text(
@@ -75,7 +74,7 @@ class Progression extends StatelessWidget {
                     width: 230.0,
                     lineHeight: 14.0,
                     percent: 0.5,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[400],
                     progressColor: Colors.cyan,
                   ),
                   Text(
@@ -108,7 +107,7 @@ class Progression extends StatelessWidget {
                     width: 230.0,
                     lineHeight: 14.0,
                     percent: 0.5,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[400],
                     progressColor: Colors.cyan,
                   ),
                   Text(
@@ -141,7 +140,7 @@ class Progression extends StatelessWidget {
                     width: 230.0,
                     lineHeight: 14.0,
                     percent: 0.5,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[400],
                     progressColor: Colors.cyan,
                   ),
                   Text(
@@ -174,7 +173,7 @@ class Progression extends StatelessWidget {
                     width: 230.0,
                     lineHeight: 14.0,
                     percent: 0.5,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[400],
                     progressColor: Colors.cyan,
                   ),
                   Text(
@@ -207,7 +206,7 @@ class Progression extends StatelessWidget {
                     width: 230.0,
                     lineHeight: 14.0,
                     percent: 0.5,
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[400],
                     progressColor: Colors.cyan,
                   ),
                   Text(

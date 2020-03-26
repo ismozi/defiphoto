@@ -41,16 +41,16 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Tableau de bord'),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/screen2')},
+            onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).push(CupertinoPageRoute(builder: (context) => Progression()))},
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/screen3')},
           ),
           ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Paramètres'),
+            leading: Icon(Icons.info),
+            title: Text('Aide'),
             onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
