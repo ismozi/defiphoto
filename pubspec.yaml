@@ -25,6 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   flappy_search_bar: 1.4.1
   percent_indicator: ^2.1.1
+  image_picker:
 
 dev_dependencies:
   flutter_test:

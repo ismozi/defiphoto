@@ -1,5 +1,8 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'messageReceivedWidget.dart';
+import 'messageSentWidget.dart';
 
 class pageCommentaire extends StatefulWidget {
   final String txt;
@@ -13,6 +16,25 @@ class pageCommentaire extends StatefulWidget {
 }
 
 class pageCommentaireState extends State<pageCommentaire> {
+
+
+File imageFile;
+  
+  
+  _ouvrirGallery() async{
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    this.setState((){
+      imageFile = image;
+    });
+  }
+
+  _ouvrirCamera() async{
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    this.setState((){
+      imageFile = image;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,11 +94,11 @@ class pageCommentaireState extends State<pageCommentaire> {
                             ),
                             IconButton(
                               icon: Icon(Icons.photo_camera,color:Colors.black),
-                              onPressed: () {},
+                              onPressed: () {_ouvrirCamera();},
                             ),
                             IconButton(
                               icon: Icon(Icons.photo,color:Colors.black),
-                              onPressed: () {},
+                              onPressed: () {_ouvrirGallery();},
                             )
                           ],
                         ),
