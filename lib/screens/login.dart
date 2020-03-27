@@ -1,8 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'home.dart';
+import 'mainPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:jwt_decode/jwt_decode.dart';
+import '../data/user.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+
+  bool _isLoading = false;
+  TextEditingController givenId = new TextEditingController();
+  TextEditingController passwd = new TextEditingController();
+
+  void signIn(String id , String password) async {
+    var data = {
+        "givenId" : id.trim().toString(),
+        "password" : password.trim().toString()
+    };
+    var response = await http.post("http://10.0.2.2:3000/users/login", body : data);
+    if (response.statusCode == 200){
+      Map authData = json.decode(response.body);
+      var token = authData["token"];
+      var userData = Jwt.parseJwt(token);
+      print(userData);
+      setState(() {
+        
+        User user = new User(
+            id: userData["givenId"],
+            firstName: userData["firstName"],
+            lastName: userData["lastName"],
+            email: userData["email"],
+            role: userData["role"],
+        );
+      _isLoading =false;
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
+      });
+    }
+    else{
+     //pop-up pour dire que ca n'a pas fonctionner sans indiquer le probleme
+    }
+  }
+    
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +54,7 @@ class Login extends StatelessWidget {
           color:Colors.grey[900],
       padding: EdgeInsets.all(10.0),
       child: Center(
-        child: ListView(
+        child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
           children: <Widget>[
             SizedBox(
               height: 40.0,
@@ -51,9 +94,9 @@ class Login extends StatelessWidget {
                                 blurRadius: 5,
                                 color: Colors.black)
                           ],),
-                        child: TextField(
-                          style:
-                              new TextStyle(fontSize: 20, color: Colors.black),
+              child: TextField(
+                          controller: givenId,
+                          style: new TextStyle(fontSize: 20, color: Colors.black),
                           decoration: InputDecoration(
                               hintStyle:
                                   TextStyle(fontSize: 20.0, color: Colors.grey),
@@ -62,10 +105,11 @@ class Login extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               border: InputBorder.none,
-                              hintText: "Nom d'utilisateur"),
+                              hintText: "Id d'utilisateur"),
+
                         ),
                       ),
-                      SizedBox(
+                SizedBox(
                         height: 20.0,
                       ),
                       Container(
@@ -82,9 +126,9 @@ class Login extends StatelessWidget {
                           ],
                             ),
 
-                        child: TextField(
-                          style:
-                              new TextStyle(fontSize: 20, color: Colors.black),
+              child: TextField(
+                          controller: passwd,
+                          style: new TextStyle(fontSize: 20, color: Colors.black),
                           obscureText: true,
                           decoration: InputDecoration(
                               hintStyle:
@@ -97,6 +141,7 @@ class Login extends StatelessWidget {
                               hintText: "Mot-de-passe"),
                         ),
                       ),
+                      
                       SizedBox(
                         height: 20.0,
                       ),
@@ -106,8 +151,12 @@ class Login extends StatelessWidget {
                         child: RaisedButton(
                           elevation: 5.0,
                           onPressed: () {
-                            Navigator.of(context).push(CupertinoPageRoute(
-                                builder: (context) => MainPage()));
+                           setState(() {
+                             _isLoading = true;
+                           });
+                            signIn(givenId.text, passwd.text);
+
+                            
                           },
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
@@ -140,3 +189,4 @@ class Login extends StatelessWidget {
     ));
   }
 }
+

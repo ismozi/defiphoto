@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'login.dart';
 import 'progression.dart';
-import 'home.dart';
+import 'mainPage.dart';
 
 class NavDrawer extends StatelessWidget {
   @override
