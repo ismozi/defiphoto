@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home.dart';
+import 'screens/mainPage.dart';
 import 'screens/login.dart';
 import 'screens/progression.dart';
 

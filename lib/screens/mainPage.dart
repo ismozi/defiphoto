@@ -6,15 +6,18 @@ import 'fabwithicons.dart';
 import 'layout.dart';
 import 'listViewWidget.dart';
 import 'pageQuestion.dart';
+import '../data/user.dart';
 
 Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontSize: 15));
 
 class MainPage extends StatefulWidget {
-  Home createState() => new Home();
+ 
+  mainPage createState() => new mainPage();
 }
 
-class Home extends State<MainPage> {
+class mainPage extends State<MainPage> {
+  
   String _lastSelected = 'TAB: 0';
   String show = 'False';
   bool showOverlay = false;
@@ -100,7 +103,7 @@ class Home extends State<MainPage> {
       _lastSelected = 'FAB: $index';
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
