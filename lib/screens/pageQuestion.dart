@@ -18,6 +18,8 @@ class pageQuestionState extends State<pageQuestion> {
   
   File imageFile;
   
+  TextEditingController messageSend = new TextEditingController();
+
   _ouvrirGallery() async{
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState((){

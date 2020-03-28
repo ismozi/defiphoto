@@ -1,4 +1,5 @@
-import '../models/user.dart';
+
+import'../data/user.dart';
 
 class Message {
   final User sender;
@@ -19,14 +20,14 @@ class Message {
 
 // YOU - current user
 final User currentUser = User(
-  id: 0,
+  id: '0',
   firstName: 'Current User',
 
 );
 
 // USERS
 final User professeur = User(
-  id: 1,
+  id: '1',
   firstName: 'Professeur',
 );
 

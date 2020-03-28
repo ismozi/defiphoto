@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:test_flutter/models/message_model.dart';
 import 'messageReceivedWidget.dart';
 import 'messageSentWidget.dart';
-import '../models/user.dart';
+
 
 class pageCommentaire extends StatefulWidget {
   
