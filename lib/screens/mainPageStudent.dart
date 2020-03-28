@@ -17,6 +17,8 @@ class MainPage extends StatefulWidget {
 }
 
 class mainPage extends State<MainPage> {
+
+  Map userData = {};
   
   String _lastSelected = 'TAB: 0';
   String show = 'False';
@@ -106,6 +108,9 @@ class mainPage extends State<MainPage> {
   
   @override
   Widget build(BuildContext context) {
+
+    userData = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       drawer: Container(color:Colors.grey[900],child:NavDrawer()),
       appBar: AppBar(

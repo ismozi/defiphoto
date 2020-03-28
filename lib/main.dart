@@ -12,9 +12,9 @@ class App extends StatelessWidget {
    debugShowCheckedModeBanner: false,
   
   routes: <String, WidgetBuilder> {
-    '/screen1': (BuildContext context) => new Login(),
-    '/screen2' : (BuildContext context) => new MainPage(),
-    '/screen3' : (BuildContext context) => new Progression()
+    '/login': (BuildContext context) => new Login(),
+    '/mainPageStudent' : (BuildContext context) => new MainPage(),
+    '/progression' : (BuildContext context) => new Progression()
   },
 
       theme: new ThemeData(

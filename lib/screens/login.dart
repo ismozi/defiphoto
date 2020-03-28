@@ -25,8 +25,8 @@ class _LoginState extends State<Login> {
     var response = await http.post("https://defiphoto-api.herokuapp.com/users/login", body : data);
     if (response.statusCode == 200){
       Map authData = json.decode(response.body);
-      var token = authData["token"];
-      var userData = Jwt.parseJwt(token);
+      var token =  authData["token"];
+      var userData =  Jwt.parseJwt(token);
       print(userData);
       setState(() {
         
@@ -40,7 +40,13 @@ class _LoginState extends State<Login> {
       _isLoading =false;
       if(userData["role"]=="S"){
         
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
+        Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
+          'id': userData["givenId"],
+            'firstName': userData["firstName"],
+            'lastName': userData["lastName"],
+            'email': userData["email"],
+            'role': userData["role"],
+        });
       }
       if(userData["role"]=="P"){
         ////main page pour les profs
@@ -52,6 +58,7 @@ class _LoginState extends State<Login> {
     }
    else {
      setState(() {
+       
          return showDialog<void>(
                                 context: context,
                                 barrierDismissible: false, 
@@ -69,6 +76,9 @@ class _LoginState extends State<Login> {
                                       FlatButton(
                                         child: Text('Re-essayer'),
                                         onPressed: () {
+                                          
+                                          _isLoading= false;
+                                          print('pozz c off');
                                           Navigator.of(context).pop();
                                         },
                                       ),
@@ -76,8 +86,9 @@ class _LoginState extends State<Login> {
                                   );
                                 },
                               );
-                              _isLoading= false;
      });
+     
+     
     }
   }
     
@@ -189,6 +200,7 @@ class _LoginState extends State<Login> {
                            setState(() {
                              _isLoading = true;
                               signIn(givenId.text, passwd.text);
+                              _isLoading = false;
                            });
                           },
                           padding: EdgeInsets.all(15.0),
