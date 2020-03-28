@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'mainPage.dart';
+import 'mainPageStudent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
-import '../models/user.dart';
+import'../data/user.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -17,16 +18,16 @@ class _LoginState extends State<Login> {
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
 
-  void signIn(String id , String password) async {
+ signIn(String id , String password) async {
     var data = {
         "givenId" : id.trim().toString(),
         "password" : password.trim().toString()
     };
-    var response = await http.post("http://10.0.2.2:3000/users/login", body : data);
+    var response = await http.post("https://defiphoto-api.herokuapp.com/users/login", body : data);
     if (response.statusCode == 200){
       Map authData = json.decode(response.body);
-      var token = authData["token"];
-      var userData = Jwt.parseJwt(token);
+      var token =  authData["token"];
+      var userData =  Jwt.parseJwt(token);
       print(userData);
       setState(() {
         
@@ -38,11 +39,57 @@ class _LoginState extends State<Login> {
             role: userData["role"],
         );
       _isLoading =false;
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
+      if(userData["role"]=="S"){
+        
+        Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
+          'id': userData["givenId"],
+            'firstName': userData["firstName"],
+            'lastName': userData["lastName"],
+            'email': userData["email"],
+            'role': userData["role"],
+        });
+      }
+      if(userData["role"]=="P"){
+        ////main page pour les profs
+      }
+      if(userData["role"]=="A"){
+        ////main page pour l'admin
+      }
       });
     }
-    else{
-     //pop-up pour dire que ca n'a pas fonctionner sans indiquer le probleme
+   else {
+     setState(() {
+       
+         return showDialog<void>(
+                                context: context,
+                                barrierDismissible: false, 
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Erreur'),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Text('Mauvais Id ou Mot de passe!'),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Re-essayer'),
+                                        onPressed: () {
+                                          
+                                          _isLoading= false;
+                                          print('pozz c off');
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+     });
+     
+     
     }
   }
     
@@ -150,13 +197,12 @@ class _LoginState extends State<Login> {
                         width: double.infinity,
                         child: RaisedButton(
                           elevation: 5.0,
-                          onPressed: () {
+                          onPressed: ()   {
                            setState(() {
                              _isLoading = true;
+                              signIn(givenId.text, passwd.text);
+                              _isLoading = false;
                            });
-                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
-
-                            
                           },
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
@@ -178,10 +224,6 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 15.0,
                       ),
-                      Center(
-                        child: Text('Mot-de-passe oublié?',
-                            style: TextStyle(color: Colors.white)),
-                      )
                     ])))
           ],
         ),
