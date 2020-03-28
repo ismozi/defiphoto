@@ -14,7 +14,6 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
 
   bool _isLoading = false;
-  bool _isFound = null;
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
 
@@ -39,7 +38,6 @@ class _LoginState extends State<Login> {
             role: userData["role"],
         );
       _isLoading =false;
-      _isFound = true;
       if(userData["role"]=="S"){
         
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
@@ -54,8 +52,31 @@ class _LoginState extends State<Login> {
     }
    else {
      setState(() {
-        _isLoading= false;
-        _isFound = false;
+         return showDialog<void>(
+                                context: context,
+                                barrierDismissible: false, 
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Erreur'),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Text('Mauvais Id ou Mot de passe!'),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Re-essayer'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              _isLoading= false;
      });
     }
   }
@@ -168,35 +189,7 @@ class _LoginState extends State<Login> {
                            setState(() {
                              _isLoading = true;
                               signIn(givenId.text, passwd.text);
-                           print(_isFound);
-                            if(!_isFound){
-                            return showDialog<void>(
-                                context: context,
-                                barrierDismissible: false, 
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Erreur'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text('Mauvais Id ou Mot de passe!'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Re-essayer'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
                            });
-                          
                           },
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
