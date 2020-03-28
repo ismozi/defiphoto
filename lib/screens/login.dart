@@ -23,7 +23,7 @@ class _LoginState extends State<Login> {
         "givenId" : id.trim().toString(),
         "password" : password.trim().toString()
     };
-    var response = await http.post("http://10.0.2.2:3000/users/login", body : data);
+    var response = await http.post("https://defiphoto-api.herokuapp.com/users/login", body : data);
     if (response.statusCode == 200){
       Map authData = json.decode(response.body);
       var token = authData["token"];
@@ -57,8 +57,6 @@ class _LoginState extends State<Login> {
         _isLoading= false;
         _isFound = false;
      });
-    
-     
     }
   }
     
