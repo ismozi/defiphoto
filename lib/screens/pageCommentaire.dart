@@ -1,15 +1,14 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:test_flutter/models/message_model.dart';
 import 'messageReceivedWidget.dart';
 import 'messageSentWidget.dart';
+import '../models/user.dart';
 
 class pageCommentaire extends StatefulWidget {
-  final String txt;
-
-  pageCommentaire({
-    this.txt,
-  });
+  
+  pageCommentaire();
 
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
@@ -17,8 +16,69 @@ class pageCommentaire extends StatefulWidget {
 
 class pageCommentaireState extends State<pageCommentaire> {
 
-
 File imageFile;
+
+TextEditingController messageSend = new TextEditingController();
+
+  _buildMessage(Message message, bool isMe) {
+    final Container msg = Container(
+      margin: isMe
+          ? EdgeInsets.only(
+              top: 8.0,
+              bottom: 8.0,
+              left: 80.0,
+            )
+          : EdgeInsets.only(
+              top: 8.0,
+              bottom: 8.0,
+            ),
+      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
+      width: MediaQuery.of(context).size.width * 0.75,
+      decoration: BoxDecoration(
+        color: isMe ? Colors.blueGrey : Colors.cyan,
+        borderRadius: isMe
+            ? BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                bottomLeft: Radius.circular(15.0),
+              )
+            : BorderRadius.only(
+                topRight: Radius.circular(15.0),
+                bottomRight: Radius.circular(15.0),
+              ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            message.time,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(height: 8.0),
+          Text(
+            message.text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+    if (isMe) {
+      return msg;
+    }
+    return Row(
+      children: <Widget>[
+        msg,
+        
+      ],
+    );
+  }
   
   
   _ouvrirGallery() async{
@@ -33,6 +93,16 @@ File imageFile;
     this.setState((){
       imageFile = image;
     });
+  }
+
+  _envoyerMessage() {
+    
+    messages.add(Message (
+    sender: currentUser,
+    time: '4:30 PM',
+    text: messageSend.text,
+    ));
+
   }
 
   @override
@@ -56,9 +126,12 @@ File imageFile;
               child: Column(children: <Widget>[
             Expanded(child: ListView.builder(
                     padding: const EdgeInsets.all(15),
-                    itemCount: 1,
-                    itemBuilder: (ctx, i) {
-                     return ReceivedMessagesWidget(txt: widget.txt);
+                    itemCount: messages.length,
+                    itemBuilder: (BuildContext ctx, int i) {
+                      final Message message = messages[i];
+                      bool isMe= message.sender.id==currentUser.id;
+
+                     return _buildMessage(message,isMe) ;
                     },
                   ),
             ),
@@ -82,9 +155,13 @@ File imageFile;
                         child: Row(
                           children: <Widget>[
                             IconButton(
-                                icon: Icon(Icons.send,color:Colors.black), onPressed: () {}),
+                                icon: Icon(Icons.send,color:Colors.black), onPressed: () {setState(() {
+                                  _envoyerMessage();
+
+                                }); }),
                             Expanded(
                               child: TextField(
+                                controller: messageSend,
                                 style: new TextStyle(color: Colors.black),
                                 decoration: InputDecoration(
                                     hintText: "Répondre",

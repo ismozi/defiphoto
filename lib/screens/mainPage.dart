@@ -6,7 +6,7 @@ import 'fabwithicons.dart';
 import 'layout.dart';
 import 'listViewWidget.dart';
 import 'pageQuestion.dart';
-import '../data/user.dart';
+import '../models/user.dart';
 
 Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontSize: 15));
@@ -21,11 +21,9 @@ class mainPage extends State<MainPage> {
   String _lastSelected = 'TAB: 0';
   String show = 'False';
   bool showOverlay = false;
-  List<String> txt1 = [
-    "Question sur les produits 1",
-    "Question sur les produits 2"
-  ];
-  int nbItem = 2;
+
+  String type='M';
+ 
 
   void _selectedTab(int index) {
     setState(() {
@@ -34,54 +32,28 @@ class mainPage extends State<MainPage> {
       if (index == 0) {
         appBarTitle =
             Text('Matières et produits', style: TextStyle(fontSize: 15));
-
-        txt1 = ["Question sur les produits 1", "Question sur les produits 2"];
-        nbItem = txt1.length;
+            type='M';
       }
       if (index == 1) {
         appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
-
-        txt1 = [
-          "Question sur l'équipement 1",
-          "Question sur l'équipement 2",
-          "Question sur l'équipement 3"
-        ];
-        nbItem = txt1.length;
+        type='E1';
       }
       if (index == 2) {
         appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
-
-        txt1 = ["Question sur les tâches 1"];
-        nbItem = txt1.length;
+        type='T';
       }
       if (index == 3) {
         appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
-
-        txt1 = ["Question sur les individus 1", "Question sur les individus 2"];
-        nbItem = txt1.length;
+        type='I';
       }
       if (index == 4) {
         appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
-
-        txt1 = [
-          "Question sur l'environnement 1",
-          "Question sur l'environnement 2",
-          "Question sur l'environnement 3",
-          "Question sur l'environnement 4",
-          "Question sur l'environnement 5",
-          "Question sur l'environnement 6"
-        ];
-        nbItem = txt1.length;
+        type='E';
       }
       if (index == 5) {
         appBarTitle =
             Text('Ressources humaines', style: TextStyle(fontSize: 15));
-
-        txt1 = [
-          "Question sur les ressources humaines 1",
-          "Question sur les ressources humaines 2"
-        ];
-        nbItem = txt1.length;
+            type='R';
       }
     });
   }
@@ -126,8 +98,7 @@ class mainPage extends State<MainPage> {
             IconButton(icon: Icon(Icons.search), onPressed: () {})
           ]),
       body: listViewWidget(
-        txt: txt1,
-        nbItem: nbItem,
+       type: type
       ),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,

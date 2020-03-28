@@ -4,7 +4,7 @@ import 'mainPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
-import '../data/user.dart';
+import '../models/user.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -154,7 +154,7 @@ class _LoginState extends State<Login> {
                            setState(() {
                              _isLoading = true;
                            });
-                            signIn(givenId.text, passwd.text);
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
 
                             
                           },
