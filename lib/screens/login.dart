@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'mainPage.dart';
+import 'mainPageStudent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -14,10 +14,11 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
 
   bool _isLoading = false;
+  bool _isFound = null;
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
 
-  void signIn(String id , String password) async {
+ signIn(String id , String password) async {
     var data = {
         "givenId" : id.trim().toString(),
         "password" : password.trim().toString()
@@ -38,11 +39,26 @@ class _LoginState extends State<Login> {
             role: userData["role"],
         );
       _isLoading =false;
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
+      _isFound = true;
+      if(userData["role"]=="S"){
+        
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => MainPage()), (Route <dynamic> route) => false );
+      }
+      if(userData["role"]=="P"){
+        ////main page pour les profs
+      }
+      if(userData["role"]=="A"){
+        ////main page pour l'admin
+      }
       });
     }
-    else{
-     //pop-up pour dire que ca n'a pas fonctionner sans indiquer le probleme
+   else {
+     setState(() {
+        _isLoading= false;
+        _isFound = false;
+     });
+    
+     
     }
   }
     
@@ -150,13 +166,39 @@ class _LoginState extends State<Login> {
                         width: double.infinity,
                         child: RaisedButton(
                           elevation: 5.0,
-                          onPressed: () {
+                          onPressed: ()   {
                            setState(() {
                              _isLoading = true;
+                              signIn(givenId.text, passwd.text);
+                           print(_isFound);
+                            if(!_isFound){
+                            return showDialog<void>(
+                                context: context,
+                                barrierDismissible: false, 
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Erreur'),
+                                    content: SingleChildScrollView(
+                                      child: ListBody(
+                                        children: <Widget>[
+                                          Text('Mauvais Id ou Mot de passe!'),
+                                        ],
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        child: Text('Re-essayer'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                            });
-                            signIn(givenId.text, passwd.text);
-
-                            
+                          
                           },
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(
@@ -178,10 +220,6 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 15.0,
                       ),
-                      Center(
-                        child: Text('Mot-de-passe oublié?',
-                            style: TextStyle(color: Colors.white)),
-                      )
                     ])))
           ],
         ),
