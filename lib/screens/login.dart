@@ -33,15 +33,14 @@ class _LoginState extends State<Login> {
       setState(() {
       _isLoading =false;
       if(userData["role"]=="S"){
-        
         Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
           'givenId': userData["givenId"],
             'firstName': userData["firstName"],
             'lastName': userData["lastName"],
             'email': userData["email"],
             'role': userData["role"],
+            'stageName' : userData['stageName']
         });
-
       }
       if(userData["role"]=="P"){
         ////main page pour les profs

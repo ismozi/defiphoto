@@ -19,7 +19,6 @@ class pageCommentaire extends StatefulWidget {
 
 class pageCommentaireState extends State<pageCommentaire> {
   File imageFile;
-
   TextEditingController messageSend = new TextEditingController();
 
   _buildMessage(Message message, bool isMe) {
