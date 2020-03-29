@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'menu.dart';
-import 'fabwithicons.dart';
-import 'layout.dart';
+import '../widget/fabwithicons.dart';
 import 'pageQuestion.dart';
 import '../data/user.dart';
 import 'package:http/http.dart' as http;
@@ -20,10 +19,10 @@ class mainPage extends State<MainPage> {
   List questions = [{}];
   Map userData = {};
   int _currentIndex=0;
+  String type='M';
 
 
 void getData() async {
-  
      String id = userData["givenId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
      if (response.statusCode == 200){
@@ -35,11 +34,36 @@ void getData() async {
      }
  }
 
+ _gestionTab(){
+    var questionClasse = new Map();
+   
+    for(int i=0;i<questions.length;i++){
+      String question = questions[i]["text"]??''; 
+      String questionType = questions[i]["type"]??'';
+      String questionId = questions[i]["_id"]??'';
+      String questionSender = questions[i]["sender"]??'';
+      print(type);
+      
+      if(type==questionType){
+        questionClasse['text$i']=question;
+        questionClasse['type$i']=questionType;
+        questionClasse['_id$i']=questionId;
+        questionClasse['sender$i']=questionSender;
+
+
+      }
+    }
+    return questionClasse;
+  }
+
+
 
 Widget createQuestionWidgets(){
+
+ Map questionClasse = _gestionTab();
  
   return ListView.builder(
-    itemCount: questions.length,
+    itemCount: questionClasse.length,
     itemBuilder:  (context ,index){
       return Card(
               color:Colors.grey[850],
@@ -51,13 +75,13 @@ Widget createQuestionWidgets(){
                       topLeft: Radius.circular(15)),
                   side: BorderSide(width: 0.5, color: Colors.grey)),
               child: ListTile(
-                title: Text(questions[index]["text"] ?? '',
+                title: Text(questionClasse['text$index'],
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(questions[index]["sender"]??""),
+                
                 contentPadding: EdgeInsets.all(10),
                 onTap: () {
                 
@@ -71,8 +95,6 @@ Widget createQuestionWidgets(){
     );
 }
 
-
-  String type;
  
 
   void _selectedTab(int index) {
@@ -171,6 +193,7 @@ Widget createQuestionWidgets(){
            onTap: (index) {
             setState(() {
               _currentIndex = index;
+              _selectedTab(index);
             });
         },
         ),

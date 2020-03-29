@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
     }
     }
    else {
-     setState(() {
+    
        
          return showDialog<void>(
                                   context: context,
@@ -84,10 +84,10 @@ class _LoginState extends State<Login> {
                                     );
                                   },
                                 );
-     });
+     }
      
      
-    }
+    
   }
     
   @override
