@@ -8,9 +8,8 @@ import 'messageSentWidget.dart';
 class pageCommentaire extends StatefulWidget {
   String idConvo;
 
-  pageCommentaire(this.idConvo) {
-    this.idConvo;
-  }
+  pageCommentaire({this.idConvo});
+    
 
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
@@ -80,11 +79,6 @@ class pageCommentaireState extends State<pageCommentaire> {
     );
   }
 
-String questionId;
-File imageFile;
-  
-  
-  _ouvrirGallery() async{
   _gestionTab() {
     print(widget.idConvo);
     List<Message> commentaires = new List();
@@ -121,7 +115,6 @@ File imageFile;
 
   @override
   Widget build(BuildContext context) {
-    questionId = ModalRoute.of(context).settings.arguments;
     List<Message> commentaires = _gestionTab();
     return Scaffold(
         appBar: AppBar(
@@ -147,13 +140,11 @@ File imageFile;
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.all(15),
-                    itemCount: 1,
-                    itemBuilder: (ctx, i) {
-                     return ReceivedMessagesWidget(txt: questionId);
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
                       final Message message = commentaires[i];
                       bool isMe = message.sender.id == currentUser.id;
+
                       return _buildMessage(message, isMe);
                     },
                   ),

@@ -4,8 +4,7 @@ import 'mainPageStudent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
-import'../data/user.dart';
-
+import '../data/user.dart';
 
 
 class Login extends StatefulWidget {
@@ -19,8 +18,7 @@ class _LoginState extends State<Login> {
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
 
- signIn(String id , String password) async {
-    
+ void signIn(String id , String password) async {
     var data = {
         "givenId" : id.trim().toString(),
         "password" : password.trim().toString()
@@ -31,6 +29,7 @@ class _LoginState extends State<Login> {
       var token =  authData["token"];
       var userData =  Jwt.parseJwt(token);
       print(userData);
+      if (this.mounted){
       setState(() {
       _isLoading =false;
       if(userData["role"]=="S"){
@@ -52,37 +51,40 @@ class _LoginState extends State<Login> {
       }
       });
     }
+    }
    else {
-     return showDialog<void>(
-                                context: context,
-                                barrierDismissible: false, 
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Erreur'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text('Mauvais Id ou Mot de passe!'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Re-essayer'),
-                                        onPressed: () {
-
-                                          _isLoading= false;
-                                          print('pozz c off');
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+     setState(() {
        
-         
-     
+         return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false, 
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Erreur'),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text('Mauvais Id ou Mot de passe!'),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Re-essayer'),
+                                          onPressed: () {
+                                            if (this.mounted){
+                                            setState(() {
+                                            _isLoading= false;
+                                            Navigator.of(context).pop();
+                                            });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+     });
      
      
     }
@@ -193,11 +195,13 @@ class _LoginState extends State<Login> {
                         child: RaisedButton(
                           elevation: 5.0,
                           onPressed: ()   {
+                          _isLoading = true;
                            setState(() {
-                             _isLoading = true;
+                             
                               signIn(givenId.text, passwd.text);
-                              _isLoading = false;
+                             
                            });
+                          
                           },
                           padding: EdgeInsets.all(15.0),
                           shape: RoundedRectangleBorder(

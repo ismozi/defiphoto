@@ -67,23 +67,16 @@ Widget createQuestionWidgets(){
                 },
               ),
             );
-    }
+        }
     );
-  
 }
 
-  
-  String _lastSelected = 'TAB: 0';
-  String show = 'False';
-  bool showOverlay = false;
 
-  String type='M';
+  String type;
  
 
   void _selectedTab(int index) {
     setState(() {
-      _lastSelected = 'TAB: $index';
-
       if (index == 0) {
         appBarTitle =
             Text('Matières et produits', style: TextStyle(fontSize: 15));
@@ -91,7 +84,7 @@ Widget createQuestionWidgets(){
       }
       if (index == 1) {
         appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
-        type='E1';
+        type='É';
       }
       if (index == 2) {
         appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
@@ -145,13 +138,9 @@ Widget createQuestionWidgets(){
       body: createQuestionWidgets() ,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-      body: listViewWidget(
-       type: type
-      ),
-      bottomNavigationBar: FABBottomAppBar(
-        onTabSelected: _selectedTab,
-        selectedColor: Colors.cyan,
-        notchedShape: CircularNotchedRectangle(),
+      // body: listViewWidget(
+      //  type: type
+      // ),
         backgroundColor: Colors.grey[900],
         items: [
           BottomNavigationBarItem(
@@ -187,7 +176,7 @@ Widget createQuestionWidgets(){
         ),
       
     );
+  
   }
-
   
 }
