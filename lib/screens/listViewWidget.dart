@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test_flutter/screens/pageQuestion.dart';
 import 'pageCommentaire.dart';
 import 'package:test_flutter/models/message_model.dart';
-
 
 class listViewWidget extends StatefulWidget {
   final String type;
@@ -23,7 +23,7 @@ class listViewWidgetState extends State<listViewWidget> {
     List<Message> questions= new List();
     for(int i=0;i<chats.length;i++){
       Message question = chats[i]; 
-      print(question.type);
+      
       if(widget.type==question.type){
         questions.add(question);
       }
@@ -58,7 +58,7 @@ class listViewWidgetState extends State<listViewWidget> {
                 onTap: () {
                   Navigator.of(context).push(CupertinoPageRoute(
                       builder: (context) =>
-                          (pageCommentaire())));
+                          (pageCommentaire(question.idConvo))));
                 },
               ),
             );
@@ -81,7 +81,7 @@ class listViewWidgetState extends State<listViewWidget> {
           padding: const EdgeInsets.all(7.0),
           itemBuilder: (context, position) {
              
-            print(position);
+           
                         return _affichageTxt(questions, position);
           }),
     );

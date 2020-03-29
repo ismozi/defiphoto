@@ -46,17 +46,17 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/screen3')},
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/progression')},
           ),
           ListTile(
             leading: Icon(Icons.info),
             title: Text('Aide'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {Navigator.of(context).pushReplacementNamed('/aide')}
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter'),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/screen1')}
+            onTap: () => {Navigator.of(context).pushReplacementNamed('/login')}
           ),
         ],
       )),

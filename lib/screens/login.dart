@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   TextEditingController passwd = new TextEditingController();
 
  signIn(String id , String password) async {
+    Navigator.pushReplacementNamed(context,'/mainPageStudent');
     var data = {
         "givenId" : id.trim().toString(),
         "password" : password.trim().toString()
@@ -60,33 +61,7 @@ class _LoginState extends State<Login> {
    else {
     
        
-         return showDialog<void>(
-                                context: context,
-                                barrierDismissible: false, 
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text('Erreur'),
-                                    content: SingleChildScrollView(
-                                      child: ListBody(
-                                        children: <Widget>[
-                                          Text('Mauvais Id ou Mot de passe!'),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                        child: Text('Re-essayer'),
-                                        onPressed: () {
-                                          
-                                          _isLoading= false;
-                                          print('pozz c off');
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+         
      
      
      
