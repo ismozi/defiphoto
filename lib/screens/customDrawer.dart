@@ -4,7 +4,10 @@ import 'login.dart';
 import 'progression.dart';
 import 'mainPageStudent.dart';
 
-class NavDrawer extends StatelessWidget {
+class customDrawer extends StatelessWidget {
+  Map userData= {};
+  customDrawer({this.userData});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(child:
@@ -27,13 +30,13 @@ class NavDrawer extends StatelessWidget {
                 Positioned(
                     top: 12,
                     child: Container(
-                        child: Text('Étudiant 1',
+                        child: Text(userData['firstName'] + " " +userData['lastName'],
                             style: TextStyle(fontSize: 25)))),
                 Positioned(
                     top: 50,
                     left: 1,
                     child: Container(
-                        child: Text('Type de stage',
+                        child: Text(userData["stageName"],
                             style: TextStyle(fontSize: 13)))),
               ],
             ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'menu.dart';
+import 'customDrawer.dart';
 class InformationTab extends StatelessWidget {
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Container(color:Colors.grey[900],child:NavDrawer()),
+      // drawer: Container(color:Colors.grey[900],child:NavDrawer()),
       backgroundColor: Colors.grey[750],
       appBar: AppBar(
         backgroundColor: Colors.grey[900],

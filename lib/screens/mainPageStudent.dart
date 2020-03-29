@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'menu.dart';
+import 'package:test_flutter/screens/main.dart';
+import 'customDrawer.dart';
 import 'fabwithicons.dart';
 import 'layout.dart';
 import 'pageQuestion.dart';
@@ -17,29 +18,65 @@ class MainPage extends StatefulWidget {
 
 class mainPage extends State<MainPage> {
 
-  List questions = [{}];
+  List<Map> questions = [{}];
   Map userData = {};
   int _currentIndex=0;
+  String type;
+ 
 
 
-void getData() async {
+  getData() async {
   
      String id = userData["givenId"];
+     print(id);
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
      if (response.statusCode == 200){
-       if(this.mounted){
        setState(() {
-         questions = json.decode(response.body);
-       });
-       }
+         questions =  json.decode(response.body);
+       });     
      }
  }
 
 
-Widget createQuestionWidgets(){
- 
-  return ListView.builder(
-    itemCount: questions.length,
+
+  getBody(int currentIndex){
+     String section;
+     dynamic questionSection;
+        getData();
+    setState(() {
+    switch(currentIndex){
+      case 0 :
+        section = "M";
+        break;
+       case 1:
+        section = "É";
+        break;
+         case 2 :
+        section = "T";
+        break;
+         case 3 :
+        section = "I";
+        break;
+         case 4 :
+        section = "E";
+        break;
+         case 5 :
+        section = "R";
+        break;
+    }
+    print(section);
+    print(questions);
+    for(var i=0; i < questions.length ; i++){
+      if(questions[i]["type"]==section && questions[i]!= null){
+        questionSection.add(questions[i]);
+      }
+    }
+print(questionSection);
+    });
+    
+    return Container();
+    ListView.builder(
+    itemCount: questionSection.length,
     itemBuilder:  (context ,index){
       return Card(
               color:Colors.grey[850],
@@ -51,73 +88,50 @@ Widget createQuestionWidgets(){
                       topLeft: Radius.circular(15)),
                   side: BorderSide(width: 0.5, color: Colors.grey)),
               child: ListTile(
-                title: Text(questions[index]["text"] ?? '',
+                leading: Icon(Icons.question_answer ,size: 40),
+                title: Text(questionSection[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(questions[index]["sender"]??""),
+                subtitle: Text(questionSection[index]["sender"]??""),
                 contentPadding: EdgeInsets.all(10),
                 onTap: () {
                 
-                 Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
-                       'questionId': questions[index]["_id"],
+                 Navigator.pushReplacementNamed(context,'/pageCommentaire',arguments: {
+                       'questionId': questionSection[index]["_id"],
                   });
                 },
               ),
             );
         }
     );
-}
 
 
-  String type;
- 
-
-  void _selectedTab(int index) {
-    setState(() {
-      if (index == 0) {
-        appBarTitle =
-            Text('Matières et produits', style: TextStyle(fontSize: 15));
-            type='M';
-      }
-      if (index == 1) {
-        appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
-        type='É';
-      }
-      if (index == 2) {
-        appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
-        type='T';
-      }
-      if (index == 3) {
-        appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
-        type='I';
-      }
-      if (index == 4) {
-        appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
-        type='E';
-      }
-      if (index == 5) {
-        appBarTitle =
-            Text('Ressources humaines', style: TextStyle(fontSize: 15));
-            type='R';
-      }
-    });
   }
-
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     Future.delayed(Duration(milliseconds: 100)).then((_) {
+       setState(() {
+           userData = ModalRoute.of(context).settings.arguments;
+          getData();
+          print(userData);
+       });
+   
+    });
+  
+  }
 
   
   
   @override
   Widget build(BuildContext context) {
 
-  userData = ModalRoute.of(context).settings.arguments;
-  getData();
-
-
     return Scaffold(
-      drawer: Container(color:Colors.grey[900],child:NavDrawer()),
+      drawer: Container(color:Colors.grey[900],child:customDrawer(userData: userData,)),
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
           title: Column(
@@ -135,12 +149,9 @@ Widget createQuestionWidgets(){
           actions: <Widget>[
             IconButton(icon: Icon(Icons.search), onPressed: () {})
           ]),
-      body: createQuestionWidgets() ,
+      body: getBody(_currentIndex) ,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-      // body: listViewWidget(
-      //  type: type
-      // ),
         backgroundColor: Colors.grey[900],
         items: [
           BottomNavigationBarItem(
