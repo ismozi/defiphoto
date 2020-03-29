@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'login.dart';
 import 'progression.dart';
+import 'profile_tabbar.dart';
 import 'home.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -48,7 +49,7 @@ class NavDrawer extends StatelessWidget {
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
             onTap: () {Navigator.of(context).push(
-                    CupertinoPageRoute(builder: (context) => Progression()));},
+                    CupertinoPageRoute(builder: (context) => InfoEleve()));},
           ),
           ListTile(
             leading: Icon(Icons.settings),
