@@ -53,8 +53,6 @@ class _LoginState extends State<Login> {
     }
     }
    else {
-     setState(() {
-       
          return showDialog<void>(
                                   context: context,
                                   barrierDismissible: false, 
@@ -84,9 +82,6 @@ class _LoginState extends State<Login> {
                                     );
                                   },
                                 );
-     });
-     
-     
     }
   }
     
