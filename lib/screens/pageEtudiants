@@ -1,3 +1,5 @@
+import 'models/popupPage.dart';
+
 class PageEtudiants extends StatefulWidget {
   Etudiant etudiant;
 
