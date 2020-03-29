@@ -1,0 +1,585 @@
+class PageProfAcceuil extends StatefulWidget {
+  Professeur professeur;
+
+  PageProfAcceuil({this.professeur});
+
+  @override
+  _PageProfAcceuilState createState() => _PageProfAcceuilState();
+}
+
+class _PageProfAcceuilState extends State<PageProfAcceuil>
+    with TickerProviderStateMixin {
+  TabController tabController;
+  static final int NB_TAB = 2;
+
+  List<DropdownMenuItem<AnneScolaire>> listeDDitem;
+  List<String> listeLettre;
+  List<int> listePosition;
+
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tabController = TabController(length: NB_TAB, vsync: this);
+
+    chargerList();
+  }
+
+  void chargerList() {
+    filterList();
+    listeDDitem = getNomAnneScolaire();
+    listeLettre = getLettrePosition(true);
+    listePosition = getLettrePosition(false);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    tabController.dispose();
+    super.dispose();
+  }
+
+  void filterList() {
+    widget.professeur.anneScolaireActuelle.listEtudiant
+        .sort((a, b) => a._nom.compareTo(b._nom));
+    for (int i = 0;
+        i < widget.professeur.anneScolaireActuelle.listEtudiant.length;
+        i++) {
+      widget.professeur.anneScolaireActuelle.listEtudiant
+          .elementAt(i)
+          .setIdSearch(i);
+    }
+  }
+
+  List<DropdownMenuItem<AnneScolaire>> getNomAnneScolaire() {
+    List<DropdownMenuItem<AnneScolaire>> listeTemp = [];
+
+    for (int i = 0; i < widget.professeur._anneScolaires.length; i++) {
+      listeTemp.add(DropdownMenuItem<AnneScolaire>(
+        value: widget.professeur._anneScolaires.elementAt(i),
+        child:
+            Text(widget.professeur._anneScolaires.elementAt(i).afficherAnne()),
+      ));
+    }
+
+    return listeTemp;
+  }
+
+  List getLettrePosition(bool lettre) {
+    List<String> listLettre = [];
+    List<int> listePosition = [];
+    listLettre.add(widget.professeur.anneScolaireActuelle.listEtudiant[0]._nom
+        .substring(0, 1)
+        .toUpperCase());
+    listePosition.add(0);
+
+    List listTemp = [];
+
+    for (int i = 1;
+        i < widget.professeur.anneScolaireActuelle.listEtudiant.length;
+        i++) {
+      if (widget.professeur.anneScolaireActuelle.listEtudiant[i]._nom
+              .substring(0, 1)
+              .toUpperCase() !=
+          widget.professeur.anneScolaireActuelle.listEtudiant[i - 1]._nom
+              .substring(0, 1)
+              .toUpperCase()) {
+        listePosition.add(i);
+        listLettre.add(widget
+            .professeur.anneScolaireActuelle.listEtudiant[i]._nom
+            .substring(0, 1)
+            .toUpperCase());
+      }
+    }
+
+    for (int i = 0; i < listLettre.length; i++) {
+      print('${listLettre[i]}\n');
+    }
+
+    print('--------------------------------');
+
+    for (int i = 0; i < listePosition.length; i++) {
+      // print('${listePosition[i]}\n');
+    }
+
+    if (lettre == true) {
+      listTemp = listLettre;
+      //  print('${listLettre.length}');
+    } else {
+      listTemp = listePosition;
+    }
+
+    return listTemp;
+  }
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    final double sizeboxD = 38.5;
+
+    return Scaffold(
+      drawer: Drawer(
+        elevation: 30,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: Row(
+                    children: <Widget>[
+                      Center(
+                        child: Text(
+                          '${widget.professeur._nom}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                      Center(
+                          child: CircleAvatar(
+                        backgroundColor: Colors.cyan[300],
+                        radius: 60,
+                        child: Text(
+                            '${widget.professeur._nom.substring(0, 1).toLowerCase()}'), //TODO AVATAR  PROF
+                      ))
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(),
+                ListTile(
+                  leading: Icon(Icons.home),
+                  title: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Acceuil')
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                //    Divider(),
+                ListTile(
+                  leading: Icon(Icons.account_circle),
+                  title: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Mon Profil')
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                //  Divider(),
+                ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Paramètres')
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                // Divider(),
+                Divider(),
+                SizedBox(
+                  height: sizeboxD,
+                ),
+                //Divider(),
+                ListTile(
+                  leading: Icon(Icons.help_outline),
+                  title: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Aide')
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                // Divider(),
+                ListTile(
+                  leading: Icon(Icons.report),
+                  title: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Signaler un problème')
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+                //Divider(),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                SizedBox(
+                  height: (sizeboxD * 2) + 10,
+                ),
+                //      Divider(),
+                ListTile(
+                  title: Row(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text('Se déconnecter')
+                    ],
+                  ),
+                  trailing: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                  //TODO TROUVER UN ICON POUR DECONNEXTION
+                  onTap: () {},
+                ),
+                Divider(),
+                Text('Version 64')
+              ],
+            ),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+          elevation: 15,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                child: SafeArea(
+                  child: Row(
+                    children: <Widget>[
+                      Text('Notification',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              SizedBox(),
+              Container(),
+            ],
+          )),
+      appBar: AppBar(
+        elevation: 0,
+        title: Text('Acceuil'),
+        actions: <Widget>[
+          IconButton(
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: SearchPage(
+                      listEtudiant:
+                          widget.professeur.anneScolaireActuelle.listEtudiant,
+                      recentEtudiant:
+                          widget.professeur.anneScolaireActuelle.recentEtudiant,
+                      hintText: 'Cherchez un étudiant'),
+                );
+              },
+              icon: Icon(
+                Icons.search,
+                size: 20,
+                color: Colors.white,
+              )),
+          IconButton(
+            icon: Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+          ),
+          Builder(
+            builder: (context) => IconButton(
+              icon: Icon(
+                Icons.notifications,
+                color: Colors.yellow[400],
+              ),
+              onPressed: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+            ),
+          )
+        ],
+      ),
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_home,
+        overlayColor: Colors.black87,
+        curve: Curves.bounceOut,
+        tooltip: 'Action',
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.person_add),
+            label: 'Ajouter un élève',
+            labelStyle: TextStyle(color: Colors.black),
+            onTap: () {
+              // TODO Navigator
+            },
+          ),
+          SpeedDialChild(
+              child: Icon(Icons.add_comment),
+              label: 'Ajouter une question',
+              labelStyle: TextStyle(color: Colors.black),
+              onTap: () {
+                //TODO ALLER A AJOUTER UNE QUESTION
+              }),
+        ],
+        elevation: 15,
+      ),
+      body: DefaultTabController(
+        length: NB_TAB, // This is the number of tabs.
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverOverlapAbsorber(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                child: SliverAppBar(
+                  leading: SizedBox(
+                    width: 0.1,
+                  ),
+                  title: Row(
+                    children: <Widget>[
+                      //   SizedBox(width: 5,),
+                      Text(
+                        "Bonjour,",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 25),
+                      ),
+                      SizedBox(width: 4),
+                      Text("${widget.professeur._nom}",
+                          style: TextStyle(fontSize: 20))
+                    ],
+                  ),
+                  onStretchTrigger: () {},
+                  stretchTriggerOffset: 90,
+                  elevation: 10,
+                  //TODO CHANGER LE SLIVERAPPBARR PROP
+                  pinned: false,
+                  floating: true,
+                  snap: true,
+                  expandedHeight: 100.0,
+                  forceElevated: innerBoxIsScrolled,
+                  bottom: TabBar(tabs: [
+                    Tab(
+                      icon: Icon(
+                        Icons.group,
+                        size: 32,
+                      ),
+                      text: 'Mes élèves',
+                    ),
+                    Tab(
+                      icon: Icon(
+                        Icons.question_answer,
+                        size: 32,
+                      ),
+                      text: 'Mes questions (Groupe) ',
+                    )
+                  ]),
+                  actions: <Widget>[Container()],
+                ),
+              ),
+            ];
+          },
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              DropDownAnneScolaire(listeDDitem,widget.professeur,context,(AnneScolaire asActuelle)  {
+              setState(() {
+                this.widget.professeur.setAnneScolaireActuelle(
+                    asActuelle.idPosition);
+                chargerList();
+              });
+
+          }),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.8,
+                child: TabBarView(
+                  children: [
+                        VoirListEtudiant(widget.professeur.anneScolaireActuelle.listEtudiant),
+                        Container(),
+                    // TODO AFFICHER LES QUESTION POUR LE GROUPE SEPARER PAR METIER
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class ListTileEtudiant extends ListTile {
+  Etudiant etudiant;
+  BuildContext context;
+
+  ListTileEtudiant(this.etudiant, this.context)
+      : super(
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(),
+              SizedBox(
+                height: 6,
+              ),
+              Text(
+                etudiant.afficherProg(),
+                style: TextStyle(fontSize: 18.5),
+              ),
+              Text(
+                etudiant.afficherStage(),
+                style: TextStyle(fontSize: 18.5),
+              )
+            ],
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                etudiant.afficherNom(),
+                style: TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
+          leading: CircleAvatar(
+            radius: 50,
+            child: Text(
+              etudiant._prenom.substring(0, 1).toUpperCase(),
+              style: TextStyle(color: Colors.black),
+            ),
+            backgroundColor: Colors.grey[100],
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => (PageEtudiants(
+                          etudiant: etudiant,
+                        ))));
+          },
+          onLongPress: () {
+            Scaffold.of(context).showBottomSheet((context) => Container(
+                  height: MediaQuery.of(context).size.height * 0.20,
+                  child: Center(
+                    child: Row(
+                      children: <Widget>[
+                        Text('Allo'),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        FlatButton(
+                          child: Text('ANNULER'),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+          },
+          trailing: IconButton(
+            icon: Icon(
+              Icons.question_answer,
+              size: 28,
+            ),
+            tooltip: 'Click me',
+            onPressed: () {
+              //TODO POUR ALLER AJOUTER UNE QUESTION
+            },
+          ),
+        );
+}
+
+class VoirListEtudiant extends AnimatedPadding{
+
+  List<Etudiant> listEtudiant;
+  Duration duration=Duration(seconds: 2);
+  double padd=2;
+
+  VoirListEtudiant(this.listEtudiant,{this.duration,this.padd}): super(
+    duration: duration,
+    padding:  EdgeInsets.all(padd),
+    //child: SafeArea( //
+    // top: true,
+    //   bottom: true,
+    child: Stack(children: [
+      ListView.builder(
+        itemBuilder: (context, index) {
+          return AnimatedPadding(
+              duration: const Duration(seconds: 12),
+              padding: EdgeInsets.all(8),
+              child: Card(
+                elevation: 8,
+                child: ListTileEtudiant(listEtudiant[index], context),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    side: BorderSide(
+                        width: 1, color: Colors.teal)),
+              ));
+        },
+        itemCount:listEtudiant.length,
+        scrollDirection: Axis.vertical,
+        //   itemExtent: 200,
+      ),
+    ]),
+    //      ),
+  );
+
+
+
+}
+
+class DropDownAnneScolaire extends Container{
+BuildContext context;
+List<DropdownMenuItem> listeDDitem;
+Professeur professeur;
+Function funcionApres;
+
+  DropDownAnneScolaire(this.listeDDitem,this.professeur,this.context,this.funcionApres):super(
+      height: MediaQuery.of(context).size.height * .08,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text('Sélectionner une année scolaire :'),
+          SizedBox(width: 8),
+          DropdownButton(
+            icon: Icon(Icons.keyboard_arrow_down),
+            value: professeur.anneScolaireActuelle,
+            items: listeDDitem,
+            onChanged: funcionApres,
+            itemHeight: 50,
+            focusColor: Colors.cyan,
+            elevation: 14,
+          ),
+          SizedBox(width: 8),
+          Text(
+              'Actuelle : ${professeur.anneScolaireActuelle.afficherAnne()}'),
+        ],
+      )
+  );
+}
