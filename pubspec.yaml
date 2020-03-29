@@ -26,6 +26,9 @@ dependencies:
   flappy_search_bar: 1.4.1
   percent_indicator: ^2.1.1
   image_picker:
+  flutter_speed_dial: ^1.2.1
+  flutter_spinkit: ^4.1.2
+  backdrop: ^0.2.8
 
 dev_dependencies:
   flutter_test:
