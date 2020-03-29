@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
 import '../data/user.dart';
 
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -29,24 +30,17 @@ class _LoginState extends State<Login> {
       var userData =  Jwt.parseJwt(token);
       print(userData);
       setState(() {
-        
-        User user = new User(
-            id: userData["givenId"],
-            firstName: userData["firstName"],
-            lastName: userData["lastName"],
-            email: userData["email"],
-            role: userData["role"],
-        );
       _isLoading =false;
       if(userData["role"]=="S"){
         
         Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
-          'id': userData["givenId"],
+          'givenId': userData["givenId"],
             'firstName': userData["firstName"],
             'lastName': userData["lastName"],
             'email': userData["email"],
             'role': userData["role"],
         });
+
       }
       if(userData["role"]=="P"){
         ////main page pour les profs

@@ -1,115 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'fabbottomappbar.dart';
 import 'menu.dart';
 import 'fabwithicons.dart';
 import 'layout.dart';
-import 'listViewWidget.dart';
 import 'pageQuestion.dart';
 import '../data/user.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontSize: 15));
 
 class MainPage extends StatefulWidget {
- 
   mainPage createState() => new mainPage();
 }
 
 class mainPage extends State<MainPage> {
 
+  List questions = [{}];
   Map userData = {};
+  int _currentIndex=0;
+
+
+void getData() async {
   
-  String _lastSelected = 'TAB: 0';
-  String show = 'False';
-  bool showOverlay = false;
-  List<String> txt1 = [
-    "Question sur les produits 1",
-    "Question sur les produits 2"
-  ];
-  int nbItem = 2;
+     String id = userData["givenId"];
+     var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+     if (response.statusCode == 200){
+       if(this.mounted){
+       setState(() {
+         questions = json.decode(response.body);
+       });
+       }
+     }
+ }
 
-  void _selectedTab(int index) {
-    setState(() {
-      _lastSelected = 'TAB: $index';
 
-      if (index == 0) {
-        appBarTitle =
-            Text('Matières et produits', style: TextStyle(fontSize: 15));
+Widget createQuestionWidgets(){
+ 
+  return ListView.builder(
+    itemCount: questions.length,
+    itemBuilder:  (context ,index){
+      return Card(
+              color:Colors.grey[850],
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
+              child: ListTile(
+                title: Text(questions[index]["text"] ?? '',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(questions[index]["sender"]??""),
+                contentPadding: EdgeInsets.all(10),
+                onTap: () {
+                
+                 Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
+                       'questionId': questions[index]["_id"],
+                  });
+                },
+              ),
+            );
+    }
+    );
+  
+}
 
-        txt1 = ["Question sur les produits 1", "Question sur les produits 2"];
-        nbItem = txt1.length;
-      }
-      if (index == 1) {
-        appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
 
-        txt1 = [
-          "Question sur l'équipement 1",
-          "Question sur l'équipement 2",
-          "Question sur l'équipement 3"
-        ];
-        nbItem = txt1.length;
-      }
-      if (index == 2) {
-        appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
 
-        txt1 = ["Question sur les tâches 1"];
-        nbItem = txt1.length;
-      }
-      if (index == 3) {
-        appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
-
-        txt1 = ["Question sur les individus 1", "Question sur les individus 2"];
-        nbItem = txt1.length;
-      }
-      if (index == 4) {
-        appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
-
-        txt1 = [
-          "Question sur l'environnement 1",
-          "Question sur l'environnement 2",
-          "Question sur l'environnement 3",
-          "Question sur l'environnement 4",
-          "Question sur l'environnement 5",
-          "Question sur l'environnement 6"
-        ];
-        nbItem = txt1.length;
-      }
-      if (index == 5) {
-        appBarTitle =
-            Text('Ressources humaines', style: TextStyle(fontSize: 15));
-
-        txt1 = [
-          "Question sur les ressources humaines 1",
-          "Question sur les ressources humaines 2"
-        ];
-        nbItem = txt1.length;
-      }
-    });
-  }
-
-  void overlay() {
-    setState(() {
-      if (showOverlay) {
-        showOverlay = false;
-        show = 'FALSE';
-      } else if (!showOverlay) {
-        showOverlay = true;
-        show = 'TRUE';
-      }
-    });
-  }
-
-  void _selectedFab(int index) {
-    setState(() {
-      _lastSelected = 'FAB: $index';
-    });
-  }
+  
   
   @override
   Widget build(BuildContext context) {
 
-    userData = ModalRoute.of(context).settings.arguments;
+  userData = ModalRoute.of(context).settings.arguments;
+  getData();
+
 
     return Scaffold(
       drawer: Container(color:Colors.grey[900],child:NavDrawer()),
@@ -130,56 +102,44 @@ class mainPage extends State<MainPage> {
           actions: <Widget>[
             IconButton(icon: Icon(Icons.search), onPressed: () {})
           ]),
-      body: listViewWidget(
-        txt: txt1,
-        nbItem: nbItem,
-      ),
-      bottomNavigationBar: FABBottomAppBar(
-        onTabSelected: _selectedTab,
-        selectedColor: Colors.cyan,
-        notchedShape: CircularNotchedRectangle(),
-        backgroundColor: Colors.grey[900],
+      body: createQuestionWidgets() ,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
         items: [
-          FABBottomAppBarItem(text: "M"),
-          FABBottomAppBarItem(text: "E"),
-          FABBottomAppBarItem(text: "T"),
-          FABBottomAppBarItem(text: "I"),
-          FABBottomAppBarItem(text: "E"),
-          FABBottomAppBarItem(text: "R"),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            title: Text("M")
+          ),
+          BottomNavigationBarItem(
+               icon: Icon(Icons.scanner),
+            title: Text("É")
+          ),
+          BottomNavigationBarItem(
+               icon: Icon(Icons.group_work),
+            title: Text("T")
+          ),
+          BottomNavigationBarItem(
+               icon: Icon(Icons.people),
+            title: Text("I")
+          ),
+          BottomNavigationBarItem(
+               icon: Icon(Icons.work),
+            title: Text("E")
+          ),
+          BottomNavigationBarItem(
+               icon: Icon(Icons.people),
+            title: Text("R")
+          ),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-                CupertinoPageRoute(builder: (context) => (pageQuestion())));
-          },
-          backgroundColor: Colors.cyan,
-          child: Icon(Icons.question_answer)),
+           onTap: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+        },
+        ),
+      
     );
   }
 
-  Widget _buildFab(BuildContext context) {
-    final icons = [Icons.sms, Icons.mic, Icons.camera];
-    return AnchoredOverlay(
-      child: FloatingActionButton(
-        onPressed: () {
-          overlay();
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.question_answer),
-        elevation: 2.0,
-      ),
-      showOverlay: showOverlay,
-      overlayBuilder: (context, offset) {
-        return CenterAbout(
-          position: Offset(offset.dx, offset.dy - icons.length * 35.0),
-          child: FabWithIcons(
-            icons: icons,
-            onIconTapped: _selectedFab,
-          ),
-        );
-      },
-    );
-  }
+  
 }

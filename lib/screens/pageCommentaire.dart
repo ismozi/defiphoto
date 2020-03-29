@@ -5,19 +5,13 @@ import 'messageReceivedWidget.dart';
 import 'messageSentWidget.dart';
 
 class pageCommentaire extends StatefulWidget {
-  final String txt;
-
-  pageCommentaire({
-    this.txt,
-  });
-
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
 }
 
 class pageCommentaireState extends State<pageCommentaire> {
 
-
+String questionId;
 File imageFile;
   
   
@@ -37,6 +31,7 @@ File imageFile;
 
   @override
   Widget build(BuildContext context) {
+    questionId = ModalRoute.of(context).settings.arguments;
     return Scaffold(
         appBar: AppBar(
           title: Column(
@@ -58,7 +53,7 @@ File imageFile;
                     padding: const EdgeInsets.all(15),
                     itemCount: 1,
                     itemBuilder: (ctx, i) {
-                     return ReceivedMessagesWidget(txt: widget.txt);
+                     return ReceivedMessagesWidget(txt: questionId);
                     },
                   ),
             ),
