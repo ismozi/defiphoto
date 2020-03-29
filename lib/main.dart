@@ -8,16 +8,18 @@ import 'screens/pageCommentaire.dart';
 void main() => runApp(App());
 
 class App extends StatelessWidget {
+  final String s='';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
    debugShowCheckedModeBanner: false,
+   
   
   routes: <String, WidgetBuilder> {
     '/login': (BuildContext context) => new Login(),
     '/mainPageStudent' : (BuildContext context) => new MainPage(),
     '/progression' : (BuildContext context) => new Progression(),
-    '/pageQuestion' :(BuildContext context) => new pageCommentaire(),
+    '/pageQuestion' :(BuildContext context) => new pageCommentaire(s),
     '/aide' : (BuildContext context) => new InformationTab()
   },
 

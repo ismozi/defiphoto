@@ -8,7 +8,9 @@ import 'messageSentWidget.dart';
 class pageCommentaire extends StatefulWidget {
   String idConvo;
 
-  pageCommentaire({this.idConvo});
+  pageCommentaire(this.idConvo) {
+    this.idConvo;
+  }
     
 
   @override
