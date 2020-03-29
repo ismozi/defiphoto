@@ -80,9 +80,7 @@ class listViewWidgetState extends State<listViewWidget> {
           itemExtent: 150,
           padding: const EdgeInsets.all(7.0),
           itemBuilder: (context, position) {
-             
-           
-                        return _affichageTxt(questions, position);
+           return _affichageTxt(questions, position);
           }),
     );
   }
