@@ -8,7 +8,7 @@ import 'screens/pageCommentaire.dart';
 void main() => runApp(App());
 
 class App extends StatelessWidget {
-  final String s='';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +19,7 @@ class App extends StatelessWidget {
     '/login': (BuildContext context) => new Login(),
     '/mainPageStudent' : (BuildContext context) => new MainPage(),
     '/progression' : (BuildContext context) => new Progression(),
-    '/pageQuestion' :(BuildContext context) => new pageCommentaire(s),
+    '/pageQuestion' :(BuildContext context) => new pageCommentaire(),
     '/aide' : (BuildContext context) => new InformationTab()
   },
 

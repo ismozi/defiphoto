@@ -28,7 +28,7 @@ class _LoginState extends State<Login> {
       Map authData = json.decode(response.body);
       var token =  authData["token"];
       var userData =  Jwt.parseJwt(token);
-      print(userData);
+      
       if (this.mounted){
       setState(() {
       _isLoading =false;

@@ -4,22 +4,35 @@ import 'package:flutter/material.dart';
 import 'package:test_flutter/models/message_model.dart';
 import '../widget/messageReceivedWidget.dart';
 import '../widget/messageSentWidget.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class pageCommentaire extends StatefulWidget {
-  String idConvo;
-
-  pageCommentaire(this.idConvo) {
-    this.idConvo;
-  }
-    
-
+  
+  pageCommentaire();
+  
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
 }
 
 class pageCommentaireState extends State<pageCommentaire> {
+
   File imageFile;
   TextEditingController messageSend = new TextEditingController();
+  Map userData = {};
+   List commentaires = [{}];
+
+  getData() async {
+  
+     String id = userData["givenId"];
+     
+     var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
+     if (response.statusCode == 200){
+       setState(() {
+         commentaires =  json.decode(response.body);
+       });     
+     }
+ }
 
   _buildMessage(Message message, bool isMe) {
     final Container msg = Container(

@@ -26,7 +26,7 @@ class mainPage extends State<MainPage> {
   getData() async {
   
      String id = userData["givenId"];
-     print(id);
+     
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
      if (response.statusCode == 200){
        setState(() {
@@ -36,45 +36,64 @@ class mainPage extends State<MainPage> {
  }
 
 
-
   getBody(int currentIndex){
      String section;
-     dynamic questionSection;
+     var questionSection;
+     List questionSectionTab = new List();
         getData();
     setState(() {
     switch(currentIndex){
       case 0 :
         section = "M";
+        appBarTitle =
+            Text('Matières et produits', style: TextStyle(fontSize: 15));
         break;
        case 1:
         section = "É";
+        appBarTitle =
+            Text('Équipement', style: TextStyle(fontSize: 15));
         break;
          case 2 :
         section = "T";
+        appBarTitle =
+            Text('Tâches', style: TextStyle(fontSize: 15));
         break;
          case 3 :
         section = "I";
+        appBarTitle =
+            Text('Individu', style: TextStyle(fontSize: 15));
         break;
          case 4 :
         section = "E";
+        appBarTitle =
+            Text('Environnement', style: TextStyle(fontSize: 15));
         break;
          case 5 :
         section = "R";
+        appBarTitle =
+            Text('Ressources humaines', style: TextStyle(fontSize: 15));
         break;
     }
     print(section);
-    print(questions);
+
+    
+    
     for(var i=0; i < questions.length ; i++){
+      questionSection = {
+          "id":questions[i]["_id"],
+          "sender":questions[i]["sender"],
+          "text":questions[i]["text"]
+        };
       if(questions[i]["type"]==section && questions[i]!= null){
-        questionSection.add(questions[i]);
+        questionSectionTab.add(questionSection);     
       }
     }
-print(questionSection);
+
     });
     
-    return Container();
+    return Container(child:
     ListView.builder(
-    itemCount: questionSection.length,
+    itemCount: questionSectionTab.length,
     itemBuilder:  (context ,index){
       return Card(
               color:Colors.grey[850],
@@ -87,13 +106,13 @@ print(questionSection);
                   side: BorderSide(width: 0.5, color: Colors.grey)),
               child: ListTile(
                 leading: Icon(Icons.question_answer ,size: 40),
-                title: Text(questionSection[index]["text"] ??'',
+                title: Text(questionSectionTab[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(questionSection[index]["sender"]??""),
+                subtitle: Text(questionSectionTab[index]["sender"]??""),
                 contentPadding: EdgeInsets.all(10),
                 onTap: () {
                 
@@ -104,7 +123,7 @@ print(questionSection);
               ),
             );
         }
-    );
+    ));
 
 
   }
@@ -116,7 +135,7 @@ print(questionSection);
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;
           getData();
-          print(userData);
+          
        });
    
     });
