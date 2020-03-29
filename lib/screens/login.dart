@@ -4,7 +4,8 @@ import 'mainPageStudent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
-import '../data/user.dart';
+import'../data/user.dart';
+
 
 
 class Login extends StatefulWidget {
@@ -19,6 +20,7 @@ class _LoginState extends State<Login> {
   TextEditingController passwd = new TextEditingController();
 
  signIn(String id , String password) async {
+    
     var data = {
         "givenId" : id.trim().toString(),
         "password" : password.trim().toString()
@@ -51,9 +53,7 @@ class _LoginState extends State<Login> {
       });
     }
    else {
-     setState(() {
-       
-         return showDialog<void>(
+     return showDialog<void>(
                                 context: context,
                                 barrierDismissible: false, 
                                 builder: (BuildContext context) {
@@ -70,7 +70,7 @@ class _LoginState extends State<Login> {
                                       FlatButton(
                                         child: Text('Re-essayer'),
                                         onPressed: () {
-                                          
+
                                           _isLoading= false;
                                           print('pozz c off');
                                           Navigator.of(context).pop();
@@ -80,7 +80,9 @@ class _LoginState extends State<Login> {
                                   );
                                 },
                               );
-     });
+       
+         
+     
      
      
     }

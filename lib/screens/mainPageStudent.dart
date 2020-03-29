@@ -72,6 +72,46 @@ Widget createQuestionWidgets(){
   
 }
 
+  
+  String _lastSelected = 'TAB: 0';
+  String show = 'False';
+  bool showOverlay = false;
+
+  String type='M';
+ 
+
+  void _selectedTab(int index) {
+    setState(() {
+      _lastSelected = 'TAB: $index';
+
+      if (index == 0) {
+        appBarTitle =
+            Text('Matières et produits', style: TextStyle(fontSize: 15));
+            type='M';
+      }
+      if (index == 1) {
+        appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
+        type='E1';
+      }
+      if (index == 2) {
+        appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
+        type='T';
+      }
+      if (index == 3) {
+        appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
+        type='I';
+      }
+      if (index == 4) {
+        appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
+        type='E';
+      }
+      if (index == 5) {
+        appBarTitle =
+            Text('Ressources humaines', style: TextStyle(fontSize: 15));
+            type='R';
+      }
+    });
+  }
 
 
   
@@ -105,6 +145,14 @@ Widget createQuestionWidgets(){
       body: createQuestionWidgets() ,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
+      body: listViewWidget(
+       type: type
+      ),
+      bottomNavigationBar: FABBottomAppBar(
+        onTabSelected: _selectedTab,
+        selectedColor: Colors.cyan,
+        notchedShape: CircularNotchedRectangle(),
+        backgroundColor: Colors.grey[900],
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.school),

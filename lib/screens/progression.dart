@@ -23,8 +23,15 @@ class Progression extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Card(
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
             child: Container(
-              color: Colors.grey[750],
+              color: Colors.grey[850],
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,8 +63,15 @@ class Progression extends StatelessWidget {
             ),
           ),
           Card(
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
             child: Container(
-              color: Colors.grey[750],
+              color: Colors.grey[850],
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,8 +103,15 @@ class Progression extends StatelessWidget {
             ),
           ),
           Card(
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
             child: Container(
-              color: Colors.grey[750],
+              color: Colors.grey[850],
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,8 +143,15 @@ class Progression extends StatelessWidget {
             ),
           ),
           Card(
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
             child: Container(
-              color: Colors.grey[750],
+              color: Colors.grey[850],
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,8 +183,15 @@ class Progression extends StatelessWidget {
             ),
           ),
           Card(
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
             child: Container(
-              color: Colors.grey[750],
+              color: Colors.grey[850],
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -188,8 +223,15 @@ class Progression extends StatelessWidget {
             ),
           ),
           Card(
+            shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      bottomRight: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                      topLeft: Radius.circular(15)),
+                  side: BorderSide(width: 0.5, color: Colors.grey)),
             child: Container(
-              color: Colors.grey[750],
+              color: Colors.grey[850],
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,7 +273,7 @@ class Progression extends StatelessWidget {
                     fontSize: 28.0,
                     fontWeight: FontWeight.w800,
                     color: Colors.blueGrey,
-                    decoration: TextDecoration.underline,
+                    
                   ),
                 ),
                 CircularPercentIndicator(

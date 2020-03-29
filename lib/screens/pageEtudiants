@@ -1,0 +1,167 @@
+import 'models/popupPage.dart';
+
+class PageEtudiants extends StatefulWidget {
+  Etudiant etudiant;
+
+  PageEtudiants({this.etudiant});
+
+  @override
+  _PageEtudiantsState createState() => _PageEtudiantsState();
+}
+
+class _PageEtudiantsState extends State<PageEtudiants>
+    with TickerProviderStateMixin {
+  TabController tabController;
+  static final int NB_TAB = 3;
+  static final double TAILE_ICON = 22;
+  static final Color ICON_COLOR = Colors.white;
+
+  //TODO WIDGET POUR LA PAGE PARAMETRE
+  // Widget papgeParametre
+  
+  //TODO WIDGET POUR LA PAGE MODIFIER
+  // Widget papgeModifier
+
+
+  PopupPage popupParametre;
+  PopupPage popupModifier;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    tabController = TabController(length: NB_TAB, vsync: this, initialIndex: 1);
+    popupParametre = new PopupPage.defaut(
+
+        //TODO WIDGET POUR MODIFIER LES PARAMETRE
+        Container(
+          child: Text('Mettre les parametre'),
+        ),
+        context,
+        'Parametre');
+
+    popupModifier = new PopupPage.defaut(
+
+        // TODO WIDGET POUR MODIFER L ELEVE
+        Container(
+          child: Text('Modifier levee'),
+        ),
+        context,
+        "Modfier l'élève");
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    tabController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    const double bdSize = 16, bdSizeSub = 10;
+    return BackdropScaffold(
+      iconPosition: BackdropIconPosition.action,
+      title: Text(widget.etudiant._nomComplet),
+      backLayer: Column(
+        children: <Widget>[
+          Container(),
+          Divider(
+            thickness: 4,
+          ),
+          SizedBox(
+            height: 5,
+          ),
+          ListTile(
+            leading: Icon(Icons.edit),
+            title: Text(
+              "Modifier l'élève",
+              style: TextStyle(fontSize: bdSize, fontWeight: FontWeight.w400),
+            ),
+            subtitle: Text(
+              'description',
+              style: TextStyle(fontSize: bdSizeSub),
+            ),
+            onTap: () {
+              popupModifier.showPopup();
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text(
+              "Paramètres",
+              style: TextStyle(fontSize: bdSize, fontWeight: FontWeight.w400),
+            ),
+            subtitle: Text(
+              'description',
+              style: TextStyle(fontSize: bdSizeSub),
+            ),
+            onTap: () {
+              popupParametre.showPopup();
+            },
+          ),
+          Builder(
+            builder: (context) => ListTile(
+              leading: Icon(
+                Icons.delete,
+                color: Colors.red,
+              ),
+              title: Text(
+                "Supprimer l'élève",
+                style: TextStyle(fontSize: bdSize, fontWeight: FontWeight.w400),
+              ),
+              subtitle: Text(
+                '',
+                style: TextStyle(fontSize: bdSizeSub),
+              ),
+              onTap: () {
+                //TODO APRES ETRE REVENU A LA PAGE DACCUEIL
+
+                //  Navigator.pop(context);
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  duration: Duration(seconds: 4),
+                  elevation: 14,
+                  backgroundColor: Colors.white,
+                  content: Text('Supprimer'),
+                ));
+              },
+            ),
+          ),
+        ],
+      ),
+      frontLayer: Scaffold(
+        appBar: AppBar(
+          leading: Container(),
+          elevation: 15,
+          bottom: TabBar(
+            controller: tabController,
+            tabs: <Widget>[
+              Tab(
+                text: 'Question',
+                icon: Icon(Icons.question_answer),
+              ),
+              Tab(
+                icon: Icon(Icons.account_circle),
+                text: 'Profile',
+              ),
+              Tab(
+                text: 'Progression',
+                icon: Icon(Icons.fitness_center),
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            Container(),
+            Container(),
+            Container(),
+          ],
+          controller: tabController,
+        ),
+      ),
+      headerHeight: MediaQuery.of(context).size.height * .70,
+      frontLayerBorderRadius: BorderRadius.circular(14),
+    );
+  }
+}
