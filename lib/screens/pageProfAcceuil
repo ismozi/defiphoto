@@ -181,19 +181,6 @@ class _PageProfAcceuilState extends State<PageProfAcceuil>
                   ),
                   onTap: () {},
                 ),
-                //  Divider(),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Row(
-                    children: <Widget>[
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text('Paramètres')
-                    ],
-                  ),
-                  onTap: () {},
-                ),
                 // Divider(),
                 Divider(),
                 SizedBox(
@@ -585,3 +572,4 @@ Function funcionApres;
       )
   );
 }
+
