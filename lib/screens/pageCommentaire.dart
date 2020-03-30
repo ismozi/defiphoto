@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:test_flutter/models/message_model.dart';
+import 'package:test_flutter/screens/main.dart';
 import '../widget/messageReceivedWidget.dart';
 import '../widget/messageSentWidget.dart';
 import 'package:http/http.dart' as http;
@@ -19,13 +20,15 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   File imageFile;
   TextEditingController messageSend = new TextEditingController();
-  Map userData = {};
-   List commentaires = [{}];
+  Map questionData = {};
+  List commentaires = [{}];
+
+
+  
 
   getData() async {
   
-     String id = userData["givenId"];
-     
+     String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
      if (response.statusCode == 200){
        setState(() {
@@ -93,17 +96,17 @@ class pageCommentaireState extends State<pageCommentaire> {
     );
   }
 
-  _gestionTab() {
-    print(widget.idConvo);
-    List<Message> commentaires = new List();
-    for (int i = 0; i < messages.length; i++) {
-      Message commentaire = messages[i];
-      if (widget.idConvo == commentaire.idConvo) {
-        commentaires.add(commentaire);
-      }
-    }
-    return commentaires;
-  }
+  // _gestionTab() {
+  //   print(widget.idConvo);
+  //   List<Message> commentaires = new List();
+  //   for (int i = 0; i < messages.length; i++) {
+  //     Message commentaire = messages[i];
+  //     if (widget.idConvo == commentaire.idConvo) {
+  //       commentaires.add(commentaire);
+  //     }
+  //   }
+  //   return commentaires;
+  // }
 
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -119,19 +122,37 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
   }
 
-  _envoyerMessage() {
-    messages.add(Message(
-        sender: currentUser,
-        time: '4:30 PM',
-        text: messageSend.text,
-        idConvo: widget.idConvo));
+  // _envoyerMessage() {
+  //   messages.add(Message(
+  //       sender: currentUser,
+  //       time: '4:30 PM',
+  //       text: messageSend.text,
+  //       idConvo: widget.idConvo));
+  // }
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(milliseconds: 100)).then((_) {
+      if(this.mounted){
+       setState(() {
+           questionData = ModalRoute.of(context).settings.arguments;
+          getData();
+       });
+      }
+    });
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    List<Message> commentaires = _gestionTab();
+    // List<Message> commentaires = _gestionTab();
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed:() {Navigator.of(context).pop();}),
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +207,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     icon: Icon(Icons.send, color: Colors.black),
                                     onPressed: () {
                                       setState(() {
-                                        _envoyerMessage();
+                                        // _envoyerMessage();
                                         messageSend.clear();
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
@@ -207,13 +228,13 @@ class pageCommentaireState extends State<pageCommentaire> {
                                   icon: Icon(Icons.photo_camera,
                                       color: Colors.black),
                                   onPressed: () {
-                                    _ouvrirCamera();
+                                    // _ouvrirCamera();
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.photo, color: Colors.black),
                                   onPressed: () {
-                                    _ouvrirGallery();
+                                    // _ouvrirGallery();
                                   },
                                 )
                               ],
