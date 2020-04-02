@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'messageReceivedWidget.dart';
 
@@ -13,6 +15,27 @@ class pageQuestion extends StatefulWidget {
 }
 
 class pageQuestionState extends State<pageQuestion> {
+  
+  File imageFile;
+  
+  TextEditingController messageSend = new TextEditingController();
+
+  _ouvrirGallery() async{
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    this.setState((){
+      imageFile = image;
+    });
+  }
+
+  _ouvrirCamera() async{
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    this.setState((){
+      imageFile = image;
+    });
+  }
+
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,11 +89,11 @@ class pageQuestionState extends State<pageQuestion> {
                             ),
                             IconButton(
                               icon: Icon(Icons.photo_camera,color:Colors.black),
-                              onPressed: () {},
+                              onPressed: () {_ouvrirCamera();},
                             ),
                             IconButton(
                               icon: Icon(Icons.photo,color:Colors.black),
-                              onPressed: () {},
+                              onPressed: () {_ouvrirGallery();},
                             )
                           ],
                         ),

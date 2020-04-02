@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 class SentMessagesWidget extends StatelessWidget {
   final int i;
   final String txt;
+  final Image image;
   const SentMessagesWidget({
     Key key,
     this.txt,
+    this.image,
     @required this.i,
   }) : super(key: key);
 
