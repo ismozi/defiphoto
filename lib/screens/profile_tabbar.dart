@@ -3,18 +3,23 @@ import 'menu.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class InfoEleve extends StatelessWidget {
+
+  static int idStudent = 1856423;
+  static String name = 'Kevin';
+  static String lastName = 'Chan';
+  static String stage = 'Plomberie';
+  static String year = '2020-2021';
+  static String mail = '1856423@bdeb.qc.ca';
+
   static int percentageM = 10;
   static int percentageE1 = 50;
   static int percentageT = 63;
   static int percentageI = 59;
   static int percentageE2 = 25;
   static int percentageR = 38;
+  static int percTot = (percentageE1+percentageE2+percentageI+percentageM+percentageR+percentageT)~/6;
 
-  String nom = 'Raouf';
-  String nomFamille = 'Babari';
-  String ecole = 'Bois de Boulogne';
-  int id = 1826597;
-  String courriel = 'raouf.babari@bdeb.qc.ca';
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,132 +46,139 @@ class InfoEleve extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            Column(children: <Widget>[
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/avatar.jpg'),
-                radius: 85.0,
+            Padding(
+              padding: EdgeInsets.fromLTRB(30, 40, 20, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Center(
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('assets/avatar.jpg'),
+                      radius: (45.0),
+                    ),
+                  ),
+                  Divider(
+                    height: 40,
+                    color: Colors.grey[800],
+                  ),
+                  Text('ID',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        letterSpacing: 2.0,
+                      )),
+                  SizedBox(height: 10),
+                  Text('$idStudent',
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          letterSpacing: 2.0,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20),
+                  Text('Prénom',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        letterSpacing: 2.0,
+                      )),
+                  SizedBox(height: 10),
+                  Text('$name',
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          letterSpacing: 2.0,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20),
+                  Text('Nom',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        letterSpacing: 2.0,
+                      )),
+                  SizedBox(height: 10),
+                  Text('$lastName',
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          letterSpacing: 2.0,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.accessibility_new,
+                        color: Colors.grey[400],
+                      ),
+                      Text(
+                        'Stage',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          letterSpacing: 2.0,
+                        ),
+                      ),
+                      
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text('$stage',
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          letterSpacing: 2.0,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20),
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.assignment_ind,
+                        color: Colors.grey[400],
+                      ),
+                      Text(
+                        'Année',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          letterSpacing: 2.0,
+                        ),
+                      ),
+                      
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text('$year',
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          letterSpacing: 2.0,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: 20),
+                  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.mail,
+                            color: Colors.grey[400],
+                          ),
+                          Text(
+                            'Courriel',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 10),
+                      Text('$mail',
+                          style: TextStyle(
+                              color: Colors.cyan,
+                              letterSpacing: 2.0,
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold)),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ],
               ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Card(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'ID: ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.cyan,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          Text(
-                            '$id ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Nom: ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.cyan,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          Text(
-                            '$nomFamille ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Prénom: ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.cyan,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          Text(
-                            '$nom ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'École: ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.cyan,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          Text(
-                            '$ecole ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Card(
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            'Courriel: ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.cyan,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                          Text(
-                            '$courriel ',
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]),
-            ]),
+            ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -189,7 +201,7 @@ class InfoEleve extends StatelessWidget {
                         LinearPercentIndicator(
                           width: 230.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: percentageM/100,
                           backgroundColor: Colors.grey[300],
                           progressColor: Colors.cyan,
                         ),
@@ -222,7 +234,7 @@ class InfoEleve extends StatelessWidget {
                         LinearPercentIndicator(
                           width: 230.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: percentageE1/100,
                           backgroundColor: Colors.grey[300],
                           progressColor: Colors.cyan,
                         ),
@@ -255,7 +267,7 @@ class InfoEleve extends StatelessWidget {
                         LinearPercentIndicator(
                           width: 230.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: percentageT/100,
                           backgroundColor: Colors.grey[300],
                           progressColor: Colors.cyan,
                         ),
@@ -288,7 +300,7 @@ class InfoEleve extends StatelessWidget {
                         LinearPercentIndicator(
                           width: 230.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: percentageI/100,
                           backgroundColor: Colors.grey[300],
                           progressColor: Colors.cyan,
                         ),
@@ -321,7 +333,7 @@ class InfoEleve extends StatelessWidget {
                         LinearPercentIndicator(
                           width: 230.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: percentageE2/100,
                           backgroundColor: Colors.grey[300],
                           progressColor: Colors.cyan,
                         ),
@@ -354,7 +366,7 @@ class InfoEleve extends StatelessWidget {
                         LinearPercentIndicator(
                           width: 230.0,
                           lineHeight: 14.0,
-                          percent: 0.5,
+                          percent: percentageR/100,
                           backgroundColor: Colors.grey[300],
                           progressColor: Colors.cyan,
                         ),
@@ -387,11 +399,11 @@ class InfoEleve extends StatelessWidget {
                         radius: 160.0,
                         progressColor: Colors.redAccent,
                         backgroundColor: Colors.grey[300],
-                        percent: 0.5,
+                        percent: percTot/100,
                         animation: true,
                         lineWidth: 30.0,
                         center: Text(
-                          '50%',
+                          '$percTot%',
                           style: TextStyle(
                             fontSize: 35.0,
                             color: Colors.redAccent,
