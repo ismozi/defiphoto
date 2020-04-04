@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'menu.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class InfoEleve extends StatelessWidget {
+class InfoEleve extends StatelessWidget { 
   static int idStudent = 1856423;
   static String name = 'Kevin';
   static String lastName = 'Chan';
@@ -21,8 +21,7 @@ class InfoEleve extends StatelessWidget {
           percentageI +
           percentageM +
           percentageR +
-          percentageT) ~/
-      6;
+          percentageT) ~/ 6;
 
   @override
   Widget build(BuildContext context) {
