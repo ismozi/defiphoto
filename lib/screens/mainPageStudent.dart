@@ -28,7 +28,6 @@ class mainPage extends State<MainPage> {
   getData() async {
   
      String id = userData["givenId"];
-     
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
      if (response.statusCode == 200){
        setState(() {
@@ -119,7 +118,7 @@ class mainPage extends State<MainPage> {
                   
                 
                  Navigator.pushReplacementNamed(context,'/pageCommentaire',arguments: {
-                       'questionId': questionSection[index]["_id"],
+                       'questionId': questionSectionTab[index]["id"],
                   });
                 },
               ),

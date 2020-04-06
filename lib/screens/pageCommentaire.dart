@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:test_flutter/models/message_model.dart';
+import 'package:test_flutter/screens/main.dart';
 import '../widget/messageReceivedWidget.dart';
 import '../widget/messageSentWidget.dart';
 import 'package:http/http.dart' as http;
@@ -18,14 +18,15 @@ class pageCommentaire extends StatefulWidget {
 class pageCommentaireState extends State<pageCommentaire> {
 
   File imageFile;
-  TextEditingController messageSend = new TextEditingController();
-  Map userData = {};
-   List commentaires = [{}];
+  Map questionData = {};
+  List commentaires = [{}];
+  TextEditingController messageController = new TextEditingController();
 
-  getData() async {
+
   
-     String id = userData["givenId"];
-     
+
+  _recevoirMessage() async {
+     String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
      if (response.statusCode == 200){
        setState(() {
@@ -34,7 +35,22 @@ class pageCommentaireState extends State<pageCommentaire> {
      }
  }
 
-  _buildMessage(Message message, bool isMe) {
+ _envoyerMessage(String text , String sender , String questionId) async {
+
+    var data = {
+        "text" : text.trim(),
+        "sender" : sender.trim(),
+        "questionId" : questionId.trim()
+    };
+    print(data);
+    var response = await http.post("https://defiphoto-api.herokuapp.com/comments", body : data);
+    commentaires.add({
+      "text" : text.trim(),
+      "sender" : sender.trim(),
+    });
+  }
+
+  _buildMessage(Map message, bool isMe) {
     final Container msg = Container(
       margin: isMe
           ? EdgeInsets.only(
@@ -64,7 +80,7 @@ class pageCommentaireState extends State<pageCommentaire> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            message.time,
+            message["sender"],
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -73,7 +89,7 @@ class pageCommentaireState extends State<pageCommentaire> {
           ),
           SizedBox(height: 8.0),
           Text(
-            message.text,
+             message["text"],
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -93,17 +109,6 @@ class pageCommentaireState extends State<pageCommentaire> {
     );
   }
 
-  _gestionTab() {
-    
-    List<Message> commentaires = new List();
-    for (int i = 0; i < messages.length; i++) {
-      Message commentaire = messages[i];
-      
-        commentaires.add(commentaire);
-      
-    }
-    return commentaires;
-  }
 
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -119,19 +124,32 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
   }
 
-  _envoyerMessage() {
-    messages.add(Message(
-        sender: currentUser,
-        time: '4:30 PM',
-        text: messageSend.text,
-        ));
+  
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(Duration(milliseconds: 100)).then((_) {
+      if(this.mounted){
+       setState(() {
+          questionData = ModalRoute.of(context).settings.arguments;
+          _recevoirMessage();
+       });
+      }
+    });
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    List<Message> commentaires = _gestionTab();
     return Scaffold(
+
+
         appBar: AppBar(
+          leading: IconButton(icon: Icon(Icons.arrow_back), onPressed:() {Navigator.of(context).pop();}),
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,6 +162,8 @@ class pageCommentaireState extends State<pageCommentaire> {
                 )
               ]),
         ),
+
+
         body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -156,13 +176,26 @@ class pageCommentaireState extends State<pageCommentaire> {
                     padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
-                      final Message message = commentaires[i];
-                      bool isMe = message.sender.id == currentUser.id;
-
+                      
+                      final Map message = commentaires[i];
+                      bool isMe = false;
+                      if(int.parse(message["sender"]) == int.parse(questionData["givenId"]) && message["sender"]!=null){
+                        setState(() {
+                          isMe = true;
+                        });
+                      }
+                      else{
+                        isMe = false;
+                      }
+                       
                       return _buildMessage(message, isMe);
                     },
                   ),
                 ),
+
+
+
+
                 Container(
                     margin: EdgeInsets.all(15.0),
                     height: 61,
@@ -186,15 +219,15 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     icon: Icon(Icons.send, color: Colors.black),
                                     onPressed: () {
                                       setState(() {
-                                        _envoyerMessage();
-                                        messageSend.clear();
+                                        _envoyerMessage(messageController.text,"Me", questionData["questionId"] );
+                                        messageController.clear();
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
                                       });
                                     }),
                                 Expanded(
                                   child: TextField(
-                                    controller: messageSend,
+                                    controller: messageController,
                                     style: new TextStyle(color: Colors.black),
                                     decoration: InputDecoration(
                                         hintText: "Répondre",

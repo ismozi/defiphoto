@@ -3,8 +3,7 @@ import'../data/user.dart';
 
 class Message {
   final User sender;
-  final String
-      time; // Would usually be type DateTime or Firebase Timestamp in production apps
+  // final String time; // Would usually be type DateTime or Firebase Timestamp in production apps
   final String text;
   final String type;
   final String idConvo;
@@ -12,7 +11,7 @@ class Message {
 
   Message({
     this.sender,
-    this.time,
+    // this.time,
     this.text,
     this.type,
     this.idConvo    
@@ -36,7 +35,6 @@ final User professeur = User(
 List<Message> chats = [
   Message(
     sender: professeur,
-    time: '5:30 PM',
     text: 'Envoi moi une photo de ton environnement de travail',
     type: 'E',
     idConvo: '1a'
@@ -44,7 +42,6 @@ List<Message> chats = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
     text: 'Envoi moi une photo de ton environnement de travail',
     type: 'E',
     idConvo: '1b'
@@ -52,7 +49,6 @@ List<Message> chats = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
     text: 'Envoi moi une photo des matières que tu utilises',
     type: 'M',
     idConvo: '1c'
@@ -60,7 +56,7 @@ List<Message> chats = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+
     text: 'Envoi moi une photo des tâches que tu réalises',
     type: 'T',
     idConvo: '1d'
@@ -68,7 +64,6 @@ List<Message> chats = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
     text: 'Envoi moi une photo des individus avec qui tu travailles',
     type: 'I',
     idConvo: '1e'
@@ -76,7 +71,6 @@ List<Message> chats = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
     text: 'Envoi moi une photo des individus avec qui tu travailles',
     type: 'I',
     idConvo: '1f'
@@ -84,7 +78,7 @@ List<Message> chats = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo de ton équipement de travail',
     type: 'E1',
     idConvo: '1g'
@@ -92,7 +86,7 @@ List<Message> chats = [
 
   Message(
     sender: professeur,
-    time: '5:30 PM',
+
     text: 'Envoi moi une photo de ressources humaines',
     type: 'R',
     idConvo: '1h'

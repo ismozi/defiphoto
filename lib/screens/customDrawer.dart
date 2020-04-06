@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'login.dart';
 import 'progression.dart';
-import 'mainPageStudent.dart';
+import 'profile_tabbar.dart';
+//import 'home.dart';
+import 'mainPage.dart';
 
 class customDrawer extends StatelessWidget {
   Map userData= {};
@@ -44,22 +46,27 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Tableau de bord'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () {Navigator.of(context).push(
+                    CupertinoPageRoute(builder: (context) => MainPage()));},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil'),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/progression')},
+            onTap: () {Navigator.of(context).push(
+                    CupertinoPageRoute(builder: (context) => InfoEleve()));},
           ),
           ListTile(
-            leading: Icon(Icons.info),
-            title: Text('Aide'),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/aide')}
+            leading: Icon(Icons.settings),
+            title: Text('Paramètres'),
+            onTap: () => {Navigator.of(context).pop()},
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter'),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/login')}
+            onTap: ()  {
+                      Navigator.of(context).push(
+                    CupertinoPageRoute(builder: (context) => Login()));
+                    },
           ),
         ],
       )),
