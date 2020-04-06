@@ -4,6 +4,7 @@ import 'package:test_flutter/screens/main.dart';
 import 'customDrawer.dart';
 import 'pageQuestion.dart';
 import '../data/user.dart';
+import '../widget/fabbottomappbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -20,6 +21,7 @@ class mainPage extends State<MainPage> {
   Map userData = {};
   int _currentIndex=0;
   String type;
+  String section='M';
  
 
 
@@ -35,49 +37,49 @@ class mainPage extends State<MainPage> {
      }
  }
 
+ void _selectedTab(int index) {
+    setState(() {
+
+      if (index == 0) {
+        appBarTitle =
+            Text('Matières et produits', style: TextStyle(fontSize: 15));
+            section='M';
+      }
+      else if (index == 1) {
+        appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
+        section='É';
+      }
+      else if (index == 2) {
+        appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
+        section='T';
+      }
+      else if (index == 3) {
+        appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
+        section='I';
+      }
+      else if (index == 4) {
+        appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
+        section='E';
+      }
+      else if (index == 5) {
+        appBarTitle =
+            Text('Ressources humaines', style: TextStyle(fontSize: 15));
+            section='R';
+      }
+    });
+  }
+
+
 
   getBody(int currentIndex){
-     String section;
+     
      var questionSection;
      List questionSectionTab = new List();
         getData();
-    setState(() {
-    switch(currentIndex){
-      case 0 :
-        section = "M";
-        appBarTitle =
-            Text('Matières et produits', style: TextStyle(fontSize: 15));
-        break;
-       case 1:
-        section = "É";
-        appBarTitle =
-            Text('Équipement', style: TextStyle(fontSize: 15));
-        break;
-         case 2 :
-        section = "T";
-        appBarTitle =
-            Text('Tâches', style: TextStyle(fontSize: 15));
-        break;
-         case 3 :
-        section = "I";
-        appBarTitle =
-            Text('Individu', style: TextStyle(fontSize: 15));
-        break;
-         case 4 :
-        section = "E";
-        appBarTitle =
-            Text('Environnement', style: TextStyle(fontSize: 15));
-        break;
-         case 5 :
-        section = "R";
-        appBarTitle =
-            Text('Ressources humaines', style: TextStyle(fontSize: 15));
-        break;
-    }
+    
+    
     print(section);
 
-    
-    
     for(var i=0; i < questions.length ; i++){
       questionSection = {
           "id":questions[i]["_id"],
@@ -89,7 +91,6 @@ class mainPage extends State<MainPage> {
       }
     }
 
-    });
     
     return Container(child:
     ListView.builder(
@@ -103,7 +104,7 @@ class mainPage extends State<MainPage> {
                       topRight: Radius.circular(15),
                       bottomLeft: Radius.circular(15),
                       topLeft: Radius.circular(15)),
-                  side: BorderSide(width: 0.5, color: Colors.grey)),
+                  side: BorderSide(width: 1, color: Colors.grey)),
               child: ListTile(
                 leading: Icon(Icons.question_answer ,size: 40),
                 title: Text(questionSectionTab[index]["text"] ??'',
@@ -113,8 +114,9 @@ class mainPage extends State<MainPage> {
                       fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(questionSectionTab[index]["sender"]??""),
-                contentPadding: EdgeInsets.all(10),
+                contentPadding: EdgeInsets.all(20),
                 onTap: () {
+                  
                 
                  Navigator.pushReplacementNamed(context,'/pageCommentaire',arguments: {
                        'questionId': questionSection[index]["_id"],
@@ -134,16 +136,11 @@ class mainPage extends State<MainPage> {
      Future.delayed(Duration(milliseconds: 100)).then((_) {
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;
-          getData();
-          
-       });
-   
+          getData();         
+       });   
     });
-  
   }
 
-  
-  
   @override
   Widget build(BuildContext context) {
 
@@ -166,44 +163,31 @@ class mainPage extends State<MainPage> {
           actions: <Widget>[
             IconButton(icon: Icon(Icons.search), onPressed: () {})
           ]),
-      body: getBody(_currentIndex) ,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
+      body: getBody(_currentIndex),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(onPressed: () {
+            Navigator.of(context).push(
+                CupertinoPageRoute(builder: (context) => (pageQuestion())));
+          },
+          backgroundColor: Colors.cyan,
+          child: Icon(Icons.question_answer)),
+      bottomNavigationBar: FABBottomAppBar(
+        onTabSelected: _selectedTab,
+        selectedColor: Colors.cyan,
+        notchedShape: CircularNotchedRectangle(),
         backgroundColor: Colors.grey[900],
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            title: Text("M")
-          ),
-          BottomNavigationBarItem(
-               icon: Icon(Icons.scanner),
-            title: Text("É")
-          ),
-          BottomNavigationBarItem(
-               icon: Icon(Icons.group_work),
-            title: Text("T")
-          ),
-          BottomNavigationBarItem(
-               icon: Icon(Icons.people),
-            title: Text("I")
-          ),
-          BottomNavigationBarItem(
-               icon: Icon(Icons.work),
-            title: Text("E")
-          ),
-          BottomNavigationBarItem(
-               icon: Icon(Icons.people),
-            title: Text("R")
-          ),
+          FABBottomAppBarItem(text: "M"),
+          FABBottomAppBarItem(text: "E"),
+          FABBottomAppBarItem(text: "T"),
+          FABBottomAppBarItem(text: "I"),
+          FABBottomAppBarItem(text: "E"),
+          FABBottomAppBarItem(text: "R"),
         ],
-           onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-        },
-        ),
+      ),
+      );
       
-    );
+    
   
   }
   

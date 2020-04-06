@@ -29,7 +29,7 @@ class pageCommentaireState extends State<pageCommentaire> {
      var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
      if (response.statusCode == 200){
        setState(() {
-         commentaires =  json.decode(response.body);
+         commentaires = json.decode(response.body);
        });     
      }
  }
@@ -94,13 +94,13 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   _gestionTab() {
-    print(widget.idConvo);
+    
     List<Message> commentaires = new List();
     for (int i = 0; i < messages.length; i++) {
       Message commentaire = messages[i];
-      if (widget.idConvo == commentaire.idConvo) {
+      
         commentaires.add(commentaire);
-      }
+      
     }
     return commentaires;
   }
@@ -124,7 +124,7 @@ class pageCommentaireState extends State<pageCommentaire> {
         sender: currentUser,
         time: '4:30 PM',
         text: messageSend.text,
-        idConvo: widget.idConvo));
+        ));
   }
 
   @override

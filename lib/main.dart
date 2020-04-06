@@ -4,6 +4,7 @@ import 'screens/mainPageStudent.dart';
 import 'screens/login.dart';
 import 'screens/progression.dart';
 import 'screens/pageCommentaire.dart';
+import 'screens/main.dart';
 
 void main() => runApp(App());
 
@@ -20,7 +21,8 @@ class App extends StatelessWidget {
     '/mainPageStudent' : (BuildContext context) => new MainPage(),
     '/progression' : (BuildContext context) => new Progression(),
     '/pageQuestion' :(BuildContext context) => new pageCommentaire(),
-    '/aide' : (BuildContext context) => new InformationTab()
+    '/aide' : (BuildContext context) => new Inpage()
+
   },
 
       theme: new ThemeData(
