@@ -98,14 +98,14 @@ List<Message> chats = [
 List<Message> messages = [
   Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo de ton environnement de travail',
     idConvo:'1a'
   ),
 
   Message(
     sender: professeur,
-    time: '5:30 PM',
+   
     text: 'Envoi moi une photo de ton environnement de travail',
     type: 'E',
     idConvo: '1b'
@@ -113,7 +113,7 @@ List<Message> messages = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo des matières que tu utilises',
     type: 'M',
     idConvo: '1c'
@@ -121,7 +121,7 @@ List<Message> messages = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo des tâches que tu réalises',
     type: 'T',
     idConvo: '1d'
@@ -129,7 +129,7 @@ List<Message> messages = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo des individus avec qui tu travailles',
     type: 'I',
     idConvo: '1e'
@@ -137,7 +137,7 @@ List<Message> messages = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+  
     text: 'Envoi moi une photo des individus avec qui tu travailles',
     type: 'I',
     idConvo: '1f'
@@ -145,7 +145,7 @@ List<Message> messages = [
 
    Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo de ton équipement de travail',
     type: 'E1',
     idConvo: '1g'
@@ -153,7 +153,7 @@ List<Message> messages = [
 
   Message(
     sender: professeur,
-    time: '5:30 PM',
+    
     text: 'Envoi moi une photo de ressources humaines',
     type: 'R',
     idConvo: '1h'

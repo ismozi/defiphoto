@@ -1,5 +1,9 @@
-import 'screens/pageEtudiants.dart';
-import 'screens/drawerProf.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
+import 'pageEtudiants.dart';
+import 'drawerProf.dart';
+import 'searchPage.dart';
 
 class PageProfAcceuil extends StatefulWidget {
   Professeur professeur;

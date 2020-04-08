@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:test_flutter/screens/main.dart';
+import 'package:test_flutter/screens/information.dart';
 import 'customDrawer.dart';
 import 'pageQuestion.dart';
 import '../data/user.dart';
@@ -29,7 +29,7 @@ class mainPage extends State<MainPage> {
   
      String id = userData["givenId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
-     if (response.statusCode == 200){
+     if (response.statusCode == 200&&this.mounted){
        setState(() {
          questions =  json.decode(response.body);
        });     
@@ -75,9 +75,6 @@ class mainPage extends State<MainPage> {
      var questionSection;
      List questionSectionTab = new List();
         getData();
-    
-    
-    print(section);
 
     for(var i=0; i < questions.length ; i++){
       questionSection = {
@@ -96,14 +93,14 @@ class mainPage extends State<MainPage> {
     itemCount: questionSectionTab.length,
     itemBuilder:  (context ,index){
       return Card(
-              color:Colors.grey[850],
+              color:Colors.grey[900],
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                      bottomLeft: Radius.circular(15),
-                      topLeft: Radius.circular(15)),
-                  side: BorderSide(width: 1, color: Colors.grey)),
+                      bottomRight: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                      bottomLeft: Radius.circular(20),
+                      topLeft: Radius.circular(20)),
+                  side: BorderSide(width: 1, color: Colors.grey[800])),
               child: ListTile(
                 leading: Icon(Icons.question_answer ,size: 40),
                 title: Text(questionSectionTab[index]["text"] ??'',

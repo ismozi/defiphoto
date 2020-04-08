@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
-import 'menu.dart';
+import 'customDrawer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
-class InfoEleve extends StatelessWidget { 
-  static int idStudent = 1856423;
-  static String name = 'Kevin';
-  static String lastName = 'Chan';
-  static String stage = 'Plomberie';
-  static String year = '2020-2021';
-  static String mail = '1856423@bdeb.qc.ca';
+class InfoEleve extends StatefulWidget { 
+  infoEleve createState() => new infoEleve();
+}
+
+class infoEleve extends State<InfoEleve> {
+  Map userData  = {};
+  static String idStudent;
+  static String name;
+  static String lastName;
+  static String stage;
+  static String yearDebut;
+  static String yearFin;
+  static String mail;
 
   static int percentageM = 10;
   static int percentageE1 = 50;
@@ -23,12 +29,37 @@ class InfoEleve extends StatelessWidget {
           percentageR +
           percentageT) ~/ 6;
 
+_setInfo(){
+  idStudent=userData["givenId"];
+  print(idStudent);
+  name=userData["firstName"];
+  lastName=userData["lastName"];
+  stage=userData["stageName"];
+  mail=userData["email"];
+  yearDebut=userData["yearDebut"];
+  yearFin = userData["yearFin"];
+
+
+}
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+     Future.delayed(Duration(milliseconds: 100)).then((_) {
+       setState(() {
+           userData = ModalRoute.of(context).settings.arguments;   
+                
+       _setInfo();
+       });   
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        drawer: Container(color: Colors.grey[900], child: NavDrawer()),
         appBar: AppBar(
           backgroundColor: Colors.grey[900],
           title: Column(
@@ -148,7 +179,7 @@ class InfoEleve extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: 10),
-                            Text('$year',
+                            Text('$yearDebut - $yearFin',
                                 style: TextStyle(
                                     color: Colors.cyan,
                                     letterSpacing: 2.0,

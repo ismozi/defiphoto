@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:test_flutter/screens/main.dart';
+import 'package:test_flutter/screens/information.dart';
 import '../widget/messageReceivedWidget.dart';
 import '../widget/messageSentWidget.dart';
 import 'package:http/http.dart' as http;
@@ -25,16 +25,17 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   
 
-  _recevoirMessage() async {
+  getData() async {
+  
      String id = questionData["questionId"];
-     var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
-     if (response.statusCode == 200){
+     print(id);
+     var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+     if (response.statusCode == 200&&this.mounted){
        setState(() {
-         commentaires = json.decode(response.body);
+         commentaires =  json.decode(response.body);
        });     
      }
  }
-
  _envoyerMessage(String text , String sender , String questionId) async {
 
     var data = {
@@ -42,7 +43,7 @@ class pageCommentaireState extends State<pageCommentaire> {
         "sender" : sender.trim(),
         "questionId" : questionId.trim()
     };
-    print(data);
+  
     var response = await http.post("https://defiphoto-api.herokuapp.com/comments", body : data);
     commentaires.add({
       "text" : text.trim(),
@@ -134,7 +135,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          _recevoirMessage();
+          getData();
        });
       }
     });
@@ -176,7 +177,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                     padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
-                      
+                      print(commentaires[i]["text"]);
                       final Map message = commentaires[i];
                       bool isMe = false;
                       if(int.parse(message["sender"]) == int.parse(questionData["givenId"]) && message["sender"]!=null){

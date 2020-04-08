@@ -39,7 +39,9 @@ class _LoginState extends State<Login> {
             'lastName': userData["lastName"],
             'email': userData["email"],
             'role': userData["role"],
-            'stageName' : userData['stageName']
+            'stageName' : userData['stageName'],
+            'yearDebut' : userData['schoolYearBegin'],
+            'yearFin' : userData['schoolYearEnd'],
         });
       }
       if(userData["role"]=="P"){
