@@ -114,7 +114,7 @@ class mainPage extends State<MainPage> {
                 onTap: () {
                   
                 
-                 Navigator.pushReplacementNamed(context,'/pageCommentaire',arguments: {
+                 Navigator.pushNamed(context,'/pageCommentaire',arguments: {
                        'questionId': questionSectionTab[index]["id"],
                   });
                 },
