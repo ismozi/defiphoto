@@ -12,6 +12,7 @@ Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontSize: 15));
 
 class MainPage extends StatefulWidget {
+  
   mainPage createState() => new mainPage();
 }
 
@@ -22,6 +23,13 @@ class mainPage extends State<MainPage> {
   int _currentIndex=0;
   String type;
   String section='M';
+  bool isSearching = false;
+  
+  List filteredQuestionTab =[];
+  List questionSectionTab=[];
+     var questionSection;
+  
+
  
 
 
@@ -32,6 +40,9 @@ class mainPage extends State<MainPage> {
      if (response.statusCode == 200&&this.mounted){
        setState(() {
          questions =  json.decode(response.body);
+       
+         
+         
        });     
      }
  }
@@ -43,37 +54,48 @@ class mainPage extends State<MainPage> {
         appBarTitle =
             Text('Matières et produits', style: TextStyle(fontSize: 15));
             section='M';
+            _getQuestionSection();
+            filteredQuestionTab=questionSectionTab;
       }
       else if (index == 1) {
         appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
+        
         section='É';
+        
+        _getQuestionSection();
+        filteredQuestionTab=questionSectionTab;
+        
       }
       else if (index == 2) {
         appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
         section='T';
+        _getQuestionSection();
+        filteredQuestionTab=questionSectionTab;
       }
       else if (index == 3) {
         appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
         section='I';
+        _getQuestionSection();
+        filteredQuestionTab=questionSectionTab;
       }
       else if (index == 4) {
         appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
         section='E';
+        _getQuestionSection();
+        filteredQuestionTab=questionSectionTab;
       }
       else if (index == 5) {
         appBarTitle =
             Text('Ressources humaines', style: TextStyle(fontSize: 15));
             section='R';
+            _getQuestionSection();
+        filteredQuestionTab=questionSectionTab;
       }
     });
   }
 
-
-
-  getBody(int currentIndex){
-     
-     var questionSection;
-     List questionSectionTab = new List();
+_getQuestionSection(){
+  questionSectionTab = new List();
         getData();
 
     for(var i=0; i < questions.length ; i++){
@@ -86,13 +108,22 @@ class mainPage extends State<MainPage> {
         questionSectionTab.add(questionSection);     
       }
     }
+}
+
+  getBody(int currentIndex){
+    
 
     
     return Container(child:
+    filteredQuestionTab.length>0 ?
     ListView.builder(
-    itemCount: questionSectionTab.length,
+    itemCount: filteredQuestionTab.length,
     itemBuilder:  (context ,index){
-      return Card(
+      
+      return 
+      Padding(padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+              child:
+      Card(
               color:Colors.grey[900],
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -101,15 +132,16 @@ class mainPage extends State<MainPage> {
                       bottomLeft: Radius.circular(20),
                       topLeft: Radius.circular(20)),
                   side: BorderSide(width: 1, color: Colors.grey[800])),
-              child: ListTile(
+              child: 
+              ListTile(
                 leading: Icon(Icons.question_answer ,size: 40),
-                title: Text(questionSectionTab[index]["text"] ??'',
+                title: Text(filteredQuestionTab[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                subtitle: Text(questionSectionTab[index]["sender"]??""),
+                subtitle: Text(filteredQuestionTab[index]["sender"]??""),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
                   
@@ -119,21 +151,34 @@ class mainPage extends State<MainPage> {
                   });
                 },
               ),
-            );
+            ));
         }
-    ));
+    ):Center(child:CircularProgressIndicator()));
 
 
   }
 @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
-     Future.delayed(Duration(milliseconds: 100)).then((_) {
+  
+     Future.delayed(Duration(milliseconds: 500)).then((_) {
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;
-          getData();         
+       
+           
+          getData().then((data){
+            _getQuestionSection();
+            filteredQuestionTab=questionSectionTab;
+          });         
        });   
+    });
+  }
+  void _filterQuestions(value){
+    setState(() {
+      print(value);
+      filteredQuestionTab = questionSectionTab.where((questionSection)=>questionSection["text"].toLowerCase().contains(value.toLowerCase())).toList();
+      print(filteredQuestionTab);
     });
   }
 
@@ -141,10 +186,10 @@ class mainPage extends State<MainPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      drawer: Container(color:Colors.grey[900],child:customDrawer(userData: userData,)),
+      drawer: !isSearching ? Container(color:Colors.grey[900],child:customDrawer(userData: userData,)):null,
       appBar: AppBar(
         backgroundColor: Colors.grey[900],
-          title: Column(
+          title: !isSearching ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -155,9 +200,25 @@ class mainPage extends State<MainPage> {
                   opacity: 0.65,
                   child: appBarTitle,
                 )
-              ]),
+              ]): 
+              TextField(onChanged: (value){
+                  _filterQuestions(value);
+                },
+                decoration:InputDecoration(icon: Icon(Icons.search),hintText: "Rechercher la question")),
           actions: <Widget>[
-            IconButton(icon: Icon(Icons.search), onPressed: () {})
+            !isSearching ?
+            IconButton(icon: Icon(Icons.search), onPressed: () {
+              setState(() {
+                this.isSearching=true;
+                
+              });
+            }):
+            IconButton(icon: Icon(Icons.cancel), onPressed: () {
+              setState(() {
+                this.isSearching=false;
+                filteredQuestionTab=questionSectionTab;
+              });
+            })
           ]),
       body: getBody(_currentIndex),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

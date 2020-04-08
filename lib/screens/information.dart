@@ -12,7 +12,7 @@ class Inpage extends StatelessWidget {
             bottom: TabBar(
               tabs: [
                 Tab(text: "Description"),
-                Tab(text: "Metier"),
+                Tab(text: "M.É.T.I.E.R"),
                 Tab(text: "Fonctionnement"),
               ],
             ),
@@ -68,43 +68,41 @@ class Inpage extends StatelessWidget {
                   scrollDirection: Axis.vertical,
                   children: <Widget>[ 
                     Padding(padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    child: Text("Qu'est-ce que l'acronyme Métier ?",
+                    child: Text("Qu'est-ce que l'acronyme M.É.T.I.E.R ?",
                         style: TextStyle(
                           color: Colors.cyan,
                           fontSize: 29,
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.bold,
                         ),
                         
                       ),
                     ),
                     
-                    RichText(
-                      text: TextSpan(
+                   Padding(padding: EdgeInsets.fromLTRB(12, 0, 12, 16),
+                    child:Text("Matières et produits",
+                      
                         style: TextStyle(
                           color: Colors.cyan,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 23,
+                        
                         ),
-                        children: [
-                          TextSpan(text: "\n\n"),
-                          TextSpan(text: "Matières et produits"),
-                        ],
-                      ),
-                    ),
-                    Text("\n"),
+                        
+                      
+                    ),),
+                   
                     Card(
+                      color: Colors.grey[750],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      color: Colors.white,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(5, 8, 8, 5),
+                        padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              
                             ),
                             children: [
                               TextSpan(
@@ -115,86 +113,75 @@ class Inpage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    RichText(
-                      text: TextSpan(
+                    Padding(padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    child:Text("Équipement",
+                      
                         style: TextStyle(
                           color: Colors.cyan,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 23,
+                        
                         ),
-                        children: [
-                          TextSpan(text: "\n\n"),
-                          TextSpan(text: "Équipements"),
-                        ],
-                      ),
-                    ),
-                    Text("\n"),
+                        
+                      
+                    ),),
                     Card(
+                      color: Colors.grey[750],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(5, 8, 8, 5),
+                        padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              
                             ),
                             children: [
                               TextSpan(
                                   text:
-                                      "Prends en photo les équipements que tu utilises en lieu De Stage (les outils, les machines,...)"),
+                                      "Prends en photo les équipements que tu utilises en lieu De Stage (les outils, les machines,...)")
                             ],
                           ),
                         ),
                       ),
                     ),
-                    RichText(
-                      text: TextSpan(
+                   Padding(padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    child:Text("Tâches et exigences",
+                      
                         style: TextStyle(
                           color: Colors.cyan,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
+                          fontSize: 23,
+                        
                         ),
-                        children: [
-                          TextSpan(text: "\n\n"),
-                          TextSpan(text: "Tâches et exigences"),
-                        ],
-                      ),
-                    ),
-                    Text("\n"),
+                        
+                      
+                    ),),
                     Card(
+                      color: Colors.grey[750],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(5, 8, 8, 5),
+                        padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.white,
                               fontSize: 20,
-                              fontWeight: FontWeight.bold,
+                              
                             ),
                             children: [
                               TextSpan(
                                   text:
-                                      "Demande à l'un de tes collègues de te photographier pendant que tu réalises la tâche que tu as choisie de nous montrer. Raconte-nous ce que tu dois faire quand tu réalises cette tâche (dans l'ordre chronologique)"),
+                                      "Demande à l'un de tes collègues de te photographier pendant que tu réalises la tâche que tu as choisie de nous montrer. Raconte-nous ce que tu dois faire quand tu réalises cette tâche (dans l'ordre chronologique)")
                             ],
                           ),
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      color: Colors.redAccent,
-                      alignment: Alignment.bottomLeft,
-                    ),
+                    
                   ],
                 ),
               ),

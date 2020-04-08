@@ -55,7 +55,7 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.info),
             title: Text('Aide'),
-            onTap: () => {Navigator.of(context).pushNamed('/aide')}
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/aide')}
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
