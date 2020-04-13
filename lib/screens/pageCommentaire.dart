@@ -29,15 +29,18 @@ class pageCommentaireState extends State<pageCommentaire> {
   getData() async {
   
      String id = questionData["questionId"];
-     var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
+     var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200){
        setState(() {
-         commentaires =  json.decode(response.body);
-       });     
+         commentaires = json.decode(response.body);
+       });    
+        print(commentaires); 
+        
      }
+
  }
 
-  _buildMessage(Message message, bool isMe) {
+  _buildMessage(dynamic message, bool isMe) {
     final Container msg = Container(
       margin: isMe
           ? EdgeInsets.only(
@@ -69,7 +72,7 @@ class pageCommentaireState extends State<pageCommentaire> {
           
           SizedBox(height: 8.0),
           Text(
-            message.text,
+            message["text"],
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
@@ -127,10 +130,10 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 100)).then((_) {
+    Future.delayed(Duration(seconds: 5)).then((_) {
       if(this.mounted){
        setState(() {
-           questionData = ModalRoute.of(context).settings.arguments;
+          questionData = ModalRoute.of(context).settings.arguments;
           getData();
        });
       }
@@ -143,6 +146,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   @override
   Widget build(BuildContext context) {
     // List<Message> commentaires = _gestionTab();
+    bool isMe;
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(icon: Icon(Icons.arrow_back), onPressed:() {Navigator.of(context).pop();}),
@@ -170,10 +174,21 @@ class pageCommentaireState extends State<pageCommentaire> {
                     padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
-                      final Message message = commentaires[i];
-                      bool isMe = message.sender.id == currentUser.id;
-
-                      return _buildMessage(message, isMe);
+                      if(commentaires[i]['sender']!= null){
+                       try{
+                      
+                      if(int.parse(commentaires[i]['sender']) is int){
+                        isMe = true;
+                        return _buildMessage(commentaires[i], isMe);
+                      }
+                    
+                      }
+                      on FormatException catch(err){
+                        isMe = false;
+                        return _buildMessage(commentaires[i], isMe);
+                      }
+                    
+                      }
                     },
                   ),
                 ),

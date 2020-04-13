@@ -40,9 +40,6 @@ class mainPage extends State<MainPage> {
      if (response.statusCode == 200&&this.mounted){
        setState(() {
          questions =  json.decode(response.body);
-       
-         
-         
        });     
      }
  }
@@ -157,12 +154,10 @@ _getQuestionSection(){
 
 
   }
-@override
-  void initState() {
-    
-    super.initState();
-  
-     Future.delayed(Duration(milliseconds: 500)).then((_) {
+
+
+Future<Null> _refresh() async{
+   await Future.delayed(Duration(milliseconds: 500)).then((_) {
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;
        
@@ -173,7 +168,10 @@ _getQuestionSection(){
           });         
        });   
     });
+  return null;
   }
+
+  
   void _filterQuestions(value){
     setState(() {
       print(value);
@@ -181,6 +179,17 @@ _getQuestionSection(){
       print(filteredQuestionTab);
     });
   }
+
+
+
+
+@override
+  void initState() {
+    super.initState();
+     _refresh();
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -220,7 +229,7 @@ _getQuestionSection(){
               });
             })
           ]),
-      body: getBody(_currentIndex),
+      body: new RefreshIndicator(child: getBody(_currentIndex), onRefresh: _refresh) ,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(onPressed: () {
             Navigator.of(context).push(
@@ -244,8 +253,6 @@ _getQuestionSection(){
       ),
       );
       
-    
-  
   }
   
 }
