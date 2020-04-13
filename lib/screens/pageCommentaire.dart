@@ -40,57 +40,42 @@ class pageCommentaireState extends State<pageCommentaire> {
 
  }
 
-  _buildMessage(dynamic message, bool isMe) {
-    final Container msg = Container(
-      margin: isMe
-          ? EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
-              left: 80.0,
-            )
-          : EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
-            ),
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
-      width: MediaQuery.of(context).size.width * 0.75,
-      decoration: BoxDecoration(
-        color: isMe ? Colors.blueGrey : Colors.cyan,
-        borderRadius: isMe
-            ? BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                bottomLeft: Radius.circular(15.0),
+
+     _buildMessage(dynamic message, bool isMe){
+       return Padding(
+         padding: EdgeInsets.all(10),
+         child: Column(
+          crossAxisAlignment: isMe ?  CrossAxisAlignment.end : CrossAxisAlignment.start,
+           children: <Widget>[
+            SizedBox(
+              width: double.infinity,
+              child: Align(
+                alignment: isMe ? Alignment(0.8,0) :Alignment(-0.6,0) ,
+                child: Text(isMe ? "Me" : message['sender'],style: TextStyle(color: Colors.grey[300])), 
               )
-            : BorderRadius.only(
-                topRight: Radius.circular(15.0),
-                bottomRight: Radius.circular(15.0),
               ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          
-          SizedBox(height: 8.0),
-          Text(
-            message["text"],
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-    if (isMe) {
-      return msg;
-    }
-    return Row(
-      children: <Widget>[
-        msg,
-      ],
-    );
-  }
+             SizedBox(height: 5,),
+             Material(
+               borderRadius: BorderRadius.circular(30),
+               elevation: 7.0,
+               color: isMe ? Colors.lightBlueAccent : Colors.blueGrey,
+               child: Padding(
+                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                 child: Text(
+                   message['text'],
+                   style: TextStyle(
+                     color:  Colors.white,
+                     fontSize: 17.0,
+                     fontWeight: FontWeight.bold,
+                   ),
+                   ),
+               ),
+             ),
+           ],
+         ) ,
+       );
+     }
+  
 
   // _gestionTab() {
   //   print(widget.idConvo);
@@ -126,18 +111,24 @@ class pageCommentaireState extends State<pageCommentaire> {
   //       idConvo: widget.idConvo));
   // }
 
-@override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    Future.delayed(Duration(seconds: 5)).then((_) {
+  Future<Null> _refresh() async{
+   await Future.delayed(Duration(milliseconds: 500)).then((_) {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
           getData();
        });
-      }
+      }   
     });
+  return null;
+  }
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _refresh();
+   
   }
 
 
@@ -162,7 +153,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                 )
               ]),
         ),
-        body: GestureDetector(
+        body: new RefreshIndicator(child: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
@@ -267,6 +258,6 @@ class pageCommentaireState extends State<pageCommentaire> {
                       ],
                     )),
               ]))
-            ])));
+            ])), onRefresh: _refresh));
   }
 }
