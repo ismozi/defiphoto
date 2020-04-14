@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Widget appBarTitle =
-    Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
+    Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
 
 class MainPage extends StatefulWidget {
   
@@ -30,14 +30,16 @@ class mainPage extends State<MainPage> {
      var questionSection;
   
 
+ 
+
+
   getData() async {
   
      String id = userData["givenId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
      if (response.statusCode == 200&&this.mounted){
        setState(() {
-         questions =  json.decode(response.body); 
-         
+         questions =  json.decode(response.body);
        });     
      }
  }
@@ -110,17 +112,9 @@ _getQuestionSection(){
 
     
     return Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: FractionalOffset.bottomLeft,
-                end: FractionalOffset.topRight,
-                stops:[0.0,1.0],
-                colors: <Color>[
-              Color(0xff141a24),
-              Color(0xff141a24)
-            ])          
-         ),        
-            child:
+      color: Color(0xff141a24),
+      
+    child:
     filteredQuestionTab.length>0 ?
     ListView.builder(
     itemCount: filteredQuestionTab.length,
@@ -130,16 +124,14 @@ _getQuestionSection(){
       Padding(padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
               child:
       Card(
+              color:Color(0xFF222b3b),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(20),
                       topRight: Radius.circular(20),
                       bottomLeft: Radius.circular(20),
-                      topLeft: Radius.circular(20))),
-              
-              color:Color(0xFF222b3b),
-              
-                  
+                      topLeft: Radius.circular(20)),
+                  ),
               child: 
               ListTile(
                 
@@ -165,12 +157,10 @@ _getQuestionSection(){
 
 
   }
-@override
-  void initState() {
-    
-    super.initState();
-  
-     Future.delayed(Duration(milliseconds: 500)).then((_) {
+
+
+Future<Null> _refresh() async{
+   await Future.delayed(Duration(milliseconds: 500)).then((_) {
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;
        
@@ -181,7 +171,10 @@ _getQuestionSection(){
           });         
        });   
     });
+  return null;
   }
+
+  
   void _filterQuestions(value){
     setState(() {
       print(value);
@@ -190,13 +183,23 @@ _getQuestionSection(){
     });
   }
 
+
+
+
+@override
+  void initState() {
+    super.initState();
+     _refresh();
+  }
+
+  
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       drawer: !isSearching ? Container(color:Colors.grey[900],child:customDrawer(userData: userData,)):null,
       appBar: AppBar(
-        
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -208,6 +211,7 @@ _getQuestionSection(){
             ])          
          ),        
      ),      
+        
           title: !isSearching ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,14 +245,14 @@ _getQuestionSection(){
               });
             })
           ]),
-      body:  getBody(_currentIndex),
+      body: new RefreshIndicator(child: getBody(_currentIndex), onRefresh: _refresh) ,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(onPressed: () {
             Navigator.of(context).push(
                 CupertinoPageRoute(builder: (context) => (pageQuestion())));
           },
           backgroundColor: Color(0xff444d5d),
-          child: Icon(Icons.question_answer,color: Colors.white)),
+          child: Icon(Icons.question_answer, color:Colors.white)),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,
         selectedColor: Color(0xFF0d1118),
@@ -265,8 +269,6 @@ _getQuestionSection(){
       ),
       );
       
-    
-  
   }
   
 }

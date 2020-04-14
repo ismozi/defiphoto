@@ -29,65 +29,53 @@ class pageCommentaireState extends State<pageCommentaire> {
   getData() async {
   
      String id = questionData["questionId"];
-     var response = await http.get("https://defiphoto-api.herokuapp.com/commentaires/$id");
+     var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200){
        setState(() {
-         commentaires =  json.decode(response.body);
-       });     
+         commentaires = json.decode(response.body);
+       });    
+        print(commentaires); 
+        
      }
+
  }
 
-  _buildMessage(Message message, bool isMe) {
-    final Container msg = Container(
-      margin: isMe
-          ? EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
-              left: 80.0,
-            )
-          : EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
-            ),
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
-      width: MediaQuery.of(context).size.width * 0.75,
-      decoration: BoxDecoration(
-        color: isMe ? Colors.blueGrey : Colors.cyan,
-        borderRadius: isMe
-            ? BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                bottomLeft: Radius.circular(15.0),
+
+     _buildMessage(dynamic message, bool isMe){
+       return Padding(
+         padding: EdgeInsets.all(10),
+         child: Column(
+          crossAxisAlignment: isMe ?  CrossAxisAlignment.end : CrossAxisAlignment.start,
+           children: <Widget>[
+            SizedBox(
+              width: double.infinity,
+              child: Align(
+                alignment: isMe ? Alignment(0.8,0) :Alignment(-0.6,0) ,
+                child: Text(isMe ? "Me" : message['sender'],style: TextStyle(color: Colors.grey[300])), 
               )
-            : BorderRadius.only(
-                topRight: Radius.circular(15.0),
-                bottomRight: Radius.circular(15.0),
               ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          
-          SizedBox(height: 8.0),
-          Text(
-            message.text,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.0,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-    if (isMe) {
-      return msg;
-    }
-    return Row(
-      children: <Widget>[
-        msg,
-      ],
-    );
-  }
+             SizedBox(height: 5,),
+             Material(
+               borderRadius: BorderRadius.circular(30),
+               elevation: 7.0,
+               color: isMe ? Colors.lightBlueAccent : Colors.blueGrey,
+               child: Padding(
+                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
+                 child: Text(
+                   message['text'],
+                   style: TextStyle(
+                     color:  Colors.white,
+                     fontSize: 17.0,
+                     fontWeight: FontWeight.bold,
+                   ),
+                   ),
+               ),
+             ),
+           ],
+         ) ,
+       );
+     }
+  
 
   // _gestionTab() {
   //   print(widget.idConvo);
@@ -123,18 +111,24 @@ class pageCommentaireState extends State<pageCommentaire> {
   //       idConvo: widget.idConvo));
   // }
 
+  Future<Null> _refresh() async{
+   await Future.delayed(Duration(milliseconds: 500)).then((_) {
+      if(this.mounted){
+       setState(() {
+          questionData = ModalRoute.of(context).settings.arguments;
+          getData();
+       });
+      }   
+    });
+  return null;
+  }
+
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(Duration(milliseconds: 100)).then((_) {
-      if(this.mounted){
-       setState(() {
-           questionData = ModalRoute.of(context).settings.arguments;
-          getData();
-       });
-      }
-    });
+    _refresh();
+   
   }
 
 
@@ -143,6 +137,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   @override
   Widget build(BuildContext context) {
     // List<Message> commentaires = _gestionTab();
+    bool isMe;
     return Scaffold(
         appBar: AppBar(flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -169,9 +164,9 @@ class pageCommentaireState extends State<pageCommentaire> {
                 )
               ]),
         ),
-        body: Container( 
-          color:Color(0xff141a24),
-          child:GestureDetector(
+        body: Container( color: Color(0xff141a24),
+        
+        child:new RefreshIndicator(child: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
@@ -183,10 +178,21 @@ class pageCommentaireState extends State<pageCommentaire> {
                     padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
-                      final Message message = commentaires[i];
-                      bool isMe = message.sender.id == currentUser.id;
-
-                      return _buildMessage(message, isMe);
+                      if(commentaires[i]['sender']!= null){
+                       try{
+                      
+                      if(int.parse(commentaires[i]['sender']) is int){
+                        isMe = true;
+                        return _buildMessage(commentaires[i], isMe);
+                      }
+                    
+                      }
+                      on FormatException catch(err){
+                        isMe = false;
+                        return _buildMessage(commentaires[i], isMe);
+                      }
+                    
+                      }
                     },
                   ),
                 ),
@@ -266,6 +272,6 @@ class pageCommentaireState extends State<pageCommentaire> {
                       ],
                     )),
               ]))
-            ]))));
+            ])), onRefresh: _refresh)));
   }
 }
