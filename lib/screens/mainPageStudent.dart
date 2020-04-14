@@ -130,14 +130,16 @@ _getQuestionSection(){
       Padding(padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
               child:
       Card(
-              color:Color(0xFF222b3b),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(20),
                       topRight: Radius.circular(20),
                       bottomLeft: Radius.circular(20),
-                      topLeft: Radius.circular(20)),
-                  side: BorderSide(width: 1, color: Color(0xFF222b3b))),
+                      topLeft: Radius.circular(20))),
+              
+              color:Color(0xFF222b3b),
+              
+                  
               child: 
               ListTile(
                 

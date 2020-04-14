@@ -274,6 +274,7 @@ _setInfo(){
                             ),
                           ),
                           Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                             child: Container(
                               color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -470,7 +471,7 @@ _setInfo(){
                                     '$percTot%',
                                     style: TextStyle(
                                       fontSize: 35.0,
-                                      color: Colors.cyan,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                   circularStrokeCap: CircularStrokeCap.round,

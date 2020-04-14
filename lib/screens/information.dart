@@ -8,7 +8,19 @@ class Inpage extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title: Text("Aide"),
+            flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+     ),      
+            title: Text("Aide",
+                            style: TextStyle(fontFamily:'Arboria')),
             bottom: TabBar(
               tabs: [
                 Tab(text: "Description"),
@@ -20,24 +32,29 @@ class Inpage extends StatelessWidget {
           body: TabBarView(
             children: <Widget>[
               Container(
-                
+                color: Color(0xff141a24),
                 child: ListView(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
-                    child:Text("Que dois-tu faire ?",
+                    Padding(padding: EdgeInsets.fromLTRB(12, 16, 12, 0),
+                    child:Center(child:Text("Que dois-tu faire ?",
                       
                         style: TextStyle(
-                          color: Colors.cyan,
+                          fontFamily:'Arboria',
                           fontSize: 30,
-                          fontWeight: FontWeight.w800,
-                        ),
-                        
-                      
-                    ),),
+                          color:Colors.grey 
+                        )
+                    ))),
+                    Container(
+                                padding:EdgeInsets.fromLTRB(20, 0, 20, 10),
+                              child:Divider(
+                              height: 25,
+                              color: Colors.grey[800],
+                            ),
+                              ),
                     
                     
                     Card(
-                      color: Colors.grey[750],
+                      color: Color(0xFF222b3b),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -48,6 +65,7 @@ class Inpage extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20,
+                              fontFamily: 'Arboria'
                               
                             ),
                             children: [
