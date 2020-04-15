@@ -30,7 +30,7 @@ class pageCommentaireState extends State<pageCommentaire> {
        setState(() {
          commentaires = json.decode(response.body);
        });    
-        print(commentaires); 
+        // print(commentaires); 
         
      }
 
