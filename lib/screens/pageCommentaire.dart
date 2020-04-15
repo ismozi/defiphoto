@@ -41,24 +41,24 @@ class pageCommentaireState extends State<pageCommentaire> {
  }
 
 
-     _buildMessage(dynamic message, bool isMe){
+     _buildMessage(dynamic message, bool isMe, bool isStudent){
        return Padding(
          padding: EdgeInsets.all(10),
          child: Column(
           crossAxisAlignment: isMe ?  CrossAxisAlignment.end : CrossAxisAlignment.start,
            children: <Widget>[
-            SizedBox(
-              width: double.infinity,
-              child: Align(
-                alignment: isMe ? Alignment(0.8,0) :Alignment(-0.6,0) ,
-                child: Text(isMe ? "Me" : message['sender'],style: TextStyle(color: Colors.grey[300])), 
-              )
-              ),
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: Align(
+            //     alignment: isMe ? Alignment(0.8,0) :Alignment(-0.6,0) ,
+            //     child: Text(isMe ? "Me" : message['sender'],style: TextStyle(color: Colors.grey[300])), 
+            //   )
+            //   ),
              SizedBox(height: 5,),
              Material(
                borderRadius: BorderRadius.circular(30),
                elevation: 7.0,
-               color: isMe ? Colors.lightBlueAccent : Colors.blueGrey,
+               color: isMe ? Colors.lightBlueAccent : (isStudent ? Colors.blueGrey : Colors.deepOrange),
                child: Padding(
                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
                  child: Text(
@@ -139,6 +139,8 @@ class pageCommentaireState extends State<pageCommentaire> {
   Widget build(BuildContext context) {
     // List<Message> commentaires = _gestionTab();
     bool isMe;
+    bool isStudent;
+
     return Scaffold(
         appBar: AppBar(flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -183,14 +185,22 @@ class pageCommentaireState extends State<pageCommentaire> {
                        try{
                       
                       if(int.parse(commentaires[i]['sender']) is int){
-                        isMe = true;
-                        return _buildMessage(commentaires[i], isMe);
+                        if (commentaires[i]['sender'] == questionData["givenId"]){
+                            isStudent=false;
+                           isMe = true;
+                        return _buildMessage(commentaires[i], isMe,isStudent);
                         }
-                    
+                        else{
+                          isStudent=true;
+                        isMe = false;
+                        return _buildMessage(commentaires[i], isMe,isStudent);
+                        }
+                        }
                       }
                       on FormatException catch(err){
+                        isStudent=false;
                         isMe = false;
-                        return _buildMessage(commentaires[i], isMe);
+                        return _buildMessage(commentaires[i], isMe,isStudent);
                       }
                     
                       }
