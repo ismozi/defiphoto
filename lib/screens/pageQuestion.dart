@@ -95,7 +95,7 @@ class pageQuestionState extends State<pageQuestion> {
                             IconButton(
                                 icon: Icon(Icons.send,color:Colors.black), 
                                 onPressed: () {
-                                  _envoyerQuestion(messageSend.text)
+                                  _envoyerQuestion(messageSend.text);
                                 }),
                             Expanded(
                               child: TextField(
