@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Widget appBarTitle =
-    Text('Matières et produits', style: TextStyle(fontSize: 15));
+    Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
 
 class MainPage extends StatefulWidget {
   
@@ -49,13 +49,13 @@ class mainPage extends State<MainPage> {
 
       if (index == 0) {
         appBarTitle =
-            Text('Matières et produits', style: TextStyle(fontSize: 15));
+            Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
             section='M';
             _getQuestionSection();
             filteredQuestionTab=questionSectionTab;
       }
       else if (index == 1) {
-        appBarTitle = Text('Équipement', style: TextStyle(fontSize: 15));
+        appBarTitle = Text('Équipement', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
         
         section='É';
         
@@ -64,26 +64,26 @@ class mainPage extends State<MainPage> {
         
       }
       else if (index == 2) {
-        appBarTitle = Text('Tâches', style: TextStyle(fontSize: 15));
+        appBarTitle = Text('Tâches', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
         section='T';
         _getQuestionSection();
         filteredQuestionTab=questionSectionTab;
       }
       else if (index == 3) {
-        appBarTitle = Text('Individu', style: TextStyle(fontSize: 15));
+        appBarTitle = Text('Individu', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
         section='I';
         _getQuestionSection();
         filteredQuestionTab=questionSectionTab;
       }
       else if (index == 4) {
-        appBarTitle = Text('Environnement', style: TextStyle(fontSize: 15));
+        appBarTitle = Text('Environnement', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
         section='E';
         _getQuestionSection();
         filteredQuestionTab=questionSectionTab;
       }
       else if (index == 5) {
         appBarTitle =
-            Text('Ressources humaines', style: TextStyle(fontSize: 15));
+            Text('Ressources humaines', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
             section='R';
             _getQuestionSection();
         filteredQuestionTab=questionSectionTab;
@@ -111,34 +111,37 @@ _getQuestionSection(){
     
 
     
-    return Container(child:
+    return Container(
+      color: Color(0xff141a24),
+      
+    child:
     filteredQuestionTab.length>0 ?
     ListView.builder(
     itemCount: filteredQuestionTab.length,
     itemBuilder:  (context ,index){
       
       return 
-      Padding(padding: EdgeInsets.fromLTRB(2, 2, 2, 2),
+      Padding(padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
               child:
       Card(
-              color:Colors.grey[900],
+              color:Color(0xFF222b3b),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(20),
                       topRight: Radius.circular(20),
                       bottomLeft: Radius.circular(20),
                       topLeft: Radius.circular(20)),
-                  side: BorderSide(width: 1, color: Colors.grey[800])),
+                  ),
               child: 
               ListTile(
-                leading: Icon(Icons.question_answer ,size: 40),
+                
                 title: Text(filteredQuestionTab[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold),
+                      fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(filteredQuestionTab[index]["sender"]??""),
+                subtitle: Text(filteredQuestionTab[index]["sender"]??"",style: TextStyle(fontFamily:'Arboria')),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
                   
@@ -198,16 +201,29 @@ Future<Null> _refresh() async{
     return Scaffold(
       drawer: !isSearching ? Container(color:Colors.grey[900],child:customDrawer(userData: userData,)):null,
       appBar: AppBar(
-        backgroundColor: Colors.grey[900],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+     ),      
+        
           title: !isSearching ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Défi photo",
-                ),
+                Center(child:Text(
+                  "Défi photo", 
+                  style: TextStyle(fontFamily: 'Arboria',
+                  
+                ))) ,
                 Opacity(
-                  opacity: 0.65,
+                  opacity: 0.5,
                   child: appBarTitle,
                 )
               ]): 
@@ -236,13 +252,13 @@ Future<Null> _refresh() async{
             Navigator.of(context).push(
                 CupertinoPageRoute(builder: (context) => (pageQuestion())));
           },
-          backgroundColor: Colors.cyan,
-          child: Icon(Icons.question_answer)),
+          backgroundColor: Color(0xff444d5d),
+          child: Icon(Icons.question_answer, color:Colors.white)),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,
-        selectedColor: Colors.cyan,
+        selectedColor: Color(0xFF0d1118),
         notchedShape: CircularNotchedRectangle(),
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Color(0xFF222b3b),
         items: [
           FABBottomAppBarItem(text: "M"),
           FABBottomAppBarItem(text: "E"),

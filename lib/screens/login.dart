@@ -123,11 +123,11 @@ class _LoginState extends State<Login> {
                       topLeft: Radius.circular(15)),
                   side: BorderSide(width: 0.5, color: Colors.grey)),
                 child: Padding(
-                    padding: EdgeInsets.all(25.0),
+                    padding: EdgeInsets.fromLTRB(15, 45, 15, 15),
                     child: Column(children: <Widget>[
                       Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15.0),
@@ -157,7 +157,7 @@ class _LoginState extends State<Login> {
                       ),
                       Container(
                         alignment: Alignment.center,
-                        padding: EdgeInsets.all(5.0),
+                        padding: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(15.0),
@@ -186,7 +186,7 @@ class _LoginState extends State<Login> {
                       ),
                       
                       SizedBox(
-                        height: 20.0,
+                        height: 10.0,
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(vertical: 25.0),

@@ -60,7 +60,8 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
     
 // comment test pour la branchhe 
     return BottomAppBar(
-      shape: widget.notchedShape,
+      
+      
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -81,7 +82,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
             SizedBox(height: widget.iconSize),
             Text(
               widget.centerItemText ?? "QUESTION",
-              style: TextStyle(color: widget.color, fontSize:10.65),
+              style: TextStyle(color: widget.color, fontFamily: 'Arboria',fontSize:10),
             ),
           ],
         ),
@@ -108,7 +109,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
               children: <Widget>[
                 Text(
               widget.centerItemText ?? item.text,
-              style: TextStyle(color: color,fontSize: 25, fontWeight: FontWeight.bold
+              style: TextStyle(color: color,fontSize: _selectedIndex == index ? 32: 25, fontFamily: 'Arboria'
             ),
                 )  
               ],

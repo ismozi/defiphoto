@@ -40,19 +40,33 @@ class pageQuestionState extends State<pageQuestion> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+     ),      
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Poser une question',
+                            style: TextStyle(fontFamily:'Arboria')
                 ),
                 Opacity(
                   opacity: 0.65,
                 )
               ]),
         ),
-        body: Stack(children: <Widget>[
+        body: Container(
+          color: Color(0xff141a24),
+          child:Stack(children: <Widget>[
           Positioned.fill(
               child: Column(children: <Widget>[
             Expanded(child: Text('')
@@ -103,7 +117,7 @@ class pageQuestionState extends State<pageQuestion> {
                     Container(
                       padding: const EdgeInsets.all(15.0),
                       decoration: BoxDecoration(
-                          color: Colors.cyan, shape: BoxShape.circle),
+                          color: Color(0xff444d5d), shape: BoxShape.circle),
                       child: InkWell(
                         child: Icon(
                           Icons.keyboard_voice,
@@ -117,6 +131,6 @@ class pageQuestionState extends State<pageQuestion> {
                   ],
                 )),
           ]))
-        ]));
+        ])));
   }
 }

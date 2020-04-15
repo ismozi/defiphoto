@@ -61,13 +61,24 @@ _setInfo(){
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey[900],
+           flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+     ),      
+          
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Profil",
+                  "Profil",style:TextStyle(fontFamily:'Arboria')
                 ),
               ]),
           bottom: TabBar(
@@ -77,7 +88,8 @@ _setInfo(){
             ],
           ),
         ),
-        body: TabBarView(
+        body: Container(color: Color(0xff141a24),
+          child:TabBarView(
           children: <Widget>[
             CustomScrollView(
               slivers: <Widget>[
@@ -86,7 +98,7 @@ _setInfo(){
                     (BuildContext context, int index) {
                       if (index > 0) return null;
                       return Padding(
-                        padding: EdgeInsets.fromLTRB(30, 40, 20, 0),
+                        padding: EdgeInsets.fromLTRB(30, 15, 20, 0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -98,48 +110,36 @@ _setInfo(){
                               ),
                             ),
                             Divider(
-                              height: 40,
+                              height: 25,
                               color: Colors.grey[800],
                             ),
-                            Text('ID',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  letterSpacing: 2.0,
-                                )),
+                            Text('ID',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                             SizedBox(height: 10),
                             Text('$idStudent',
                                 style: TextStyle(
-                                    color: Colors.cyan,
+                                    
                                     letterSpacing: 2.0,
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(height: 20),
-                            Text('Prénom',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  letterSpacing: 2.0,
-                                )),
+                                    fontFamily: 'Arboria')),
+                            SizedBox(height: 10),
+                            Text('Prénom',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                             SizedBox(height: 10),
                             Text('$name',
                                 style: TextStyle(
-                                    color: Colors.cyan,
+                                    
                                     letterSpacing: 2.0,
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(height: 20),
-                            Text('Nom',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  letterSpacing: 2.0,
-                                )),
+                                    fontFamily: 'Arboria')),
+                            SizedBox(height: 10),
+                            Text('Nom',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                             SizedBox(height: 10),
                             Text('$lastName',
                                 style: TextStyle(
-                                    color: Colors.cyan,
+                                    
                                     letterSpacing: 2.0,
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(height: 20),
+                                    fontFamily: 'Arboria')),
+                            SizedBox(height: 10),
                             Row(
                               children: <Widget>[
                                 Icon(
@@ -147,22 +147,17 @@ _setInfo(){
                                   color: Colors.grey[400],
                                 ),
                                 Text(
-                                  'Stage',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    letterSpacing: 2.0,
-                                  ),
-                                ),
+                                  'Stage',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                               ],
                             ),
                             SizedBox(height: 10),
                             Text('$stage',
                                 style: TextStyle(
-                                    color: Colors.cyan,
+                                    
                                     letterSpacing: 2.0,
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(height: 20),
+                                    fontFamily: 'Arboria')),
+                            SizedBox(height: 10),
                             Row(
                               children: <Widget>[
                                 Icon(
@@ -170,22 +165,17 @@ _setInfo(){
                                   color: Colors.grey[400],
                                 ),
                                 Text(
-                                  'Année',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    letterSpacing: 2.0,
-                                  ),
-                                ),
+                                  'Année',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                               ],
                             ),
                             SizedBox(height: 10),
                             Text('$yearDebut - $yearFin',
                                 style: TextStyle(
-                                    color: Colors.cyan,
+                                   
                                     letterSpacing: 2.0,
                                     fontSize: 22,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(height: 20),
+                                    fontFamily: 'Arboria')),
+                            SizedBox(height: 10),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -197,21 +187,17 @@ _setInfo(){
                                     ),
                                     Text(
                                       'Courriel',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        letterSpacing: 2.0,
-                                      ),
-                                    ),
+                                      style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                                   ],
                                 ),
                                 SizedBox(width: 10),
                                 Text('$mail',
                                     style: TextStyle(
-                                        color: Colors.cyan,
-                                        letterSpacing: 2.0,
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold)),
-                                SizedBox(height: 20),
+                                    
+                                    letterSpacing: 2.0,
+                                    fontSize: 22,
+                                    fontFamily: 'Arboria')),
+                                SizedBox(height: 10),
                               ],
                             ),
                           ],
@@ -232,9 +218,30 @@ _setInfo(){
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
+                          SizedBox(height: 15),
+                           Container(
+                             padding:EdgeInsets.fromLTRB(0, 3, 0, 0),
+                             child:
+                           Text(
+                                  'PROGRESSION PAR CATÉGORIE',
+                                
+                                  style: TextStyle(
+                                    fontSize: 20.0,
+                                    fontFamily:'Arboria',
+                                    color: Colors.grey
+                                    
+                                  )
+                                )),
+                              Container(
+                                padding:EdgeInsets.fromLTRB(20, 5, 20, 10),
+                              child:Divider(
+                              height: 25,
+                              color: Colors.grey[800],
+                            ),
+                              ),
                           Card(
                             child: Container(
-                              color: Colors.grey[750],
+                              color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
@@ -244,8 +251,8 @@ _setInfo(){
                                     'M',
                                     style: TextStyle(
                                       fontSize: 28.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.cyan,
+                                      
+                                     fontFamily:'Arboria'
                                     ),
                                   ),
                                   LinearPercentIndicator(
@@ -258,8 +265,8 @@ _setInfo(){
                                   Text(
                                     '$percentageM%',
                                     style: TextStyle(
-                                      fontSize: 28.0,
-                                      color: Colors.cyan,
+                                      fontSize: 25.0,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                 ],
@@ -267,8 +274,9 @@ _setInfo(){
                             ),
                           ),
                           Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                             child: Container(
-                              color: Colors.grey[750],
+                              color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
@@ -278,8 +286,7 @@ _setInfo(){
                                     'É',
                                     style: TextStyle(
                                       fontSize: 28.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.cyan,
+                                      fontFamily: 'Arboria'
                                     ),
                                   ),
                                   LinearPercentIndicator(
@@ -292,8 +299,8 @@ _setInfo(){
                                   Text(
                                     '$percentageE1%',
                                     style: TextStyle(
-                                      fontSize: 28.0,
-                                      color: Colors.cyan,
+                                      fontSize: 25.0,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                 ],
@@ -302,7 +309,7 @@ _setInfo(){
                           ),
                           Card(
                             child: Container(
-                              color: Colors.grey[750],
+                              color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
@@ -312,8 +319,7 @@ _setInfo(){
                                     'T',
                                     style: TextStyle(
                                       fontSize: 28.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.cyan,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                   LinearPercentIndicator(
@@ -326,8 +332,8 @@ _setInfo(){
                                   Text(
                                     '$percentageT%',
                                     style: TextStyle(
-                                      fontSize: 28.0,
-                                      color: Colors.cyan,
+                                      fontSize: 25.0,
+                                     fontFamily:'Arboria'
                                     ),
                                   ),
                                 ],
@@ -336,7 +342,7 @@ _setInfo(){
                           ),
                           Card(
                             child: Container(
-                              color: Colors.grey[750],
+                              color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
@@ -346,8 +352,7 @@ _setInfo(){
                                     'I',
                                     style: TextStyle(
                                       fontSize: 28.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.cyan,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                   LinearPercentIndicator(
@@ -360,8 +365,8 @@ _setInfo(){
                                   Text(
                                     '$percentageI%',
                                     style: TextStyle(
-                                      fontSize: 28.0,
-                                      color: Colors.cyan,
+                                      fontSize: 25.0,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                 ],
@@ -370,7 +375,7 @@ _setInfo(){
                           ),
                           Card(
                             child: Container(
-                              color: Colors.grey[750],
+                              color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
@@ -380,8 +385,7 @@ _setInfo(){
                                     'E',
                                     style: TextStyle(
                                       fontSize: 28.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.cyan,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                   LinearPercentIndicator(
@@ -394,8 +398,8 @@ _setInfo(){
                                   Text(
                                     '$percentageE2%',
                                     style: TextStyle(
-                                      fontSize: 28.0,
-                                      color: Colors.cyan,
+                                      fontSize: 25.0,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                 ],
@@ -404,7 +408,7 @@ _setInfo(){
                           ),
                           Card(
                             child: Container(
-                              color: Colors.grey[750],
+                              color: Color(0xFF222b3b),
                               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
@@ -414,8 +418,7 @@ _setInfo(){
                                     'R',
                                     style: TextStyle(
                                       fontSize: 28.0,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.cyan,
+                                     fontFamily:'Arboria'
                                     ),
                                   ),
                                   LinearPercentIndicator(
@@ -428,8 +431,8 @@ _setInfo(){
                                   Text(
                                     '$percentageR%',
                                     style: TextStyle(
-                                      fontSize: 28.0,
-                                      color: Colors.cyan,
+                                      fontSize: 25.0,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                 ],
@@ -437,22 +440,29 @@ _setInfo(){
                             ),
                           ),
                           Container(
+                            
                             color: Colors.grey[750],
-                            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: EdgeInsets.fromLTRB(20, 15, 20, 10),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  'Total:',
+                                  'PROGRESSION TOTALE',
                                   style: TextStyle(
-                                    fontSize: 28.0,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.redAccent,
-                                    decoration: TextDecoration.underline,
+                                    fontSize: 20.0,
+                                    fontFamily:'Arboria',
+                                    color:Colors.grey
+                                    
                                   ),
                                 ),
+                                Divider(
+                              height: 25,
+                              color: Colors.grey[800],
+                            ),
+                           
                                 CircularPercentIndicator(
                                   radius: 200.0,
-                                  progressColor: Colors.redAccent,
+                                  progressColor: Colors.cyan,
                                   backgroundColor: Colors.grey[300],
                                   percent: percTot / 100,
                                   animation: true,
@@ -461,7 +471,7 @@ _setInfo(){
                                     '$percTot%',
                                     style: TextStyle(
                                       fontSize: 35.0,
-                                      color: Colors.redAccent,
+                                      fontFamily:'Arboria'
                                     ),
                                   ),
                                   circularStrokeCap: CircularStrokeCap.round,
@@ -477,6 +487,7 @@ _setInfo(){
               ],
             ),
           ],
+        )
         ),
       ),
     );

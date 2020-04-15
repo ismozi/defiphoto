@@ -140,7 +140,17 @@ class pageCommentaireState extends State<pageCommentaire> {
     // List<Message> commentaires = _gestionTab();
     bool isMe;
     return Scaffold(
-        appBar: AppBar(
+        appBar: AppBar(flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+     ),      
           leading: IconButton(icon: Icon(Icons.arrow_back), onPressed:() {Navigator.of(context).pop();}),
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -148,13 +158,16 @@ class pageCommentaireState extends State<pageCommentaire> {
               children: [
                 Text(
                   'Répondre à la question',
+                            style: TextStyle(fontFamily:'Arboria')
                 ),
                 Opacity(
                   opacity: 0.65,
                 )
               ]),
         ),
-        body: new RefreshIndicator(child: GestureDetector(
+        body: Container( color: Color(0xff141a24),
+        
+        child:new RefreshIndicator(child: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
             },
@@ -185,6 +198,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                   ),
                 ),
                 Container(
+                  
                     margin: EdgeInsets.all(15.0),
                     height: 61,
                     child: Row(
@@ -246,7 +260,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                         Container(
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                              color: Colors.cyan, shape: BoxShape.circle),
+                              color: Color(0xff444d5d), shape: BoxShape.circle),
                           child: InkWell(
                             child: Icon(
                               Icons.keyboard_voice,
@@ -260,6 +274,6 @@ class pageCommentaireState extends State<pageCommentaire> {
                       ],
                     )),
               ]))
-            ])), onRefresh: _refresh));
+            ])), onRefresh: _refresh)));
   }
 }
