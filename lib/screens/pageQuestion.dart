@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import '../widget/messageReceivedWidget.dart';
 
 class pageQuestion extends StatefulWidget {
   final String txt;
