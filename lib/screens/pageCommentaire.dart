@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:test_flutter/models/message_model.dart';
-import 'package:audio_recorder/audio_recorder.dart';
+
 import '../widget/messageReceivedWidget.dart';
 import '../widget/messageSentWidget.dart';
 import 'package:http/http.dart' as http;

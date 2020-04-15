@@ -147,7 +147,7 @@ _getQuestionSection(){
                   
                 
                  Navigator.pushNamed(context,'/pageCommentaire',arguments: {
-                       'questionId': questionSectionTab[index]["id"],
+                       'questionId': filteredQuestionTab[index]["id"],
                        'givenId' : userData['givenId']
                   });
                 },
