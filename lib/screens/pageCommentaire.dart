@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:test_flutter/models/message_model.dart';
-
+import 'package:audio_recorder/audio_recorder.dart';
 import '../widget/messageReceivedWidget.dart';
 import '../widget/messageSentWidget.dart';
 import 'package:http/http.dart' as http;
@@ -26,7 +26,7 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   
 
-  getData() async {
+  getCommentaires() async {
   
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
@@ -103,20 +103,21 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
   }
 
-  // _envoyerMessage() {
-  //   messages.add(Message(
-  //       sender: currentUser,
-  //       time: '4:30 PM',
-  //       text: messageSend.text,
-  //       idConvo: widget.idConvo));
-  // }
+  envoyerCommentaire(String text) async{
+      var data = {
+        "text" : text.trim().toString(),
+        "sender" : questionData["givenId"].trim().toString(),
+        "questionId" : questionData["questionId"].toString()
+    };
+    var response = await http.post("https://defiphoto-api.herokuapp.com/comments/noFile", body : data);
+  }
 
   Future<Null> _refresh() async{
    await Future.delayed(Duration(milliseconds: 500)).then((_) {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          getData();
+          getCommentaires();
        });
       }   
     });
@@ -184,7 +185,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                       if(int.parse(commentaires[i]['sender']) is int){
                         isMe = true;
                         return _buildMessage(commentaires[i], isMe);
-                      }
+                        }
                     
                       }
                       on FormatException catch(err){
@@ -220,7 +221,8 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     icon: Icon(Icons.send, color: Colors.black),
                                     onPressed: () {
                                       setState(() {
-                                        // _envoyerMessage();
+                                        envoyerCommentaire(messageSend.text);
+                                        getCommentaires();
                                         messageSend.clear();
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());

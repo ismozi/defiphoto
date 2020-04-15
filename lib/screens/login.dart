@@ -54,8 +54,6 @@ class _LoginState extends State<Login> {
     }
     }
    else {
-    
-       
          return showDialog<void>(
                                   context: context,
                                   barrierDismissible: false, 
@@ -198,9 +196,7 @@ class _LoginState extends State<Login> {
                           onPressed: ()   {
                           _isLoading = true;
                            setState(() {
-                             
                               signIn(givenId.text, passwd.text);
-                             
                            });
                           
                           },
@@ -223,7 +219,7 @@ class _LoginState extends State<Login> {
                       SizedBox(
                         height: 15.0,
                       ),
-                    ])))
+                ])))
           ],
         ),
       ),
