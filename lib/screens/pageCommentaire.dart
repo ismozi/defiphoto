@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:audio_recorder/audio_recorder.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -27,7 +26,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
-     if (response.statusCode == 200){
+     if (response.statusCode == 200&&this.mounted){
        setState(() {
          commentaires = json.decode(response.body);
        });    
@@ -122,11 +121,26 @@ class pageCommentaireState extends State<pageCommentaire> {
   return null;
   }
 
+  void stream() async {
+  Duration interval = Duration(milliseconds: 500);
+  Stream<int> stream = Stream<int>.periodic(interval);
+  await for(int i in stream){
+  
+   if(this.mounted){
+    setState(() {
+          questionData = ModalRoute.of(context).settings.arguments;
+          getCommentaires();
+       });
+   }
+  }
+}
+
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _refresh();
+    
+    stream();
    
   }
 
@@ -230,6 +244,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                       setState(() {
                                         _envoyerCommentaire(messageSend.text);
                                         messageSend.clear();
+                                      
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
                                       });
