@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class pageCommentaire extends StatefulWidget {
   
@@ -18,6 +19,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   TextEditingController messageSend = new TextEditingController();
   Map questionData = {};
   List commentaires = [{}];
+  bool _isLoading = true;
 
 
   
@@ -28,10 +30,9 @@ class pageCommentaireState extends State<pageCommentaire> {
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200&&this.mounted){
        setState(() {
+         _isLoading=false;
          commentaires = json.decode(response.body);
        });    
-        print(commentaires); 
-        
      }
 
  }
@@ -187,9 +188,11 @@ class pageCommentaireState extends State<pageCommentaire> {
             },
             child: Stack(children: <Widget>[
               Positioned.fill(
-                  child: Column(children: <Widget>[
+                  child:  Column(children: <Widget>[
                 Expanded(
-                  child: ListView.builder(
+                  child: 
+                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 35,color: Colors.white)) :
+                  ListView.builder(
                     padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
@@ -200,11 +203,13 @@ class pageCommentaireState extends State<pageCommentaire> {
                         if (commentaires[i]['sender'] == questionData["givenId"]){
                         isStudent=false;
                         isMe = true;
+                        
                         return _buildCommentaire(commentaires[i], isMe,isStudent);
                         }
                         else{
                         isStudent=true;
                         isMe = false;
+                        
                         return _buildCommentaire(commentaires[i], isMe,isStudent);
                         }
                         }
@@ -212,6 +217,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                       on FormatException catch(err){
                         isStudent=false;
                         isMe = false;
+                        
                         return _buildCommentaire(commentaires[i], isMe,isStudent);
                       }
                       }
@@ -294,7 +300,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                         )
                       ],
                     )),
-              ]))
-            ])), onRefresh: _refresh)));
+              ])
+    )])), onRefresh: _refresh)));
   }
 }

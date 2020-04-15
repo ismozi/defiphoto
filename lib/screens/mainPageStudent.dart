@@ -6,6 +6,7 @@ import 'pageQuestion.dart';
 import '../widgets/fabbottomappbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
@@ -36,7 +37,7 @@ class mainPage extends State<MainPage> {
   
      String id = userData["givenId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
-     if (response.statusCode == 200&&this.mounted){
+     if (response.statusCode == 200){
        setState(() {
          questions =  json.decode(response.body);
        });     
@@ -153,7 +154,7 @@ _getQuestionSection(){
               ),
             ));
         }
-    ):Center(child:CircularProgressIndicator()));
+    ):Center(child:SpinKitDoubleBounce(color: Colors.white)));
 
 
   }

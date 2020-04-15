@@ -4,7 +4,7 @@ import 'mainPageStudent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
           color:Color(0xff141a24),
       padding: EdgeInsets.all(10.0),
       child: Center(
-        child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
+        child: _isLoading ? Center(child: SpinKitDoubleBounce(size: 40,color: Colors.white)) : ListView(
           children: <Widget>[
             SizedBox(
               height: 40.0,
