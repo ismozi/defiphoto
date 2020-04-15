@@ -1,10 +1,7 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:test_flutter/models/message_model.dart';
 import 'package:audio_recorder/audio_recorder.dart';
-import '../widget/messageReceivedWidget.dart';
-import '../widget/messageSentWidget.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -41,7 +38,7 @@ class pageCommentaireState extends State<pageCommentaire> {
  }
 
 
-     _buildMessage(dynamic message, bool isMe, bool isStudent){
+     _buildCommentaire(dynamic message, bool isMe, bool isStudent){
        return Padding(
          padding: EdgeInsets.all(10),
          child: Column(
@@ -56,6 +53,7 @@ class pageCommentaireState extends State<pageCommentaire> {
             //   ),
              SizedBox(height: 5,),
              Material(
+
                borderRadius: BorderRadius.circular(30),
                elevation: 7.0,
                color: isMe ? Colors.lightBlueAccent : (isStudent ? Colors.blueGrey : Colors.deepOrange),
@@ -103,7 +101,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
   }
 
-  envoyerCommentaire(String text) async{
+  _envoyerCommentaire(String text) async{
       var data = {
         "text" : text.trim().toString(),
         "sender" : questionData["givenId"].trim().toString(),
@@ -186,23 +184,22 @@ class pageCommentaireState extends State<pageCommentaire> {
                       
                       if(int.parse(commentaires[i]['sender']) is int){
                         if (commentaires[i]['sender'] == questionData["givenId"]){
-                            isStudent=false;
-                           isMe = true;
-                        return _buildMessage(commentaires[i], isMe,isStudent);
+                        isStudent=false;
+                        isMe = true;
+                        return _buildCommentaire(commentaires[i], isMe,isStudent);
                         }
                         else{
-                          isStudent=true;
+                        isStudent=true;
                         isMe = false;
-                        return _buildMessage(commentaires[i], isMe,isStudent);
+                        return _buildCommentaire(commentaires[i], isMe,isStudent);
                         }
                         }
                       }
                       on FormatException catch(err){
                         isStudent=false;
                         isMe = false;
-                        return _buildMessage(commentaires[i], isMe,isStudent);
+                        return _buildCommentaire(commentaires[i], isMe,isStudent);
                       }
-                    
                       }
                     },
                   ),
@@ -231,8 +228,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     icon: Icon(Icons.send, color: Colors.black),
                                     onPressed: () {
                                       setState(() {
-                                        envoyerCommentaire(messageSend.text);
-                                        getCommentaires();
+                                        _envoyerCommentaire(messageSend.text);
                                         messageSend.clear();
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());

@@ -4,7 +4,6 @@ import 'mainPageStudent.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
-import '../data/user.dart';
 
 
 class Login extends StatefulWidget {
