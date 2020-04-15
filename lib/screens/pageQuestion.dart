@@ -16,7 +16,6 @@ class pageQuestion extends StatefulWidget {
 class pageQuestionState extends State<pageQuestion> {
   
   File imageFile;
-  
   TextEditingController messageSend = new TextEditingController();
 
   _ouvrirGallery() async{
@@ -31,6 +30,10 @@ class pageQuestionState extends State<pageQuestion> {
     this.setState((){
       imageFile = image;
     });
+  }
+
+  _envoyerQuestion(String text){
+
   }
 
   
@@ -90,10 +93,14 @@ class pageQuestionState extends State<pageQuestion> {
                         child: Row(
                           children: <Widget>[
                             IconButton(
-                                icon: Icon(Icons.send,color:Colors.black), onPressed: () {}),
+                                icon: Icon(Icons.send,color:Colors.black), 
+                                onPressed: () {
+                                  _envoyerQuestion(messageSend.text);
+                                }),
                             Expanded(
                               child: TextField(
                                 style: new TextStyle(color: Colors.black),
+                                controller:messageSend,
                                 decoration: InputDecoration(
                                     hintText: "Question",
                                      hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
