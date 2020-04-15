@@ -41,7 +41,7 @@ class Inpage extends StatelessWidget {
                         style: TextStyle(
                           fontFamily:'Arboria',
                           fontSize: 30,
-                          color:Colors.grey 
+                          color:Colors.white 
                         )
                     ))),
                     Container(
@@ -59,11 +59,11 @@ class Inpage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                        padding: EdgeInsets.fromLTRB(17, 12, 12, 12),
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.grey[300],
                               fontSize: 20,
                               fontFamily: 'Arboria'
                               
@@ -82,15 +82,17 @@ class Inpage extends StatelessWidget {
                 ),
               ),
               Container(
+                color:Color(0xff141a24),
                 child: ListView(
                   scrollDirection: Axis.vertical,
                   children: <Widget>[ 
                     Padding(padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
                     child: Text("Qu'est-ce que l'acronyme M.É.T.I.E.R ?",
                         style: TextStyle(
-                          color: Colors.cyan,
+                          fontFamily: 'Arboria',
                           fontSize: 29,
-                          fontWeight: FontWeight.bold,
+                          
+                          
                         ),
                         
                       ),
@@ -102,6 +104,7 @@ class Inpage extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.cyan,
                           fontSize: 23,
+                          fontFamily: 'Arboria'
                         
                         ),
                         
@@ -109,7 +112,7 @@ class Inpage extends StatelessWidget {
                     ),),
                    
                     Card(
-                      color: Colors.grey[750],
+                      color: Color(0xFF222b3b),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -118,8 +121,9 @@ class Inpage extends StatelessWidget {
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.grey[300],
                               fontSize: 20,
+                              fontFamily: 'Arboria'
                               
                             ),
                             children: [
@@ -137,13 +141,14 @@ class Inpage extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.cyan,
                           fontSize: 23,
+                          fontFamily: 'Arboria'
                         
                         ),
                         
                       
                     ),),
                     Card(
-                      color: Colors.grey[750],
+                      color: Color(0xFF222b3b),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -152,8 +157,9 @@ class Inpage extends StatelessWidget {
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.grey[300],
                               fontSize: 20,
+                              fontFamily: 'Arboria'
                               
                             ),
                             children: [
@@ -171,13 +177,14 @@ class Inpage extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.cyan,
                           fontSize: 23,
+                          fontFamily: 'Arboria'
                         
                         ),
                         
                       
                     ),),
                     Card(
-                      color: Colors.grey[750],
+                      color: Color(0xFF222b3b),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20.0),
                       ),
@@ -186,8 +193,9 @@ class Inpage extends StatelessWidget {
                         child: RichText(
                           text: TextSpan(
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.grey[300],
                               fontSize: 20,
+                              fontFamily: 'Arboria'
                               
                             ),
                             children: [
@@ -204,12 +212,12 @@ class Inpage extends StatelessWidget {
                 ),
               ),
               Container(
-              
+              color:Color(0xff141a24),
                 child: ListView(
                   children: <Widget>[
                     Card_cust(
                         "Page de Connexion",
-                        Colors.cyanAccent.shade100,
+                        Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,
@@ -218,7 +226,7 @@ class Inpage extends StatelessWidget {
                             }),
                     Card_cust(
                         "Mot de passe oublié",
-                        Colors.redAccent.shade200,
+                        Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,
@@ -227,7 +235,7 @@ class Inpage extends StatelessWidget {
                             }),
                     Card_cust(
                         "Page d'acceuil",
-                        Colors.deepPurpleAccent.shade100,
+                        Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,
@@ -236,7 +244,7 @@ class Inpage extends StatelessWidget {
                             }),
                     Card_cust(
                         "Menu",
-                        Colors.white,
+                       Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,
@@ -245,7 +253,7 @@ class Inpage extends StatelessWidget {
                             }),
                     Card_cust(
                         "Répondre à une question",
-                        Colors.deepOrangeAccent,
+                        Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,
@@ -254,7 +262,7 @@ class Inpage extends StatelessWidget {
                             }),
                     Card_cust(
                         "Ajouter et supprimer une photo",
-                        Colors.limeAccent,
+                        Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,
@@ -263,7 +271,7 @@ class Inpage extends StatelessWidget {
                             }),
                     Card_cust(
                         "Ajouter et supprimer commentaire",
-                        Colors.indigoAccent,
+                        Color(0xFF222b3b),
                         () => {
                               Navigator.push(
                                   context,

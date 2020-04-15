@@ -61,17 +61,17 @@ class _LoginState extends State<Login> {
                                   barrierDismissible: false, 
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Erreur'),
+                                      title: Text('Erreur', style: TextStyle(fontFamily: 'Arboria')),
                                       content: SingleChildScrollView(
                                         child: ListBody(
                                           children: <Widget>[
-                                            Text('Mauvais Id ou Mot de passe!'),
+                                            Text('Mauvais ID ou Mot de passe!', style: TextStyle(fontFamily: 'Arboria')),
                                           ],
                                         ),
                                       ),
                                       actions: <Widget>[
                                         FlatButton(
-                                          child: Text('Re-essayer'),
+                                          child: Text('Re-essayer', style: TextStyle(fontFamily: 'Arboria')),
                                           onPressed: () {
                                             if (this.mounted){
                                             setState(() {
@@ -96,7 +96,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       
         body: Container(
-          color:Colors.grey[900],
+          color:Color(0xff141a24),
       padding: EdgeInsets.all(10.0),
       child: Center(
         child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
@@ -116,14 +116,14 @@ class _LoginState extends State<Login> {
               height: 30.0,
             ),
             new Card(
-              color:Colors.grey[850],
+              color:Color(0xFF222b3b),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(15),
                       topRight: Radius.circular(15),
                       bottomLeft: Radius.circular(15),
                       topLeft: Radius.circular(15)),
-                  side: BorderSide(width: 0.5, color: Colors.grey)),
+                  ),
                 child: Padding(
                     padding: EdgeInsets.fromLTRB(15, 45, 15, 15),
                     child: Column(children: <Widget>[
@@ -150,7 +150,7 @@ class _LoginState extends State<Login> {
                                 color: Colors.grey,
                               ),
                               border: InputBorder.none,
-                              hintText: "Id d'utilisateur"),
+                              hintText: "ID d'utilisateur"),
 
                         ),
                       ),
@@ -208,15 +208,14 @@ class _LoginState extends State<Login> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                           ),
-                          color: Colors.cyan,
+                          color: Color(0xff444d5d),
                           child: Text(
                             'CONNEXION',
                             style: TextStyle(
                               color: Colors.white,
                               letterSpacing: 1.5,
                               fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'OpenSans',
+                              fontFamily: 'Arboria',
                             ),
                           ),
                         ),

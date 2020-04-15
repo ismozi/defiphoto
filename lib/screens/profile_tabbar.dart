@@ -343,7 +343,7 @@ _setInfo(){
                           Card(
                             child: Container(
                               color: Color(0xFF222b3b),
-                              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              padding: EdgeInsets.fromLTRB(24, 10, 20, 10),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
