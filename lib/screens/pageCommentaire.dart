@@ -139,9 +139,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
     stream();
-   
   }
 
 
