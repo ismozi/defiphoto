@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   Map questionData = {};
   List commentaires = [{}];
   bool _isLoading = true;
+  ScrollController _scrollController = new ScrollController();
 
 
   
@@ -30,8 +32,10 @@ class pageCommentaireState extends State<pageCommentaire> {
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200&&this.mounted){
        setState(() {
+         
          _isLoading=false;
          commentaires = json.decode(response.body);
+         
        });    
      }
 
@@ -124,6 +128,7 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   void stream() async {
   Duration interval = Duration(milliseconds: 500);
+  //Timer(Duration(milliseconds: 1000), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
   Stream<int> stream = Stream<int>.periodic(interval);
   await for(int i in stream){
   
@@ -140,6 +145,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    
     
     stream();
    
@@ -191,8 +197,9 @@ class pageCommentaireState extends State<pageCommentaire> {
                   child:  Column(children: <Widget>[
                 Expanded(
                   child: 
-                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 35,color: Colors.white)) :
+                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 40,color: Colors.white)) :
                   ListView.builder(
+                    controller: _scrollController,
                     padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {

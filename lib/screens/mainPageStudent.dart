@@ -154,7 +154,7 @@ _getQuestionSection(){
               ),
             ));
         }
-    ):Center(child:SpinKitDoubleBounce(color: Colors.white)));
+    ):Center(child:SpinKitDoubleBounce(size: 40,color: Colors.white)));
 
 
   }
