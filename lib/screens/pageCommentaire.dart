@@ -1,3 +1,12 @@
+/*
+TODO LIST :
+1- Voice Messages (envoyer et recevoir)
+2- Notification system
+3- faire en sorte qu'on doit pas scroll jusqu'en bas a chaque fois on rentre dans le chat room
+*/
+
+
+
 import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -23,7 +32,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   bool _isLoading = true;
 
 
-  getCommentaires() async {
+  _getCommentaires() async {
   
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
@@ -31,8 +40,7 @@ class pageCommentaireState extends State<pageCommentaire> {
        setState(() {
          _isLoading=false;
          commentaires = json.decode(response.body);
-       });    
-        // print(commentaires);   
+       });      
      }
  }
 
@@ -78,7 +86,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                     )
                 )  
                  :Text(
-                   message['text'] ?? "",
+                   message['text'],
                    style: TextStyle(
                      color:  Colors.white,
                      fontSize: 17.0,
@@ -147,7 +155,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          getCommentaires();
+          _getCommentaires();
        });
       }   
     });
@@ -163,7 +171,7 @@ class pageCommentaireState extends State<pageCommentaire> {
    if(this.mounted){
     setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          getCommentaires();
+          _getCommentaires();
        });
    }
   }
