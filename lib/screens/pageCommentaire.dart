@@ -1,12 +1,3 @@
-/*
-TODO LIST :
-1- Voice Messages (envoyer et recevoir)
-2- Notification system
-3- faire en sorte qu'on doit pas scroll jusqu'en bas a chaque fois on rentre dans le chat room
-*/
-
-
-
 import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -30,21 +21,25 @@ class pageCommentaireState extends State<pageCommentaire> {
   Map questionData = {};
   List commentaires = [{}];
   bool _isLoading = true;
+  ScrollController _scrollController = new ScrollController();
 
 
-  _getCommentaires() async {
+  
+
+  getCommentaires() async {
   
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200&&this.mounted){
        setState(() {
+         
          _isLoading=false;
          commentaires = json.decode(response.body);
-       });      
+         
+       });    
      }
- }
 
-  
+ }
 
 
      _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData){
@@ -67,7 +62,7 @@ class pageCommentaireState extends State<pageCommentaire> {
             //   )
             //   ),
              SizedBox(height: 5,),
-              Material(
+             Material(
 
                borderRadius: BorderRadius.circular(30),
                elevation: 7.0,
@@ -119,7 +114,6 @@ class pageCommentaireState extends State<pageCommentaire> {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState(() {
       imageFile = image;
-      _envoyerImage(imageFile.path);
     });
   }
 
@@ -127,7 +121,6 @@ class pageCommentaireState extends State<pageCommentaire> {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
       imageFile = image;
-      _envoyerImage(imageFile.path);
     });
   }
 
@@ -157,34 +150,36 @@ class pageCommentaireState extends State<pageCommentaire> {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          _getCommentaires();
+          getCommentaires();
        });
       }   
     });
   return null;
   }
 
-
-  void _stream() async {
+  void stream() async {
   Duration interval = Duration(milliseconds: 500);
+  //Timer(Duration(milliseconds: 1000), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
   Stream<int> stream = Stream<int>.periodic(interval);
   await for(int i in stream){
   
    if(this.mounted){
     setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          _getCommentaires();
+          getCommentaires();
        });
    }
   }
 }
 
-
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _stream();
+    
+    
+    stream();
+   
   }
 
 
@@ -223,8 +218,8 @@ class pageCommentaireState extends State<pageCommentaire> {
                 )
               ]),
         ),
-        body: Container( 
-          color: Color(0xff141a24),
+        body: Container( color: Color(0xff141a24),
+        
         child:new RefreshIndicator(child: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -234,9 +229,10 @@ class pageCommentaireState extends State<pageCommentaire> {
                   child:  Column(children: <Widget>[
                 Expanded(
                   child: 
-                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 35,color: Colors.white)) :
-                  ListView.builder( 
-                    padding: const EdgeInsets.all(15), 
+                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 40,color: Colors.white)) :
+                  ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(15),
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
                       if(commentaires[i]['sender']!= null){
@@ -295,6 +291,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                           }
                      
                         }
+
                       }
                     },
                   ),
@@ -351,7 +348,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 IconButton(
                                   icon: Icon(Icons.photo, color: Colors.black),
                                   onPressed: () {
-                                    _ouvrirGallery();
+                                    // _ouvrirGallery();
                                   },
                                 )
                               ],

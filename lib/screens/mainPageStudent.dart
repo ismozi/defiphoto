@@ -109,6 +109,8 @@ _getQuestionSection(){
 
   getBody(int currentIndex){
     
+
+    
     return Container(
       color: Color(0xff141a24),
       
@@ -130,8 +132,9 @@ _getQuestionSection(){
                       bottomLeft: Radius.circular(20),
                       topLeft: Radius.circular(20)),
                   ),
-              child: ListTile(
-                leading: Icon(Icons.work, size: 30,),
+              child: 
+              ListTile(
+                
                 title: Text(filteredQuestionTab[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
@@ -151,7 +154,7 @@ _getQuestionSection(){
               ),
             ));
         }
-    ):Center(child:SpinKitDoubleBounce(color: Colors.white)));
+    ):Center(child:SpinKitDoubleBounce(size: 40,color: Colors.white)));
 
 
   }
