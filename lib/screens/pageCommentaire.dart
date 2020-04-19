@@ -1,3 +1,12 @@
+/*
+TODO LIST :
+1- Voice Messages (envoyer et recevoir)
+2- Notification system
+3- faire en sorte qu'on doit pas scroll jusqu'en bas a chaque fois on rentre dans le chat room
+*/
+
+
+
 import 'dart:async';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -24,9 +33,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   ScrollController _scrollController = new ScrollController();
 
 
-  
-
-  getCommentaires() async {
+  _getCommentaires() async {
   
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
@@ -35,14 +42,18 @@ class pageCommentaireState extends State<pageCommentaire> {
          
          _isLoading=false;
          commentaires = json.decode(response.body);
-         
-       });    
+       });      
      }
-
  }
 
+  
 
-     _buildCommentaire(dynamic message, bool isMe, bool isStudent){
+
+     _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData){
+       String imagePath;
+       if(fromData){
+         imagePath = message['commentFile'];
+       }   
        return Padding(
          padding: EdgeInsets.all(10),
          child: Column(
@@ -56,14 +67,27 @@ class pageCommentaireState extends State<pageCommentaire> {
             //   )
             //   ),
              SizedBox(height: 5,),
-             Material(
+              Material(
 
                borderRadius: BorderRadius.circular(30),
                elevation: 7.0,
                color: isMe ? Colors.lightBlueAccent : (isStudent ? Colors.blueGrey : Colors.deepOrange),
                child: Padding(
                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 20),
-                 child: Text(
+                 child: fromData ? 
+                 Material(
+                    child: InkWell(
+                      onTap: () {
+                          //Si on veut agrandir la photo ou qqch
+                      },
+                      child: Container(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20.0),
+                          child: Image.network("https://defiphoto-api.herokuapp.com/$imagePath",),
+                        ),),
+                    )
+                )  
+                 :Text(
                    message['text'],
                    style: TextStyle(
                      color:  Colors.white,
@@ -95,6 +119,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState(() {
       imageFile = image;
+      _envoyerImage(imageFile.path);
     });
   }
 
@@ -102,6 +127,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     this.setState(() {
       imageFile = image;
+      _envoyerImage(imageFile.path);
     });
   }
 
@@ -114,19 +140,32 @@ class pageCommentaireState extends State<pageCommentaire> {
     var response = await http.post("https://defiphoto-api.herokuapp.com/comments/noFile", body : data);
   }
 
+
+    _envoyerImage(dynamic imagePath) async {
+       var reponse = await http.MultipartRequest('POST', Uri.parse("https://defiphoto-api.herokuapp.com/comments/"))
+       ..fields['sender'] = questionData["givenId"].trim().toString()
+       ..fields['questionId'] = questionData["questionId"].toString()
+       ..files.add(await http.MultipartFile.fromPath('commentFile', imagePath));
+        var res = await reponse.send();
+        if (res.statusCode == 200) print('Uploaded!');
+  }
+
+
+
   Future<Null> _refresh() async{
    await Future.delayed(Duration(milliseconds: 500)).then((_) {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          getCommentaires();
+          _getCommentaires();
        });
       }   
     });
   return null;
   }
 
-  void stream() async {
+
+  void _stream() async {
   Duration interval = Duration(milliseconds: 500);
   //Timer(Duration(milliseconds: 1000), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
   Stream<int> stream = Stream<int>.periodic(interval);
@@ -135,20 +174,18 @@ class pageCommentaireState extends State<pageCommentaire> {
    if(this.mounted){
     setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          getCommentaires();
+          _getCommentaires();
        });
    }
   }
 }
 
+
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    
-    
-    stream();
-   
+    _stream();
   }
 
 
@@ -159,6 +196,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     // List<Message> commentaires = _gestionTab();
     bool isMe;
     bool isStudent;
+    bool fromData;
 
     return Scaffold(
         appBar: AppBar(flexibleSpace: Container(
@@ -186,8 +224,8 @@ class pageCommentaireState extends State<pageCommentaire> {
                 )
               ]),
         ),
-        body: Container( color: Color(0xff141a24),
-        
+        body: Container( 
+          color: Color(0xff141a24),
         child:new RefreshIndicator(child: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(new FocusNode());
@@ -197,36 +235,79 @@ class pageCommentaireState extends State<pageCommentaire> {
                   child:  Column(children: <Widget>[
                 Expanded(
                   child: 
-                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 40,color: Colors.white)) :
-                  ListView.builder(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.all(15),
+                  _isLoading ? Center(child:SpinKitDoubleBounce(size: 35,color: Colors.white)) :
+                  ListView.builder( 
+                    padding: const EdgeInsets.all(15), 
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
                       if(commentaires[i]['sender']!= null){
                        try{
                       
-                      if(int.parse(commentaires[i]['sender']) is int){
-                        if (commentaires[i]['sender'] == questionData["givenId"]){
-                        isStudent=false;
-                        isMe = true;
-                        
-                        return _buildCommentaire(commentaires[i], isMe,isStudent);
-                        }
-                        else{
-                        isStudent=true;
-                        isMe = false;
-                        
-                        return _buildCommentaire(commentaires[i], isMe,isStudent);
-                        }
-                        }
+                          if(int.parse(commentaires[i]['sender']) is int){
+                            if (commentaires[i]['sender'] == questionData["givenId"]){
+                            
+                              if(commentaires[i]['commentFile'] != null){
+                                isStudent=false;
+                                isMe = true;
+                                fromData = true;
+                                   print(fromData);
+                                print("1");
+                                return _buildCommentaire(commentaires[i], isMe, isStudent, fromData);
+                             
+                              }
+                              else{
+                                isStudent=false;
+                                isMe = true;
+                                fromData = false;
+                                print(fromData);
+                                print("2");
+                                return _buildCommentaire(commentaires[i], isMe, isStudent, fromData);
+                                  
+                              }
+                           
+                            }
+
+
+                            else{
+                               if(commentaires[i]['commentFile'] != null){
+                                 isStudent=true;
+                                  isMe = false;
+                                  fromData = true;
+                                   print(fromData);
+                                print("3");
+                                  return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
+                                 }
+                                 else{
+                                    isStudent=true;
+                                  isMe = false;
+                                  fromData = false;
+                                   print(fromData);
+                                print("4");
+                                  return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
+                                 }
+                               }
+                            }
+
                       }
                       on FormatException catch(err){
+                          if(commentaires[i]['commentFile'] != null){
                         isStudent=false;
                         isMe = false;
-                        
-                        return _buildCommentaire(commentaires[i], isMe,isStudent);
-                      }
+                        fromData = true;
+                         print(fromData);
+                                print("5");
+                        return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
+                          }
+                          else{
+                            isStudent=false;
+                        isMe = false;
+                        fromData = false;
+                         print(fromData);
+                                print("6");
+                        return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
+                          }
+                     
+                        }
                       }
                     },
                   ),
@@ -283,7 +364,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 IconButton(
                                   icon: Icon(Icons.photo, color: Colors.black),
                                   onPressed: () {
-                                    // _ouvrirGallery();
+                                    _ouvrirGallery();
                                   },
                                 )
                               ],
