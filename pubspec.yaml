@@ -30,6 +30,7 @@ dependencies:
   flutter_spinkit: ^4.1.2
   backdrop: ^0.2.8
   pinch_zoom_image: "^0.2.5"
+  flutter_image_compress: ^0.6.5+1
   
 
 dev_dependencies:
