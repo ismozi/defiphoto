@@ -342,13 +342,13 @@ class pageCommentaireState extends State<pageCommentaire> {
                                   icon: Icon(Icons.photo_camera,
                                       color: Colors.black),
                                   onPressed: () {
-                                    // _ouvrirCamera();
+                                    _ouvrirCamera();
                                   },
                                 ),
                                 IconButton(
                                   icon: Icon(Icons.photo, color: Colors.black),
                                   onPressed: () {
-                                    // _ouvrirGallery();
+                                    _ouvrirGallery();
                                   },
                                 )
                               ],
