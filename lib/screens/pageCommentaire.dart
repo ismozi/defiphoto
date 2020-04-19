@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pinch_zoom_image/pinch_zoom_image.dart';
 
 class pageCommentaire extends StatefulWidget {
   
@@ -396,7 +397,17 @@ class _imagePageState extends State<imagePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),),
-      body: Center(child :Image.network(widget.url)),
-    );
+      body: Center(child :
+      PinchZoomImage(
+        image: Image.network(widget.url),
+        zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+        hideStatusBarWhileZooming: true,
+        onZoomStart: () {
+            print('Zoom started');
+        },
+        onZoomEnd: () {
+            print('Zoom finished');
+        },
+        )));
   }
 }

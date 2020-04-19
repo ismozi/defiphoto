@@ -165,6 +165,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1+1"
+  pinch_zoom_image:
+    dependency: "direct main"
+    description:
+      name: pinch_zoom_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5"
   sky_engine:
     dependency: transitive
     description: flutter
