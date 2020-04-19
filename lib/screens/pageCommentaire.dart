@@ -162,7 +162,6 @@ class pageCommentaireState extends State<pageCommentaire> {
   //Timer(Duration(milliseconds: 1000), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
   Stream<int> stream = Stream<int>.periodic(interval);
   await for(int i in stream){
-  
    if(this.mounted){
     setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
@@ -176,10 +175,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
-    
     stream();
-   
   }
 
 
