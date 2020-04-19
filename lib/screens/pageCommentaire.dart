@@ -48,9 +48,11 @@ class pageCommentaireState extends State<pageCommentaire> {
 
 
      _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData){
-       String imagePath;
+       String filePath;
+       String url;
        if(fromData){
-         imagePath = message['commentFile'];
+         filePath = message['fileName'];
+         url = "https://defiphoto-api.herokuapp.com/comments/file/$filePath";
        }   
        return Padding(
          padding: EdgeInsets.all(10),
@@ -76,17 +78,17 @@ class pageCommentaireState extends State<pageCommentaire> {
                  Material(
                     child: InkWell(
                       onTap: () {
-                          //Si on veut agrandir la photo ou qqch
+                           Navigator.push(context,MaterialPageRoute(builder: (context) => imagePage(url)));
                       },
                       child: Container(
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
-                          child: Image.network("https://defiphoto-api.herokuapp.com/$imagePath",),
+                          child: Image.network(url,),
                         ),),
                     )
                 )  
                  :Text(
-                   message['text'],
+                   message['text']?? "",
                    style: TextStyle(
                      color:  Colors.white,
                      fontSize: 17.0,
@@ -139,11 +141,11 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
 
-    _envoyerImage(dynamic imagePath) async {
+    _envoyerImage(dynamic filePath) async {
        var reponse = await http.MultipartRequest('POST', Uri.parse("https://defiphoto-api.herokuapp.com/comments/"))
        ..fields['sender'] = questionData["givenId"].trim().toString()
        ..fields['questionId'] = questionData["questionId"].toString()
-       ..files.add(await http.MultipartFile.fromPath('commentFile', imagePath));
+       ..files.add(await http.MultipartFile.fromPath('commentFile', filePath));
         var res = await reponse.send();
         if (res.statusCode == 200) print('Uploaded!');
   }
@@ -243,12 +245,10 @@ class pageCommentaireState extends State<pageCommentaire> {
                           if(int.parse(commentaires[i]['sender']) is int){
                             if (commentaires[i]['sender'] == questionData["givenId"]){
                             
-                              if(commentaires[i]['commentFile'] != null){
+                              if(commentaires[i]['fileName'] != null){
                                 isStudent=false;
                                 isMe = true;
                                 fromData = true;
-                                   print(fromData);
-                                print("1");
                                 return _buildCommentaire(commentaires[i], isMe, isStudent, fromData);
                              
                               }
@@ -256,8 +256,6 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 isStudent=false;
                                 isMe = true;
                                 fromData = false;
-                                print(fromData);
-                                print("2");
                                 return _buildCommentaire(commentaires[i], isMe, isStudent, fromData);
                                   
                               }
@@ -266,20 +264,16 @@ class pageCommentaireState extends State<pageCommentaire> {
 
 
                             else{
-                               if(commentaires[i]['commentFile'] != null){
+                               if(commentaires[i]['fileName'] != null){
                                  isStudent=true;
                                   isMe = false;
                                   fromData = true;
-                                   print(fromData);
-                                print("3");
                                   return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                                  }
                                  else{
                                     isStudent=true;
                                   isMe = false;
                                   fromData = false;
-                                   print(fromData);
-                                print("4");
                                   return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                                  }
                                }
@@ -287,20 +281,16 @@ class pageCommentaireState extends State<pageCommentaire> {
 
                       }
                       on FormatException catch(err){
-                          if(commentaires[i]['commentFile'] != null){
+                          if(commentaires[i]['fileName'] != null){
                         isStudent=false;
                         isMe = false;
                         fromData = true;
-                         print(fromData);
-                                print("5");
                         return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                           }
                           else{
                             isStudent=false;
                         isMe = false;
                         fromData = false;
-                         print(fromData);
-                                print("6");
                         return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                           }
                      
@@ -387,5 +377,29 @@ class pageCommentaireState extends State<pageCommentaire> {
                     )),
               ])
     )])), onRefresh: _refresh)));
+  }
+}
+
+class imagePage extends StatefulWidget {
+  String url;
+  imagePage(String url){
+   this.url = url;
+  }
+
+  @override
+  _imagePageState createState() => _imagePageState();
+  
+}
+
+
+class _imagePageState extends State<imagePage> {
+  
+ 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),),
+      body: Center(child :Image.network(widget.url)),
+    );
   }
 }
