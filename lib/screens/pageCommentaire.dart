@@ -118,6 +118,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     this.setState(() {
       imageFile = compImage;
     });
+    _envoyerImage(imageFile.path);
   }
 
   _ouvrirCamera() async {
@@ -126,6 +127,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     this.setState(() {
       imageFile = compImage;
     });
+    _envoyerImage(imageFile.path);
   }
 
  Future<File> _compresserImage(File file, String targetPath) async {
