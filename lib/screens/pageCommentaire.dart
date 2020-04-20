@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pinch_zoom_image/pinch_zoom_image.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class pageCommentaire extends StatefulWidget {
   
@@ -112,17 +114,31 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    var compImage = await _compresserImage(image,image.path);
     this.setState(() {
-      imageFile = image;
+      imageFile = compImage;
     });
+    _envoyerImage(imageFile.path);
   }
 
   _ouvrirCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var compImage = await _compresserImage(image, image.path);
     this.setState(() {
-      imageFile = image;
-      
+      imageFile = compImage;
     });
+    _envoyerImage(imageFile.path);
+  }
+
+ Future<File> _compresserImage(File file, String targetPath) async {
+        var result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path, targetPath,
+        quality: 88,
+        rotate: 180,
+      );
+    print(file.lengthSync());
+    print(result.lengthSync());
+    return result;
   }
 
   _envoyerCommentaire(String text) async{
@@ -146,6 +162,7 @@ class pageCommentaireState extends State<pageCommentaire> {
 
 
 
+
   Future<Null> _refresh() async{
    await Future.delayed(Duration(milliseconds: 500)).then((_) {
       if(this.mounted){
@@ -160,13 +177,10 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   void stream() async {
   Duration interval = Duration(milliseconds: 500);
-  //Timer(Duration(milliseconds: 1000), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
   Stream<int> stream = Stream<int>.periodic(interval);
   await for(int i in stream){
-  
    if(this.mounted){
     setState(() {
-          questionData = ModalRoute.of(context).settings.arguments;
           getCommentaires();
        });
    }
@@ -177,10 +191,8 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    
-    
+    questionData = ModalRoute.of(context).settings.arguments;
     stream();
-   
   }
 
 
@@ -391,13 +403,21 @@ class imagePage extends StatefulWidget {
 
 
 class _imagePageState extends State<imagePage> {
-  
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),),
-      body: Center(child :Image.network(widget.url)),
-    );
+      body: Center(child :
+      PinchZoomImage(
+        image: Image.network(widget.url),
+        zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
+        hideStatusBarWhileZooming: true,
+        onZoomStart: () {
+            print('Zoom started');
+        },
+        onZoomEnd: () {
+            print('Zoom finished');
+        },
+        )));
   }
 }
