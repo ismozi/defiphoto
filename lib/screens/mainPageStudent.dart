@@ -27,14 +27,13 @@ class mainPage extends State<MainPage> {
   
   List filteredQuestionTab =[];
   List questionSectionTab=[];
-     var questionSection;
+  var questionSection;
   
 
  
 
 
-  getData() async {
-  
+  _getData() async {
      String id = userData["givenId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
      if (response.statusCode == 200){
@@ -93,7 +92,7 @@ class mainPage extends State<MainPage> {
 
 _getQuestionSection(){
   questionSectionTab = new List();
-        getData();
+        _getData();
 
     for(var i=0; i < questions.length ; i++){
       questionSection = {
@@ -107,10 +106,8 @@ _getQuestionSection(){
     }
 }
 
-  getBody(int currentIndex){
-    
+  _getBody(int currentIndex){
 
-    
     return Container(
       color: Color(0xff141a24),
       
@@ -142,19 +139,21 @@ _getQuestionSection(){
                       fontFamily: 'Arboria'),
                 ),
                 subtitle: Text(filteredQuestionTab[index]["sender"]??"",style: TextStyle(fontFamily:'Arboria')),
+                leading: Icon(Icons.work, size: 40),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
                   
                 
                  Navigator.pushNamed(context,'/pageCommentaire',arguments: {
                        'questionId': filteredQuestionTab[index]["id"],
-                       'givenId' : userData['givenId']
+                       'givenId' : userData['givenId'],
+                       'role' : userData['role']
                   });
                 },
               ),
             ));
         }
-    ):Center(child:SpinKitDoubleBounce(size: 40,color: Colors.white)));
+    ):Center(child:Text("Il n'y a pas de questions pour le moment...", style: TextStyle(color: Colors.blueGrey, fontSize: 40,letterSpacing: 1.2,fontFamily: 'Arboria' ))));
 
 
   }
@@ -164,9 +163,7 @@ Future<Null> _refresh() async{
    await Future.delayed(Duration(milliseconds: 500)).then((_) {
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;
-       
-           
-          getData().then((data){
+          _getData().then((data){
             _getQuestionSection();
             filteredQuestionTab=questionSectionTab;
           });         
@@ -183,8 +180,6 @@ Future<Null> _refresh() async{
       print(filteredQuestionTab);
     });
   }
-
-
 
 
 @override
@@ -212,7 +207,6 @@ Future<Null> _refresh() async{
             ])          
          ),        
      ),      
-        
           title: !isSearching ? Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -246,11 +240,11 @@ Future<Null> _refresh() async{
               });
             })
           ]),
-      body: new RefreshIndicator(child: getBody(_currentIndex), onRefresh: _refresh) ,
+      body: new RefreshIndicator(child: _getBody(_currentIndex), onRefresh: _refresh) ,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(onPressed: () {
             Navigator.of(context).push(
-                CupertinoPageRoute(builder: (context) => (pageQuestion())));
+                CupertinoPageRoute(builder: (context) => (pageQuestion(userData["givenId"],userData['role']))));
           },
           backgroundColor: Color(0xff444d5d),
           child: Icon(Icons.question_answer, color:Colors.white)),

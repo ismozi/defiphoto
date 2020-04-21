@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:pinch_zoom_image/pinch_zoom_image.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 class pageCommentaire extends StatefulWidget {
@@ -34,13 +34,10 @@ class pageCommentaireState extends State<pageCommentaire> {
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200&&this.mounted){
        setState(() {
-         
          _isLoading=false;
          commentaires = json.decode(response.body);
-         
        });    
      }
-
  }
 
 
@@ -65,8 +62,7 @@ class pageCommentaireState extends State<pageCommentaire> {
             //   ),
              SizedBox(height: 5,),
              Material(
-
-               borderRadius: BorderRadius.circular(30),
+               borderRadius: isMe ? BorderRadius.only(bottomLeft:  Radius.circular(40),bottomRight: Radius.circular(0) ,topLeft:  Radius.circular(40),topRight: Radius.circular(40) ) :  BorderRadius.only(bottomLeft:  Radius.circular(0),bottomRight: Radius.circular(40) ,topLeft:  Radius.circular(40),topRight: Radius.circular(40) ),
                elevation: 7.0,
                color: isMe ? Colors.lightBlueAccent : (isStudent ? Colors.blueGrey : Colors.deepOrange),
                child: Padding(
@@ -100,54 +96,53 @@ class pageCommentaireState extends State<pageCommentaire> {
      }
   
 
-  // _gestionTab() {
-  //   print(widget.idConvo);
-  //   List<Message> commentaires = new List();
-  //   for (int i = 0; i < messages.length; i++) {
-  //     Message commentaire = messages[i];
-  //     if (widget.idConvo == commentaire.idConvo) {
-  //       commentaires.add(commentaire);
-  //     }
-  //   }
-  //   return commentaires;
-  // }
-
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    var compImage = await _compresserImage(image,image.path);
+    // var compImage = await _compresserImage(image,'/storage');
     this.setState(() {
-      imageFile = compImage;
+      imageFile = image;
     });
     _envoyerImage(imageFile.path);
+    // compImage.delete();
   }
 
   _ouvrirCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    var compImage = await _compresserImage(image, image.path);
+    // var compImage = await _compresserImage(image, '/storage');
     this.setState(() {
-      imageFile = compImage;
+      imageFile = image;
     });
     _envoyerImage(imageFile.path);
+    // compImage.delete();
   }
 
- Future<File> _compresserImage(File file, String targetPath) async {
-        var result = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path, targetPath,
-        quality: 88,
-        rotate: 180,
-      );
-    print(file.lengthSync());
-    print(result.lengthSync());
-    return result;
-  }
+//  Future<File> _compresserImage(File file, String targetPath) async {
+//     try{
+//         var result = await FlutterImageCompress.compressAndGetFile(
+//         file.absolute.path, targetPath,
+//         quality: 88,
+//         rotate: 180,
+//       );
+//     print(file.lengthSync());
+//     print(result.lengthSync());
+//     return result;
+//     }
+//     catch(err){
+//       print(err);
+//       return file;
+//     }
+//   }
 
   _envoyerCommentaire(String text) async{
+    if(text.trim().isNotEmpty){
       var data = {
         "text" : text.trim().toString(),
         "sender" : questionData["givenId"].trim().toString(),
-        "questionId" : questionData["questionId"].toString()
+        "questionId" : questionData["questionId"].toString(),
+        "role" : questionData["role"].toString()
     };
     var response = await http.post("https://defiphoto-api.herokuapp.com/comments/noFile", body : data);
+    }
   }
 
 
@@ -155,6 +150,7 @@ class pageCommentaireState extends State<pageCommentaire> {
        var reponse = await http.MultipartRequest('POST', Uri.parse("https://defiphoto-api.herokuapp.com/comments/"))
        ..fields['sender'] = questionData["givenId"].trim().toString()
        ..fields['questionId'] = questionData["questionId"].toString()
+       ..fields['role'] = questionData["role"].toString()
        ..files.add(await http.MultipartFile.fromPath('commentFile', filePath));
         var res = await reponse.send();
         if (res.statusCode == 200) print('Uploaded!');
@@ -181,6 +177,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   await for(int i in stream){
    if(this.mounted){
     setState(() {
+      questionData = ModalRoute.of(context).settings.arguments;
           getCommentaires();
        });
    }
@@ -191,7 +188,6 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    questionData = ModalRoute.of(context).settings.arguments;
     stream();
   }
 
@@ -249,30 +245,23 @@ class pageCommentaireState extends State<pageCommentaire> {
                     itemCount: commentaires.length,
                     itemBuilder: (BuildContext ctx, int i) {
                       if(commentaires[i]['sender']!= null){
-                       try{
-                      
-                          if(int.parse(commentaires[i]['sender']) is int){
-                            if (commentaires[i]['sender'] == questionData["givenId"]){
-                            
+                            if (commentaires[i]['role'] == questionData["role"] && commentaires[i]['sender'] == questionData['givenId'] ){
                               if(commentaires[i]['fileName'] != null){
                                 isStudent=false;
                                 isMe = true;
                                 fromData = true;
                                 return _buildCommentaire(commentaires[i], isMe, isStudent, fromData);
-                             
                               }
                               else{
                                 isStudent=false;
                                 isMe = true;
                                 fromData = false;
                                 return _buildCommentaire(commentaires[i], isMe, isStudent, fromData);
-                                  
                               }
-                           
-                            }
+                           }
 
 
-                            else{
+                          if(commentaires[i]['role'] == "S" && commentaires[i]['sender'] != questionData['givenId'] ){
                                if(commentaires[i]['fileName'] != null){
                                  isStudent=true;
                                   isMe = false;
@@ -285,11 +274,10 @@ class pageCommentaireState extends State<pageCommentaire> {
                                   fromData = false;
                                   return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                                  }
-                               }
                             }
+                            
 
-                      }
-                      on FormatException catch(err){
+                  if(commentaires[i]['role'] == "P" && commentaires[i]['sender'] != questionData['givenId'] ){
                           if(commentaires[i]['fileName'] != null){
                         isStudent=false;
                         isMe = false;
@@ -302,9 +290,8 @@ class pageCommentaireState extends State<pageCommentaire> {
                         fromData = false;
                         return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                           }
-                     
-                        }
-
+                       }
+                       
                       }
                     },
                   ),
@@ -335,7 +322,6 @@ class pageCommentaireState extends State<pageCommentaire> {
                                       setState(() {
                                         _envoyerCommentaire(messageSend.text);
                                         messageSend.clear();
-                                      
                                         FocusScope.of(context)
                                             .requestFocus(new FocusNode());
                                       });
@@ -406,18 +392,34 @@ class _imagePageState extends State<imagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),),
-      body: Center(child :
-      PinchZoomImage(
-        image: Image.network(widget.url),
-        zoomedBackgroundColor: Color.fromRGBO(240, 240, 240, 1.0),
-        hideStatusBarWhileZooming: true,
-        onZoomStart: () {
-            print('Zoom started');
-        },
-        onZoomEnd: () {
-            print('Zoom finished');
-        },
-        )));
+      appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () => Navigator.pop(context)),
+      flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+     ), 
+     ),
+      body:Container( color: Color(0xff141a24),child:
+      Center(child :  PhotoView(
+      imageProvider: NetworkImage(widget.url),
+      backgroundDecoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: <Color>[
+              Color(0xff141a24),
+              Color(0xFF2b3444)
+            ])          
+         ),        
+      initialScale: 1.0,
+      minScale: 0.5,
+    )
+     )));
   }
 }
