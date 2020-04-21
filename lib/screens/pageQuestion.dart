@@ -22,11 +22,22 @@ class pageQuestionState extends State<pageQuestion> {
   
   List questions = [{}];
   List users= [{}];
+  List profs = [{}];
   File file;
   TextEditingController messageSend = new TextEditingController();
   bool isEmpty;
   bool isLoading=true;
 
+  _getProfs() async{
+    var response = await http.get("https://defiphoto-api.herokuapp.com/users/sup");
+    if (response.statusCode == 200&&this.mounted){
+       setState(() {
+         profs = json.decode(response.body);
+       });    
+        print(profs);   
+     }
+  }
+  
   _ouvrirGallery() async{
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     this.setState((){
@@ -59,14 +70,6 @@ class pageQuestionState extends State<pageQuestion> {
      }
   }
 
-  _getProfs() async {
-     var response = await http.get("https://defiphoto-api.herokuapp.com/users/profs/");
-     if (response.statusCode == 200 && this.mounted){
-       setState(() {
-         users =  json.decode(response.body);
-       });     
-     }
-  }
 
   _creerQuestion() async {
 
