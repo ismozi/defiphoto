@@ -153,7 +153,7 @@ _getQuestionSection(){
               ),
             ));
         }
-    ):Center(child:Text("Il n'y a pas de questions pour le moment...", style: TextStyle(color: Colors.blueGrey, fontSize: 40,letterSpacing: 1.2,fontFamily: 'Arboria' ))));
+    ):Center(child:Text("Il n'y a pas de questions", style: TextStyle(color: Colors.blueGrey, fontSize: 20,letterSpacing: 1.2,fontFamily: 'Arboria' ))));
 
 
   }
