@@ -28,7 +28,7 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   
 
-  getCommentaires() async {
+  _getCommentaires() async {
   
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
@@ -39,6 +39,16 @@ class pageCommentaireState extends State<pageCommentaire> {
        });    
      }
  }
+
+ _enleverCommentaire(dynamic message) async {
+   String id = message['_id'];
+   var response = await http.delete("https://defiphoto-api.herokuapp.com/comments/$id"); 
+      if (response.statusCode == 200&&this.mounted){
+          print('Deleted');
+     }
+
+ }
+
 
 
      _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData){
@@ -80,14 +90,59 @@ class pageCommentaireState extends State<pageCommentaire> {
                         ),),
                     )
                 )  
-                 :Text(
+                 :InkWell(
+                   onLongPress: (){
+                     if(questionData['role']== "P" || questionData['role']== "A" ){
+                        return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false, 
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Avertissement', style: TextStyle(fontFamily: 'Arboria')),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text('Voulez-vous enlevez ce message?', style: TextStyle(fontFamily: 'Arboria')),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Oui', style: TextStyle(fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted){
+                                            setState(() {
+                                            _enleverCommentaire(message);
+                                            Navigator.of(context).pop();
+                                            });
+                                            }
+                                          },
+                                        ),
+                                             FlatButton(
+                                          child: Text('Non', style: TextStyle(fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted){
+                                            setState(() {
+                                            Navigator.of(context).pop();
+                                            });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                   }
+                    } ,
+                   child :Text(
                    message['text']?? "",
+
                    style: TextStyle(
                      color:  Colors.white,
                      fontSize: 17.0,
                      fontWeight: FontWeight.bold,
                    ),
-                   ),
+                   ))
                ),
              ),
            ],
@@ -164,7 +219,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       if(this.mounted){
        setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          getCommentaires();
+          _getCommentaires();
        });
       }   
     });
@@ -178,7 +233,7 @@ class pageCommentaireState extends State<pageCommentaire> {
    if(this.mounted){
     setState(() {
       questionData = ModalRoute.of(context).settings.arguments;
-          getCommentaires();
+          _getCommentaires();
        });
    }
   }
@@ -291,9 +346,12 @@ class pageCommentaireState extends State<pageCommentaire> {
                         return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                           }
                        }
-                       
+
                       }
+
                     },
+
+
                   ),
                 ),
                 Container(
