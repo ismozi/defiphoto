@@ -140,13 +140,13 @@ class pageQuestionState extends State<pageQuestion> {
                   ),
               child: 
               ListTile(
-                title: Text(users[index]["firstName"] ??"",
+                title: Text(profs[index]["firstName"] ??"",
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(users[index]["lastName"]??"",style: TextStyle(fontFamily:'Arboria')),
+                subtitle: Text(profs[index]["lastName"]??"",style: TextStyle(fontFamily:'Arboria')),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
                     Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(users[index]['givenId'],widget.id,widget.role)));
@@ -185,10 +185,10 @@ class _QuestionsState extends State<Questions> {
     var sender = widget.id;
     var reciever = widget.idProf;
     var data = {
-         "sender" : sender,
-        "recievers" : reciever
+         "sender" : sender.toString(),
+        "recievers" : reciever.toString()
     };
-    var response = await http.post("https://defiphoto-api.herokuapp.com/questions/auProfs",body : data);
+    var response = await http.post("https://defiphoto-api.herokuapp.com/questions/auProfs", body:data);
      if (response.statusCode == 200 && this.mounted){
        setState(() {
          questions =  json.decode(response.body);
@@ -308,16 +308,19 @@ class creationQuestion extends StatefulWidget {
 class _creationQuestionState extends State<creationQuestion> {
 
      _envoyerQuestion(String text, String type) async {
+       
+        if(text.trim().isNotEmpty){
        var data = {
-         "text" : text.trim(),
-         "sender" : widget.id,
-        "recievers" : widget.idProf,
-        "type" : type.trim()
+         "text" : text.trim().toString(),
+         "sender" : widget.id.toString(),
+        "reciever" : widget.idProf.toString(),
+        "type" : type.trim().toString()
     };
       var response = await http.post("https://defiphoto-api.herokuapp.com/questions", body : data);
-      if(response.statusCode==200){
+         if(response.statusCode==200){
       print("Done!");
       }
+        }
   }
 
 TextEditingController questionText = new TextEditingController();
