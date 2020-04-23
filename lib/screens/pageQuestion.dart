@@ -53,8 +53,15 @@ class pageQuestionState extends State<pageQuestion> {
   }
 
   _getQuestions() async{
+       var response;
       String id = widget.id;
-     var response = await http.get("https://defiphoto-api.herokuapp.com/questions/sender/$id");
+      if(widget.role == "S"){
+     response = await http.get("https://defiphoto-api.herokuapp.com/questions/sender/$id");
+      }
+      else{
+         response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+      }
+
      if (response.statusCode == 200 && this.mounted){
        setState(() {
          questions =  json.decode(response.body);
@@ -68,11 +75,6 @@ class pageQuestionState extends State<pageQuestion> {
          }
        });     
      }
-  }
-
-
-  _creerQuestion() async {
-
   }
 
 

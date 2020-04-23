@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
         });
       }
       if(userData["role"]=="P"){
-            Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
+            Navigator.pushReplacementNamed(context,'/mainPageProf',arguments: {
           'givenId': userData["givenId"],
             'firstName': userData["firstName"],
             'lastName': userData["lastName"],

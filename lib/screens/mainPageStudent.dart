@@ -19,6 +19,7 @@ class MainPage extends StatefulWidget {
 class mainPage extends State<MainPage> {
 
   List questions = [{}];
+  List users = [{}];
   Map userData = {};
   int _currentIndex=0;
   String type;
@@ -41,6 +42,26 @@ class mainPage extends State<MainPage> {
          questions =  json.decode(response.body);
        });     
      }
+ }
+
+  _getUser() async {
+     var response = await http.get("https://defiphoto-api.herokuapp.com/users");
+     if (response.statusCode == 200){
+       setState(() {
+         users =  json.decode(response.body);
+       });     
+     }
+     
+ }
+
+ String _getUsername(String id){
+   String name = "";
+   for(int i=0; i<users.length; i++){
+       if(id == users[i]['givenId']){
+           name = users[i]['firstName'] + " " + users[i]['lastName'];
+       }
+     }
+     return name;
  }
 
  void _selectedTab(int index) {
@@ -106,7 +127,7 @@ _getQuestionSection(){
     }
 }
 
-  _getBody(int currentIndex){
+  _getBody(int currentIndex) {
 
     return Container(
       color: Color(0xff141a24),
@@ -138,7 +159,7 @@ _getQuestionSection(){
                       color: Colors.white,
                       fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(filteredQuestionTab[index]["sender"]??"",style: TextStyle(fontFamily:'Arboria')),
+                subtitle: Text(_getUsername(filteredQuestionTab[index]["sender"])??"",style: TextStyle(fontFamily:'Arboria')),
                 leading: Icon(Icons.work, size: 40),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
@@ -167,7 +188,10 @@ Future<Null> _refresh() async{
             _getQuestionSection();
             filteredQuestionTab=questionSectionTab;
           });         
-       });   
+        
+       });  
+       _getUser(); 
+         
     });
   return null;
   }
@@ -186,6 +210,7 @@ Future<Null> _refresh() async{
   void initState() {
     super.initState();
      _refresh();
+     
   }
 
   

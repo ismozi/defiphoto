@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test_flutter/screens/pageQuestion.dart';
+
 
 
 class customDrawer extends StatelessWidget {
   Map userData= {};
   customDrawer({this.userData});
 
-  // _getQuestions() async {
-  //     String id = userData["givenId"];
-  //    var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
-  //    if (response.statusCode == 200){
-  //      setState(() {
-  //        questions =  json.decode(response.body);
-  //      });     
-  //    }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +55,7 @@ class customDrawer extends StatelessWidget {
             ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Questions - Reponses',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {  Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(users[index]['givenId'],widget.id,widget.role)));},
+            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => pageQuestion(userData['givenId'],userData['role'])))},
           ),
           ListTile(
             leading: Icon(Icons.info),

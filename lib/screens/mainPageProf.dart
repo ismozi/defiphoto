@@ -40,6 +40,7 @@ class mainPage extends State<MainPage2> {
        setState(() {
          questions =  json.decode(response.body);
        });     
+       print(questions);
      }
  }
 
@@ -248,7 +249,7 @@ Future<Null> _refresh() async{
                 CupertinoPageRoute(builder: (context) => (pageQuestion(userData["givenId"],userData['role']))));
           },
           backgroundColor: Color(0xff444d5d),
-          child: Icon(Icons.question_answer, color:Colors.white)),
+          child: Icon(Icons.add, color:Colors.white)),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,
         selectedColor: Color(0xFF0d1118),
@@ -256,7 +257,7 @@ Future<Null> _refresh() async{
         backgroundColor: Color(0xFF222b3b),
         items: [
           FABBottomAppBarItem(text: "M"),
-          FABBottomAppBarItem(text: "E"),
+          FABBottomAppBarItem(text: "É"),
           FABBottomAppBarItem(text: "T"),
           FABBottomAppBarItem(text: "I"),
           FABBottomAppBarItem(text: "E"),
