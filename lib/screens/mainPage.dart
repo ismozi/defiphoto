@@ -11,14 +11,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
 
-class MainPage2 extends StatefulWidget {
+class MainPage extends StatefulWidget {
   
   mainPage createState() => new mainPage();
 }
 
-class mainPage extends State<MainPage2> {
+class mainPage extends State<MainPage> {
 
   List questions = [{}];
+  List users = [{}];
   Map userData = {};
   int _currentIndex=0;
   String type;
@@ -35,13 +36,38 @@ class mainPage extends State<MainPage2> {
 
   _getData() async {
      String id = userData["givenId"];
-     var response = await http.get("https://defiphoto-api.herokuapp.com/questions/sender/$id");
+     var response;
+     if(userData['role']== "P"){
+    response = await http.get("https://defiphoto-api.herokuapp.com/questions/sender/$id"); 
+     }
+     if(userData['role']== "S"){
+     response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+     }
      if (response.statusCode == 200){
        setState(() {
          questions =  json.decode(response.body);
        });     
-       print(questions);
      }
+ }
+
+  _getUser() async {
+     var response = await http.get("https://defiphoto-api.herokuapp.com/users");
+     if (response.statusCode == 200){
+       setState(() {
+         users =  json.decode(response.body);
+       });     
+     }
+     
+ }
+
+ String _getUsername(String id){
+   String name = "";
+   for(int i=0; i<users.length; i++){
+       if(id == users[i]['givenId']){
+           name = users[i]['firstName'] + " " + users[i]['lastName'];
+       }
+     }
+     return name;
  }
 
  void _selectedTab(int index) {
@@ -88,7 +114,6 @@ class mainPage extends State<MainPage2> {
             _getQuestionSection();
         filteredQuestionTab=questionSectionTab;
       }
-     
     });
   }
 
@@ -99,7 +124,7 @@ _getQuestionSection(){
     for(var i=0; i < questions.length ; i++){
       questionSection = {
           "id":questions[i]["_id"],
-          "recievers":questions[i]["recievers"],
+          "sender":questions[i]["sender"],
           "text":questions[i]["text"]
         };
       if(questions[i]["type"]==section && questions[i]!= null){
@@ -108,7 +133,7 @@ _getQuestionSection(){
     }
 }
 
-  _getBody(int currentIndex){
+  _getBody(int currentIndex) {
 
     return Container(
       color: Color(0xff141a24),
@@ -140,7 +165,7 @@ _getQuestionSection(){
                       color: Colors.white,
                       fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(filteredQuestionTab[index]["sender"]??"",style: TextStyle(fontFamily:'Arboria')),
+                subtitle: Text(_getUsername(filteredQuestionTab[index]["sender"])??"",style: TextStyle(fontFamily:'Arboria')),
                 leading: Icon(Icons.work, size: 40),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
@@ -155,7 +180,7 @@ _getQuestionSection(){
               ),
             ));
         }
-    ):Center(child:Text("Il n'y a pas de questions pour le moment...", style: TextStyle(color: Colors.blueGrey, fontSize: 40,letterSpacing: 1.2,fontFamily: 'Arboria' ))));
+    ):Center(child:Text("Il n'y a pas de questions", style: TextStyle(color: Colors.blueGrey, fontSize: 20,letterSpacing: 1.2,fontFamily: 'Arboria' ))));
 
 
   }
@@ -169,7 +194,10 @@ Future<Null> _refresh() async{
             _getQuestionSection();
             filteredQuestionTab=questionSectionTab;
           });         
-       });   
+        
+       });  
+       _getUser(); 
+         
     });
   return null;
   }
@@ -188,6 +216,7 @@ Future<Null> _refresh() async{
   void initState() {
     super.initState();
      _refresh();
+     
   }
 
   
@@ -216,6 +245,7 @@ Future<Null> _refresh() async{
                 Center(child:Text(
                   "Défi photo", 
                   style: TextStyle(fontFamily: 'Arboria',
+                  
                 ))) ,
                 Opacity(
                   opacity: 0.5,
@@ -248,7 +278,7 @@ Future<Null> _refresh() async{
                 CupertinoPageRoute(builder: (context) => (pageQuestion(userData["givenId"],userData['role']))));
           },
           backgroundColor: Color(0xff444d5d),
-          child: Icon(Icons.add, color:Colors.white)),
+          child: Icon(Icons.question_answer, color:Colors.white)),
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,
         selectedColor: Color(0xFF0d1118),

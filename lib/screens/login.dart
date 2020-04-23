@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'mainPageStudent.dart';
+import 'mainPage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -31,8 +31,8 @@ class _LoginState extends State<Login> {
       if (this.mounted){
       setState(() {
       _isLoading =false;
-      if(userData["role"]=="S"){
-        Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
+      if(userData["role"]=="S" || userData["role"]=="P"){
+        Navigator.pushReplacementNamed(context,'/mainPage',arguments: {
           'givenId': userData["givenId"],
             'firstName': userData["firstName"],
             'lastName': userData["lastName"],
@@ -43,18 +43,6 @@ class _LoginState extends State<Login> {
             'yearFin' : userData['schoolYearEnd'],
         });
       }
-      if(userData["role"]=="P"){
-            Navigator.pushReplacementNamed(context,'/mainPageProf',arguments: {
-          'givenId': userData["givenId"],
-            'firstName': userData["firstName"],
-            'lastName': userData["lastName"],
-            'email': userData["email"],
-            'role': userData["role"],
-            'stageName' : userData['stageName'],
-            'yearDebut' : userData['schoolYearBegin'],
-            'yearFin' : userData['schoolYearEnd'],
-        });
-        }
       if(userData["role"]=="A"){
         ////main page pour l'admin
         }

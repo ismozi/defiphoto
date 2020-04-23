@@ -322,7 +322,7 @@ class _creationQuestionState extends State<creationQuestion> {
        var data = {
          "text" : text.trim().toString(),
          "sender" : widget.id.toString(),
-        "reciever" : widget.idProf.toString(),
+        "recievers" : [widget.idProf.toString()],
         "type" : type.trim().toString()
     };
       var response = await http.post("https://defiphoto-api.herokuapp.com/questions", body : data);

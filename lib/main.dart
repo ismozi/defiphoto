@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_flutter/screens/information.dart';
-import 'package:test_flutter/screens/mainPageProf.dart';
-import 'screens/mainPageStudent.dart';
+import 'screens/mainPage.dart';
 import 'screens/login.dart';
 import 'screens/pageCommentaire.dart';
 import 'screens/information.dart';
@@ -20,8 +19,7 @@ class App extends StatelessWidget {
   
   routes: <String, WidgetBuilder> {
     '/login': (BuildContext context) => new Login(),
-    '/mainPageStudent' : (BuildContext context) => new MainPage(),
-    '/mainPageProf' : (BuildContext context) => new MainPage2(),
+    '/mainPage' : (BuildContext context) => new MainPage(),
     '/progression' : (BuildContext context) => new InfoEleve(),
     '/pageCommentaire' :(BuildContext context) => new pageCommentaire(),
     '/aide' : (BuildContext context) => new Inpage()
