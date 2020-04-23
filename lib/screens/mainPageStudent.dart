@@ -280,7 +280,7 @@ Future<Null> _refresh() async{
         backgroundColor: Color(0xFF222b3b),
         items: [
           FABBottomAppBarItem(text: "M"),
-          FABBottomAppBarItem(text: "E"),
+          FABBottomAppBarItem(text: "É"),
           FABBottomAppBarItem(text: "T"),
           FABBottomAppBarItem(text: "I"),
           FABBottomAppBarItem(text: "E"),

@@ -22,21 +22,28 @@ class pageQuestionState extends State<pageQuestion> {
   
   List questions = [{}];
   List users= [{}];
-  List profs = [{}];
   File file;
   TextEditingController messageSend = new TextEditingController();
   bool isEmpty;
   bool isLoading=true;
 
-  _getProfs() async{
-    var response = await http.get("https://defiphoto-api.herokuapp.com/users/sup");
+  _getPeople() async{
+    var response;
+    if(widget.role == "P" || widget.role == "A"){
+      response = await http.get("https://defiphoto-api.herokuapp.com/users/");
+        }
+    else{
+      response = await http.get("https://defiphoto-api.herokuapp.com/users/profs");
+      }
+     
     if (response.statusCode == 200&&this.mounted){
        setState(() {
-         profs = json.decode(response.body);
+         users = json.decode(response.body);
        });    
-        print(profs);   
+        
      }
   }
+
   
   _ouvrirGallery() async{
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -84,7 +91,7 @@ class pageQuestionState extends State<pageQuestion> {
         await for(int i in stream){
         if(this.mounted){
           setState(() {
-              _getProfs();
+              _getPeople();
               _getQuestions();
           });
         }
@@ -142,13 +149,13 @@ class pageQuestionState extends State<pageQuestion> {
                   ),
               child: 
               ListTile(
-                title: Text(profs[index]["firstName"] ??"",
+                title: Text(users[index]["firstName"] ??"",
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(profs[index]["lastName"]??"",style: TextStyle(fontFamily:'Arboria')),
+                subtitle: Text(users[index]["lastName"]??"",style: TextStyle(fontFamily:'Arboria')),
                 contentPadding: EdgeInsets.all(20),
                 onTap: () {
                     Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(users[index]['givenId'],widget.id,widget.role)));

@@ -99,7 +99,7 @@ _getQuestionSection(){
     for(var i=0; i < questions.length ; i++){
       questionSection = {
           "id":questions[i]["_id"],
-          "sender":questions[i]["sender"],
+          "recievers":questions[i]["recievers"],
           "text":questions[i]["text"]
         };
       if(questions[i]["type"]==section && questions[i]!= null){
@@ -216,7 +216,6 @@ Future<Null> _refresh() async{
                 Center(child:Text(
                   "Défi photo", 
                   style: TextStyle(fontFamily: 'Arboria',
-                  
                 ))) ,
                 Opacity(
                   opacity: 0.5,
