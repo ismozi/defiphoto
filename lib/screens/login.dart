@@ -44,7 +44,16 @@ class _LoginState extends State<Login> {
         });
       }
       if(userData["role"]=="A"){
-        ////main page pour l'admin
+            Navigator.pushReplacementNamed(context,'/mainPageAdmin',arguments: {
+          'givenId': userData["givenId"],
+            'firstName': userData["firstName"],
+            'lastName': userData["lastName"],
+            'email': userData["email"],
+            'role': userData["role"],
+            'stageName' : userData['stageName'],
+            'yearDebut' : userData['schoolYearBegin'],
+            'yearFin' : userData['schoolYearEnd'],
+        });
         }
       });
     }

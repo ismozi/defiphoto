@@ -61,7 +61,6 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
 // comment test pour la branchhe 
     return BottomAppBar(
       
-      
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
