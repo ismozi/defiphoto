@@ -111,27 +111,43 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       topLeft: Radius.circular(20)),
                   ),
               child:
-              isFileFound ?  
-              Container(
-                child: 
-                Column(
-                  children: [
-                    Image.network(url, width: 100,height: 100,) ??"",
-                    Text( "Sender : " +_getUsername(array[index]["sender"]), style: TextStyle(fontSize: 20, fontFamily:'Arboria' ),),     
-                  ],
-                ),
-              )
-              : ListTile(
+              // isFileFound ?  
+              // Container(
+              //   child: 
+              //   Column(
+              //     children: [
+              //       Image.network(url, width: 100,height: 100,) ??"",
+              //       Text( "Sender : " +_getUsername(array[index]["sender"]), style: TextStyle(fontSize: 20, fontFamily:'Arboria' ),),     
+              //     ],
+              //   ),
+              // )
+              // : 
+              ListTile(
                 
-                title: Text(isUser ? array[index]['firstName']+ " "+array[index]['lastName'] ?? "":array[index]["text"] ??'',
+                title: Text(isUser ? array[index]['firstName']+ " "+array[index]['lastName'] ?? "":isFileFound ? "(Image)" : array[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(isUser ?"Role : "+ array[index]["role"] +"  "+"ID : " + array[index]["givenId"] ??"" : isComment? "Sender : " +_getUsername(array[index]["sender"]) +"\n"+"Question : " +_getQuestionname(array[index]["questionId"])??"" :"Sender : " +_getUsername(array[index]["sender"]) + "\n" +"Recievers by Id : " +array[index]["recievers"].toString() + "\n" +"Type : " +array[index]['type']+"\n"+"Question : " +_getQuestionname(array[index]["_id"])??"",style: TextStyle(fontFamily:'Arboria')),
+                subtitle: Text(isUser ?"Role : "+ array[index]["role"] +"  "+"ID : " + array[index]["givenId"] ??"" : isComment? isFileFound? "Sender : " +_getUsername(array[index]["sender"]) +"\n"+"Question : " +_getQuestionname(array[index]["questionId"])+"\n"+"File name : " +array[index]["fileName"].toString()??""   : "Sender : " +_getUsername(array[index]["sender"]) +"\n"+"Question : " +_getQuestionname(array[index]["questionId"])??"" :"Sender : " +_getUsername(array[index]["sender"]) + "\n" +"Recievers by Id : " +array[index]["recievers"].toString() + "\n" +"Type : " +array[index]['type']+"\n"+"Question : " +_getQuestionname(array[index]["_id"])??"",style: TextStyle(fontFamily:'Arboria')),
                 leading: Icon(Icons.work, size: 40),
                 contentPadding: EdgeInsets.all(20),
+                onTap: (){
+                        if(isComment&& isFileFound){
+                                   
+                        }
+                        if(isComment&& !isFileFound){
+                                             
+                        }
+                        if(isQuestion){
+                                                  
+                        }
+                                             
+                        if(isUser){
+                      
+                        }
+                },
                  onLongPress: (){
                      return showDialog<void>(
                                   context: context,
