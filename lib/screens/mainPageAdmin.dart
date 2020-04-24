@@ -50,6 +50,26 @@ class _mainPageAdminState extends State<mainPageAdmin> {
         _getQuestions();
         _getComments();
  }
+
+  String _getUsername(String id){
+   String name = "";
+   for(int i=0; i<users.length; i++){
+       if(id == users[i]['givenId']){
+           name = users[i]['firstName'] + " " + users[i]['lastName'];
+       }
+     }
+     return name;
+ }
+
+  String _getQuestionname(String id){
+   String name = "";
+   for(int i=0; i<questions.length; i++){
+       if(id == questions[i]['_id']){
+           name = questions[i]['text'];
+       }
+     }
+     return name;
+ }
  
  Widget _getBody(int index){
    switch(index){
@@ -68,9 +88,15 @@ class _mainPageAdminState extends State<mainPageAdmin> {
  }
 
  _createList(dynamic array, bool isUser, bool isQuestion, bool isComment){
+   bool isFileFound =false;
+   String url;
    return ListView.builder(
      itemCount: array.length,
      itemBuilder:  (context ,index){
+       if(isComment && array[index]['fileName']!= null){
+          isFileFound = true;
+          url = "https://defiphoto-api.herokuapp.com/comments/file/" +array[index]['fileName'].toString();
+       }
       
       return 
       Padding(padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
@@ -84,27 +110,94 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       bottomLeft: Radius.circular(20),
                       topLeft: Radius.circular(20)),
                   ),
-              child: 
-              ListTile(
+              child:
+              isFileFound ?  
+              Container(
+                child: 
+                Column(
+                  children: [
+                    Image.network(url, width: 100,height: 100,) ??"",
+                    Text( "Sender : " +_getUsername(array[index]["sender"]), style: TextStyle(fontSize: 20, fontFamily:'Arboria' ),),     
+                  ],
+                ),
+              )
+              : ListTile(
                 
-                title: Text(array[index]["text"] ??'',
+                title: Text(isUser ? array[index]['firstName']+ " "+array[index]['lastName'] ?? "":array[index]["text"] ??'',
                   style: TextStyle(
                       fontSize: 20.0,
                       color: Colors.white,
                       fontFamily: 'Arboria'),
                 ),
-                subtitle: Text(array[index]["sender"]??"",style: TextStyle(fontFamily:'Arboria')),
+                subtitle: Text(isUser ?"Role : "+ array[index]["role"] +"  "+"ID : " + array[index]["givenId"] ??"" : isComment? "Sender : " +_getUsername(array[index]["sender"]) +"\n"+"Question : " +_getQuestionname(array[index]["questionId"])??"" :"Sender : " +_getUsername(array[index]["sender"]) + "\n" +"Recievers by Id : " +array[index]["recievers"].toString() + "\n" +"Type : " +array[index]['type']+"\n"+"Question : " +_getQuestionname(array[index]["_id"])??"",style: TextStyle(fontFamily:'Arboria')),
                 leading: Icon(Icons.work, size: 40),
                 contentPadding: EdgeInsets.all(20),
-                onTap: () {
-                  
-              
+                 onLongPress: (){
+                     return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false, 
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Avertissement', style: TextStyle(fontFamily: 'Arboria')),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(isUser?'Voulez-vous enlevez cet utilisateur?' : isComment? 'Voulez-vous enlevez ce commentaire?' : 'Voulez-vous enlevez cette question?', style: TextStyle(fontFamily: 'Arboria')),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Oui', style: TextStyle(fontFamily: 'Arboria')),
+                                          onPressed: () async {
+                                           
+                                            
+                                              if(isComment&& isFileFound){
+                                                String id = array[index]['_id'];
+                                                var response = await http.delete("https://defiphoto-api.herokuapp.com/comments/$id");
+                                                //Delete File 
+                                              }
+                                               if(isComment&& !isFileFound){
+                                                 String id = array[index]['_id'];
+                                                var response = await http.delete("https://defiphoto-api.herokuapp.com/comments/$id"); 
+                                              }
+                                              if(isQuestion){
+                                                  String id = array[index]['_id'];
+                                                 var response = await http.delete("https://defiphoto-api.herokuapp.com/questions/$id"); 
+                                              }
+                                             
+                                              if(isUser){
+                                                  String id = array[index]['givenId'];
+                                                 var response = await http.delete("https://defiphoto-api.herokuapp.com/users/$id"); 
+                                                 print('Done!');
+                                              }
+
+                                            // _enleverCommentaire(message);
+                                            Navigator.of(context).pop();
+          
+                                          },
+                                        ),
+                                             FlatButton(
+                                          child: Text('Non', style: TextStyle(fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted){
+                                            setState(() {
+                                            Navigator.of(context).pop();
+                                            });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
                 },
               ),
             ));
         }
 
-     );
+     )
+     ;
 
  }
   _stream() async {
@@ -161,9 +254,9 @@ class _mainPageAdminState extends State<mainPageAdmin> {
         backgroundColorStart: Color(0xff141a24),
         backgroundColorEnd: Color(0xFF2b3444),
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-          BottomNavigationBarItem(icon: Icon(Icons.business), title: Text('Business')),
-          BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('School')),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Urilisateurs')),
+          BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Questions')),
+          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), title: Text('Commentaires')),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
