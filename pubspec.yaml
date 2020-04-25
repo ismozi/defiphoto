@@ -34,6 +34,7 @@ dependencies:
   gradient_bottom_navigation_bar: ^1.0.0+4
   solid_bottom_sheet: ^0.1.9
   draggable_scrollbar: ^0.0.4
+  flutter_slidable: ^0.5.4
   
 
 dev_dependencies:
