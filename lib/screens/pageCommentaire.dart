@@ -29,7 +29,6 @@ class pageCommentaireState extends State<pageCommentaire> {
   
 
   _getCommentaires() async {
-  
      String id = questionData["questionId"];
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
      if (response.statusCode == 200&&this.mounted){
@@ -46,7 +45,6 @@ class pageCommentaireState extends State<pageCommentaire> {
       if (response.statusCode == 200&&this.mounted){
           print('Deleted');
      }
-
  }
 
 
@@ -63,13 +61,6 @@ class pageCommentaireState extends State<pageCommentaire> {
          child: Column(
           crossAxisAlignment: isMe ?  CrossAxisAlignment.end : CrossAxisAlignment.start,
            children: <Widget>[
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: Align(
-            //     alignment: isMe ? Alignment(0.8,0) :Alignment(-0.6,0) ,
-            //     child: Text(isMe ? "Me" : message['sender'],style: TextStyle(color: Colors.grey[300])), 
-            //   )
-            //   ),
              SizedBox(height: 5,),
              Material(
                borderRadius: isMe ? BorderRadius.only(bottomLeft:  Radius.circular(40),bottomRight: Radius.circular(0) ,topLeft:  Radius.circular(40),topRight: Radius.circular(40) ) :  BorderRadius.only(bottomLeft:  Radius.circular(0),bottomRight: Radius.circular(40) ,topLeft:  Radius.circular(40),topRight: Radius.circular(40) ),
@@ -333,7 +324,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                             
 
                   if(commentaires[i]['role'] == "P" && commentaires[i]['sender'] != questionData['givenId'] ){
-                          if(commentaires[i]['fileName'] != null){
+                      if(commentaires[i]['fileName'] != null){
                         isStudent=false;
                         isMe = false;
                         fromData = true;
@@ -346,12 +337,8 @@ class pageCommentaireState extends State<pageCommentaire> {
                         return _buildCommentaire(commentaires[i], isMe,isStudent,fromData);
                           }
                        }
-
                       }
-
                     },
-
-
                   ),
                 ),
                 Container(

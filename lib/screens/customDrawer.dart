@@ -1,29 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:test_flutter/screens/pageQuestion.dart';
+
 
 
 class customDrawer extends StatelessWidget {
   Map userData= {};
   customDrawer({this.userData});
+  
 
-  // _getQuestions() async {
-  //     String id = userData["givenId"];
-  //    var response = await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
-  //    if (response.statusCode == 200){
-  //      setState(() {
-  //        questions =  json.decode(response.body);
-  //      });     
-  //    }
-  // }
 
   @override
   Widget build(BuildContext context) {
+    
     return Drawer(child:
       Container(color:Color(0xff141a24),
       child: ListView(
         
         padding: EdgeInsets.zero,
-        children: <Widget>[
+        
+        children:  userData['role']=='S' ? <Widget>[
           DrawerHeader(
             child: Stack(
               
@@ -49,6 +45,7 @@ class customDrawer extends StatelessWidget {
               ],
             ),
           ),
+          
            ListTile(
             leading: Icon(Icons.dashboard),
             title: Text('Tableau de bord',style:TextStyle(fontFamily:'Arboria')),
@@ -60,10 +57,61 @@ class customDrawer extends StatelessWidget {
             onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/progression', arguments: userData)},
           ),
             ListTile(
-            leading: Icon(Icons.portrait),
+            leading: Icon(Icons.question_answer),
             title: Text('Questions - Reponses',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {  Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(users[index]['givenId'],widget.id,widget.role)));},
+            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => pageQuestion(userData['givenId'],userData['role'])))},
           ),
+          ListTile(
+            leading: Icon(Icons.info),
+            title: Text('Aide',style:TextStyle(fontFamily:'Arboria')),
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/aide')}
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Se déconnecter',style:TextStyle(fontFamily:'Arboria')),
+            onTap: () => {Navigator.of(context).pushReplacementNamed('/login')}
+          ),
+        ]: <Widget>[
+          DrawerHeader(
+            child: Stack(
+              
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage('assets/avatar.jpg'),
+                    radius: 55.0,
+                  ),
+                ),
+                Positioned(
+                    top: 12,
+                    child: Container(
+                        child: Text(userData['firstName'] + " " +userData['lastName'],
+                            style: TextStyle(fontFamily:'Arboria',fontSize: 25)))),
+                Positioned(
+                    top: 50,
+                    left: 1,
+                    child: Container(
+                        child: Text('Superviseur de stages',
+                            style: TextStyle(fontFamily:'Arboria',fontSize: 13)))),
+              ],
+            ),
+          ),
+          
+           ListTile(
+            leading: Icon(Icons.dashboard),
+            title: Text('Mes élèves',style:TextStyle(fontFamily:'Arboria')),
+            onTap: () => {Navigator.of(context).pop()},
+          ),
+          ListTile(
+            leading: Icon(Icons.question_answer),
+            title: Text("Questions d'élèves",style:TextStyle(fontFamily:'Arboria')),
+            onTap: () => {Navigator.of(context).pop(), Navigator.of(context).pushNamed('/mainPage',
+                                  arguments: userData)
+                            },
+          ),
+          
+          
           ListTile(
             leading: Icon(Icons.info),
             title: Text('Aide',style:TextStyle(fontFamily:'Arboria')),

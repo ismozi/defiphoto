@@ -12,7 +12,6 @@ Widget appBarTitle =
     Text('Matières et produits', style: TextStyle(fontFamily: 'Arboria',fontSize: 15));
 
 class MainPage2 extends StatefulWidget {
-  
   mainPage createState() => new mainPage();
 }
 

@@ -236,18 +236,12 @@ Future<Null> _refresh() async{
             IconButton(icon: Icon(Icons.cancel), onPressed: () {
               setState(() {
                 this.isSearching=false;
-                filteredQuestionTab=questionSectionTab;
+                
               });
             })
           ]),
       body: new RefreshIndicator(child: _getBody(_currentIndex), onRefresh: _refresh) ,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(onPressed: () {
-            Navigator.of(context).push(
-                CupertinoPageRoute(builder: (context) => (pageQuestion(userData["givenId"],userData['role']))));
-          },
-          backgroundColor: Color(0xff444d5d),
-          child: Icon(Icons.question_answer, color:Colors.white)),
+      
       bottomNavigationBar: FABBottomAppBar(
         onTabSelected: _selectedTab,
         selectedColor: Color(0xFF0d1118),
