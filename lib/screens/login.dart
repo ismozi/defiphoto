@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
       if (this.mounted){
       setState(() {
       _isLoading =false;
-      if(userData["role"]=="S" || userData["role"]=="P"){
+      if(userData["role"]=="S"){
         Navigator.pushReplacementNamed(context,'/mainPage',arguments: {
           'givenId': userData["givenId"],
             'firstName': userData["firstName"],
@@ -41,10 +41,23 @@ class _LoginState extends State<Login> {
             'stageName' : userData['stageName'],
             'yearDebut' : userData['schoolYearBegin'],
             'yearFin' : userData['schoolYearEnd'],
+            'questionEleve': false
         });
       }
       if(userData["role"]=="A"){
             Navigator.pushReplacementNamed(context,'/mainPageAdmin',arguments: {
+          'givenId': userData["givenId"],
+            'firstName': userData["firstName"],
+            'lastName': userData["lastName"],
+            'email': userData["email"],
+            'role': userData["role"],
+            'stageName' : userData['stageName'],
+            'yearDebut' : userData['schoolYearBegin'],
+            'yearFin' : userData['schoolYearEnd'],
+        });
+        }
+         if(userData["role"]=="P"){
+            Navigator.pushReplacementNamed(context,'/mainPageProf',arguments: {
           'givenId': userData["givenId"],
             'firstName': userData["firstName"],
             'lastName': userData["lastName"],

@@ -18,6 +18,8 @@ class FABBottomAppBar extends StatefulWidget {
     this.selectedColor,
     this.notchedShape,
     this.onTabSelected,
+    this.role,
+    this.questionEleve
     
   }) {
     assert(this.items.length == 6);
@@ -31,6 +33,8 @@ class FABBottomAppBar extends StatefulWidget {
   final Color selectedColor;
   final NotchedShape notchedShape;
   final ValueChanged<int> onTabSelected;
+  final String role;
+  final bool questionEleve;
   
 
   @override
@@ -56,7 +60,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         onPressed: _updateIndex,
       );
     });
-    items.insert(items.length >> 1, _buildMiddleTabItem());
+    widget.role=='S'||(widget.role=='P'&&widget.questionEleve==true)?null:items.insert(items.length >> 1, _buildMiddleTabItem());
     
 // comment test pour la branchhe 
     return BottomAppBar(
