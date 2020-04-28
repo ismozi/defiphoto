@@ -110,6 +110,7 @@ class mainPage extends State<MainPage> {
         section = 'R';
         _getQuestionSection();
         filteredQuestionTab = questionSectionTab;
+
       }
     });
   }
@@ -301,16 +302,10 @@ class mainPage extends State<MainPage> {
             ]),
         body: new RefreshIndicator(
             child: _getBody(_currentIndex), onRefresh: _refresh),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.of(context).push(CupertinoPageRoute(
-                  builder: (context) =>
-                      (pageQuestion(userData["givenId"], userData['role']))));
-            },
-            backgroundColor: Color(0xff444d5d),
-            child: Icon(Icons.question_answer, color: Colors.white)),
+        
         bottomNavigationBar: FABBottomAppBar(
+          role: userData['role'],
+          questionEleve: userData['questionEleve'],
           onTabSelected: _selectedTab,
           selectedColor: Color(0xFF0d1118),
           notchedShape: CircularNotchedRectangle(),
@@ -384,15 +379,17 @@ class mainPage extends State<MainPage> {
               child: _getBody(_currentIndex), onRefresh: _refresh),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: !userData['questionEleve']? FloatingActionButton(
               onPressed: () {
                 Navigator.of(context).push(CupertinoPageRoute(
                     builder: (context) => (creationQuestion(
                         userData["givenId"], userData['idStudent']))));
               },
               backgroundColor: Color(0xff444d5d),
-              child: Icon(Icons.add, color: Colors.white)),
+              child: Icon(Icons.add, color: Colors.white)):null,
           bottomNavigationBar: FABBottomAppBar(
+            role: userData['role'],
+            questionEleve: userData['questionEleve'],
             onTabSelected: _selectedTab,
             selectedColor: Color(0xFF0d1118),
             notchedShape: CircularNotchedRectangle(),

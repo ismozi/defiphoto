@@ -20,7 +20,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
  _getUsers() async {
      var response = await http.get("https://defiphoto-api.herokuapp.com/users");
-     if (response.statusCode == 200){
+     if (response.statusCode == 200&&this.mounted){
        setState(() {
          users =  json.decode(response.body);
        });     
@@ -29,7 +29,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
  _getQuestions() async {
      var response = await http.get("https://defiphoto-api.herokuapp.com/questions");
-     if (response.statusCode == 200){
+     if (response.statusCode == 200&&this.mounted){
        setState(() {
          questions =  json.decode(response.body);
        });     
@@ -38,7 +38,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
  _getComments() async {
      var response = await http.get("https://defiphoto-api.herokuapp.com/comments");
-     if (response.statusCode == 200){
+     if (response.statusCode == 200&&this.mounted){
        setState(() {
          comments =  json.decode(response.body);
        });     
@@ -225,9 +225,6 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 }
 
 
- 
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -236,15 +233,13 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   }
 
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     userData = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar( 
+        leading: IconButton(icon: Icon(Icons.exit_to_app),onPressed: () => {Navigator.of(context).pushReplacementNamed('/login')}),
+        actions: <Widget>[IconButton(icon: Icon(Icons.search),onPressed: null)],
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -266,11 +261,15 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     ),
     backgroundColor: Color(0xff141a24),
     body: _getBody(_selectedIndex),
+    floatingActionButton: _selectedIndex!=0? null:FloatingActionButton(
+            onPressed: () => {Navigator.of(context).pushNamed('/ajoutUtilisateur')},
+            backgroundColor: Color(0xff444d5d),
+            child: Icon(Icons.add, color: Colors.white)),
       bottomNavigationBar: GradientBottomNavigationBar(
         backgroundColorStart: Color(0xff141a24),
         backgroundColorEnd: Color(0xFF2b3444),
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Urilisateurs')),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), title: Text('Utilisateurs')),
           BottomNavigationBarItem(icon: Icon(Icons.assignment), title: Text('Questions')),
           BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), title: Text('Commentaires')),
         ],
