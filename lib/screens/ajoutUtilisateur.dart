@@ -46,7 +46,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
       "stageDesc": stageDesc.trim().toString(),
     };
 
-    var response = await http.post("https://defiphoto-api.herokuapp.com/users",
+    var response = await http.post("https://defiphoto-api.herokuapp.com/users/signup",
         body: data);
     if (response.statusCode == 200) {
       print("Done!");
