@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
       setState(() {
       _isLoading =false;
       if(userData["role"]=="S"){
-        Navigator.pushReplacementNamed(context,'/mainPage',arguments: {
+        Navigator.pushReplacementNamed(context,'/mainPageStudent',arguments: {
           'givenId': userData["givenId"],
             'firstName': userData["firstName"],
             'lastName': userData["lastName"],

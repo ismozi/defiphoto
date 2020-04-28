@@ -98,7 +98,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
        }
       
       return 
-      Padding(padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
+      Padding(padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
               child:
       Card(
               color:Color(0xFF222b3b),

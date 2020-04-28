@@ -42,8 +42,6 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
       "email": courriel.trim().toString(),
       "password": passwd.trim().toString(),
       "role": role.trim().toString(),
-      "stageName": stage.trim().toString(),
-      "stageDesc": stageDesc.trim().toString(),
     };
 
     var response = await http.post("https://defiphoto-api.herokuapp.com/users/signup",
@@ -132,7 +130,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person,
+                                      Icons.lock_outline,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
@@ -162,7 +160,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.lock,
+                                      Icons.person_pin_circle,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
@@ -192,7 +190,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person,
+                                      Icons.person_add,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
@@ -222,7 +220,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person,
+                                      Icons.mail_outline,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
@@ -252,7 +250,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person,
+                                      Icons.work,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
@@ -282,7 +280,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person,
+                                      Icons.description,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,

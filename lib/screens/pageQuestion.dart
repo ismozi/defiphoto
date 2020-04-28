@@ -104,7 +104,7 @@ class pageQuestionState extends State<pageQuestion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF222b3b),
+        backgroundColor: Color(0xff141a24),
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: customBoxDecoration(),
@@ -113,7 +113,7 @@ class pageQuestionState extends State<pageQuestion> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Poser une question',
+                Text('Choisir un enseignant',
                     style: TextStyle(fontFamily: 'Arboria')),
                 Opacity(
                   opacity: 0.65,
@@ -123,12 +123,13 @@ class pageQuestionState extends State<pageQuestion> {
         body: isLoading
             ? Center(child: SpinKitDoubleBounce(size: 40, color: Colors.white))
             : Container(
-                decoration: customBoxDecoration(),
+              color:Color(0xff141a24),
+                
                 child: ListView.builder(
                     itemCount: users.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                          padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
+                          padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
                           child: Card(
                             color: Color(0xFF222b3b),
                             shape: RoundedRectangleBorder(
@@ -226,8 +227,12 @@ class _QuestionsState extends State<Questions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF222b3b),
+      backgroundColor: Color(0xff141a24),
       appBar: AppBar(
+        title:Text("Mes questions posées",
+                                style: TextStyle(
+                                  fontFamily: 'Arboria',
+                                )),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context)),
@@ -240,12 +245,12 @@ class _QuestionsState extends State<Questions> {
           : isEmpty
               ? Text('Null')
               : Container(
-                  decoration: customBoxDecoration(),
+                  color:Color(0xff141a24),
                   child: ListView.builder(
                       itemCount: questions.length,
                       itemBuilder: (context, index) {
                         return Padding(
-                            padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
+                            padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
                             child: Card(
                               color: Color(0xFF222b3b),
                               shape: RoundedRectangleBorder(
@@ -296,7 +301,7 @@ class _QuestionsState extends State<Questions> {
                       creationQuestion(widget.id, widget.idProf)));
         },
         child: Icon(Icons.add),
-        backgroundColor: Colors.lightBlue.shade50,
+        backgroundColor: Colors.blueGrey,
         elevation: 5.0,
       ),
     );

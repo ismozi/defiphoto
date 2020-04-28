@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 
-
-
 class FABBottomAppBarItem {
   FABBottomAppBarItem({this.text});
   String text;
 }
 
 class FABBottomAppBar extends StatefulWidget {
-  FABBottomAppBar({
-    this.items,
-    this.centerItemText,
-    this.height: 60.0,
-    this.iconSize: 24.0,
-    this.backgroundColor,
-    this.color,
-    this.selectedColor,
-    this.notchedShape,
-    this.onTabSelected,
-    this.role,
-    this.questionEleve
-    
-  }) {
+  FABBottomAppBar(
+      {this.items,
+      this.centerItemText,
+      this.height: 60.0,
+      this.iconSize: 24.0,
+      this.backgroundColor,
+      this.color,
+      this.selectedColor,
+      this.notchedShape,
+      this.onTabSelected,
+      this.role,
+      this.questionEleve}) {
     assert(this.items.length == 6);
   }
   final List<FABBottomAppBarItem> items;
@@ -35,7 +31,6 @@ class FABBottomAppBar extends StatefulWidget {
   final ValueChanged<int> onTabSelected;
   final String role;
   final bool questionEleve;
-  
 
   @override
   State<StatefulWidget> createState() => FABBottomAppBarState();
@@ -60,18 +55,24 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         onPressed: _updateIndex,
       );
     });
-    widget.role=='S'||widget.questionEleve==true?null:items.insert(items.length >> 1, _buildMiddleTabItem());
-    
-// comment test pour la branchhe 
+    widget.role == 'S' || widget.questionEleve == true
+        ? null
+        : items.insert(items.length >> 1, _buildMiddleTabItem());
+
+// comment test pour la branchhe
     return BottomAppBar(
-      
+        child: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: items,
       ),
-      color: widget.backgroundColor,
-    );
+    ));
   }
 
   Widget _buildMiddleTabItem() {
@@ -85,7 +86,8 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
             SizedBox(height: widget.iconSize),
             Text(
               widget.centerItemText ?? "QUESTION",
-              style: TextStyle(color: widget.color, fontFamily: 'Arboria',fontSize:10),
+              style: TextStyle(
+                  color: widget.color, fontFamily: 'Arboria', fontSize: 10),
             ),
           ],
         ),
@@ -110,11 +112,23 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-              widget.centerItemText ?? item.text,
-              style: TextStyle(color: color,fontSize: _selectedIndex == index ? 32: 25, fontFamily: 'Arboria'
-            ),
-                )  
+                _selectedIndex == index
+                    ? ClipOval(child:Material(
+                        color: Colors.blueGrey,
+                        child: SizedBox(width: 35, height: 35,child:Center(child:Text(
+                          widget.centerItemText ?? item.text,
+                          style: TextStyle(
+                              color: color,
+                              fontSize: _selectedIndex == index ? 25 : 25,
+                              fontFamily: 'Arboria'),
+                        )))))
+                    : Text(
+                        widget.centerItemText ?? item.text,
+                        style: TextStyle(
+                            color: color,
+                            fontSize: _selectedIndex == index ? 32 : 25,
+                            fontFamily: 'Arboria'),
+                      )
               ],
             ),
           ),
