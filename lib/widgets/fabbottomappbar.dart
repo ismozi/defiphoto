@@ -60,7 +60,7 @@ class FABBottomAppBarState extends State<FABBottomAppBar> {
         onPressed: _updateIndex,
       );
     });
-    widget.role=='S'||(widget.role=='P'&&widget.questionEleve==true)?null:items.insert(items.length >> 1, _buildMiddleTabItem());
+    widget.role=='S'||widget.questionEleve==true?null:items.insert(items.length >> 1, _buildMiddleTabItem());
     
 // comment test pour la branchhe 
     return BottomAppBar(

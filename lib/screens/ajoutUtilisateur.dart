@@ -46,7 +46,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
       "stageDesc": stageDesc.trim().toString(),
     };
 
-    var response = await http.post("https://defiphoto-api.herokuapp.com/users",
+    var response = await http.post("https://defiphoto-api.herokuapp.com/users/signup",
         body: data);
     if (response.statusCode == 200) {
       print("Done!");
@@ -60,26 +60,26 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
+            ),
+            title: Text("Créer un nouveau compte",
+                style: TextStyle(fontFamily: 'Arboria'))),
         body: Container(
-      color: Color(0xff141a24),
-      child: Center(
-        child: _isLoading
-            ? Center(child: SpinKitDoubleBounce(size: 40, color: Colors.white))
-            : ListView(
-                children: <Widget>[
-                  SizedBox(
-                    height: 40.0,
-                  ),
-                  new Card(
-                      color: Color(0xFF222b3b),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                            bottomRight: Radius.circular(15),
-                            topRight: Radius.circular(15),
-                            bottomLeft: Radius.circular(15),
-                            topLeft: Radius.circular(15)),
-                      ),
-                      child: Padding(
+          color: Color(0xff141a24),
+          child: Center(
+            child: _isLoading
+                ? Center(
+                    child: SpinKitDoubleBounce(size: 40, color: Colors.white))
+                : ListView(
+                    children: <Widget>[
+                      
+                      Padding(
                           padding: EdgeInsets.fromLTRB(15, 45, 15, 15),
                           child: Column(children: <Widget>[
                             Container(
@@ -107,6 +107,36 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     ),
                                     border: InputBorder.none,
                                     hintText: "ID d'utilisateur"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: givenIdController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Mot-de-passe"),
                               ),
                             ),
                             SizedBox(
@@ -310,10 +340,10 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                             SizedBox(
                               height: 15.0,
                             ),
-                          ])))
-                ],
-              ),
-      ),
-    ));
+                          ]))
+                    ],
+                  ),
+          ),
+        ));
   }
 }
