@@ -38,6 +38,7 @@ class _LoginState extends State<Login> {
             'lastName': userData["lastName"],
             'email': userData["email"],
             'role': userData["role"],
+            'profId': userData['profId'],
             'stageName' : userData['stageName'],
             'yearDebut' : userData['schoolYearBegin'],
             'yearFin' : userData['schoolYearEnd'],
