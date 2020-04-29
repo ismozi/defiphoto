@@ -18,7 +18,7 @@ class PageEtudiants extends StatefulWidget {
 class _PageEtudiantsState extends State<PageEtudiants>
     with TickerProviderStateMixin {
   TabController tabController;
-  AnimationController _animationController;
+  //AnimationController _animationController;
 
   static final int NB_TAB = 3;
   static final double TAILE_ICON = 22;
@@ -50,7 +50,7 @@ class _PageEtudiantsState extends State<PageEtudiants>
         ),
         context,
         "Modfier l'élève");
-    _animationController=new AnimationController(vsync: this,duration: Duration(milliseconds: 2500));
+ //   _animationController=new AnimationController(vsync: this,duration: Duration(milliseconds: 2500));
   }
 
   @override
@@ -201,7 +201,7 @@ class _PageEtudiantsState extends State<PageEtudiants>
       headerHeight: MediaQuery.of(context).size.height * .30,
       frontLayerBorderRadius: BorderRadius.circular(15),
       animationCurve: Curves.slowMiddle,
-      controller: _animationController,
+     // controller: _animationController,
     );
   }
 }
