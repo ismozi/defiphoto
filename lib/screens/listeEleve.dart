@@ -118,10 +118,11 @@ class _listeEleveState extends State<listeEleve> {
         })
                             }),
                     SizedBox(width: 1),
+                    VerticalDivider(thickness: 1.5),
                     IconButton(
                         icon: Icon(Icons.person, size: 30),
                         onPressed: () => {
-                              Navigator.of(context).pushNamed('/progression',
+                              Navigator.of(context).pushNamed('/profilEleve',
                                   arguments: array[index])
                             })
                   ]),

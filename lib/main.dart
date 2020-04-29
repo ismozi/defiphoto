@@ -8,6 +8,8 @@ import 'screens/pageCommentaire.dart';
 import 'screens/information.dart';
 import 'screens/profile_tabbar.dart';
 import 'screens/ajoutUtilisateur.dart';
+import 'screens/progressionEleve.dart';
+import 'screens/profilEleve.dart';
 
 
 
@@ -25,11 +27,13 @@ class App extends StatelessWidget {
     '/login': (BuildContext context) => new Login(),
     '/mainPage' : (BuildContext context) => new MainPage(),
     '/mainPageAdmin' : (BuildContext context) => new mainPageAdmin(),
-    '/progression' : (BuildContext context) => new InfoEleve(),
+    '/profilEleve' : (BuildContext context) => new profilEleve(),
     '/ajoutUtilisateur' : (BuildContext context) => new ajoutUtilisateur(),
     '/pageCommentaire' :(BuildContext context) => new pageCommentaire(),
     '/aide' : (BuildContext context) => new Inpage(),
     '/mainPageProf' : (BuildContext context) => new listeEleve(),
+    '/mainPageStudent' : (BuildContext context) => new progressionEleve(),
+
 
 
   },

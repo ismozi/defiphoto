@@ -91,14 +91,14 @@ class _mainPageAdminState extends State<mainPageAdmin> {
    String url;
    return ListView.builder(
      itemCount: array.length,
-     itemBuilder:  (context ,index){
+     itemBuilder: (context ,index){
        if(isComment && array[index]['fileName']!= null){
           isFileFound = true;
           url = "https://defiphoto-api.herokuapp.com/comments/file/" +array[index]['fileName'].toString();
        }
       
       return 
-      Padding(padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
+      Padding(padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
               child:
       Card(
               color:Color(0xFF222b3b),
@@ -259,7 +259,14 @@ class _mainPageAdminState extends State<mainPageAdmin> {
               )
     ),
     backgroundColor: Color(0xff141a24),
-    body: _getBody(_selectedIndex),
+    body: //REGARDER PK MARCHE PAS LORSQUE USERS.LENGTH>0
+    users.length > 1 ? _getBody(_selectedIndex) : Center(
+                child: Text("Il n'y pas d'étudiants",
+                    style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 20,
+                        letterSpacing: 1.2,
+                        fontFamily: 'Arboria'))),
     floatingActionButton: _selectedIndex!=0? null:FloatingActionButton(
             onPressed: () => {Navigator.of(context).pushNamed('/ajoutUtilisateur')},
             backgroundColor: Color(0xff444d5d),

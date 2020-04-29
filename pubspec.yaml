@@ -35,6 +35,8 @@ dependencies:
   solid_bottom_sheet: ^0.1.9
   draggable_scrollbar: ^0.0.4
   flutter_slidable: ^0.5.4
+  sider_bar: ^0.1.1
+  flutter_page_transition: ^0.1.0
   
 
 dev_dependencies:

@@ -154,7 +154,7 @@ class mainPage extends State<MainPage> {
                 itemCount: filteredQuestionTab.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                      padding: EdgeInsets.fromLTRB(6, 15, 6, 2),
+                      padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
                       child: Card(
                         color: Color(0xFF222b3b),
                         shape: RoundedRectangleBorder(
@@ -179,7 +179,7 @@ class mainPage extends State<MainPage> {
                                           ["sender"]) ??
                                       "",
                               style: TextStyle(fontFamily: 'Arboria')),
-                          leading: Icon(Icons.work, size: 40),
+                          leading: Icon(Icons.work, size: 40,color:Colors.blueGrey),
                           contentPadding: EdgeInsets.all(20),
                           onTap: () {
                             Navigator.pushNamed(context, '/pageCommentaire',
@@ -245,13 +245,7 @@ class mainPage extends State<MainPage> {
     }
     if (userData['role'] == 'S') {
       return Scaffold(
-        drawer: !isSearching
-            ? Container(
-                color: Colors.grey[900],
-                child: customDrawer(
-                  userData: userData,
-                ))
-            : null,
+        
         appBar: AppBar(
             flexibleSpace: Container(
               decoration: BoxDecoration(
@@ -266,7 +260,7 @@ class mainPage extends State<MainPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                         Center(
-                            child: Text("Défi photo",
+                            child: Text("Question de stage",
                                 style: TextStyle(
                                   fontFamily: 'Arboria',
                                 ))),
@@ -341,7 +335,7 @@ class mainPage extends State<MainPage> {
                                       style: TextStyle(
                                         fontFamily: 'Arboria',
                                       ))
-                                  : Text("Questions",
+                                  : Text("Questions d'élèves",
                                       style: TextStyle(
                                         fontFamily: 'Arboria',
                                       ))),

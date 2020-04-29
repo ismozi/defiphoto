@@ -48,18 +48,24 @@ class customDrawer extends StatelessWidget {
           
            ListTile(
             leading: Icon(Icons.dashboard),
-            title: Text('Tableau de bord',style:TextStyle(fontFamily:'Arboria')),
+            title: Text('Ma progression',style:TextStyle(fontFamily:'Arboria')),
             onTap: () => {Navigator.of(context).pop()},
+          ),
+           ListTile(
+            leading: Icon(Icons.message),
+            title: Text('Questions de stage',style:TextStyle(fontFamily:'Arboria')),
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/mainPage', arguments: userData)},
+          ),
+          
+            ListTile(
+            leading: Icon(Icons.question_answer),
+            title: Text('Poser des questions',style:TextStyle(fontFamily:'Arboria')),
+            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => pageQuestion(userData['givenId'],userData['role'])))},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
             title: Text('Profil',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/progression', arguments: userData)},
-          ),
-            ListTile(
-            leading: Icon(Icons.question_answer),
-            title: Text('Questions - Reponses',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => pageQuestion(userData['givenId'],userData['role'])))},
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/profilEleve', arguments: userData)},
           ),
           ListTile(
             leading: Icon(Icons.info),
