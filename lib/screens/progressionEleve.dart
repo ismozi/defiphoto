@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'customDrawer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'customDrawer.dart';
+import 'package:http/http.dart' as http;
 
 class progressionEleve extends StatefulWidget {
   progressionEleveState createState() => new progressionEleveState();
@@ -10,19 +14,230 @@ class progressionEleve extends StatefulWidget {
 class progressionEleveState extends State<progressionEleve> {
   Map userData = {};
 
-  static int percentageM = 10;
-  static int percentageE1 = 50;
-  static int percentageT = 63;
-  static int percentageI = 59;
-  static int percentageE2 = 25;
-  static int percentageR = 38;
-  static int percTot = (percentageE1 +
+  static int percentageM ;
+  static int percentageE1;
+  static int percentageT;
+  static int percentageI;
+  static int percentageE2;
+  static int percentageR;
+   int percTot ;
+   bool isLoading=true;
+  
+  String eAccent = "É";
+  Map questionData = {};
+  List commentaires = [{}];
+  List questions = [{}];
+  List commentairesMe = [{}];
+  int compteurM ;
+  int compteurE ;
+  int compteurT ;
+  int compteurI ;
+  int compteurE1 ;
+  int compteurR ;
+  int compteurMtot ;
+  int compteurEtot ;
+  int compteurTtot ;
+  int compteurItot ;
+  int compteurE1tot ;
+  int compteurRtot ;
+
+  _getCommentaires() async {
+    var response =
+        await http.get("https://defiphoto-api.herokuapp.com/comments");
+    if (response.statusCode == 200) {
+      commentaires = json.decode(response.body);
+    }
+  }
+
+  _getQuestions() async {
+    String id = userData["givenId"];
+    var response;
+
+    id = userData["givenId"];
+
+    response =
+        await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+
+    if (response.statusCode == 200) {
+      questions = json.decode(response.body);
+    }
+  }
+
+  _getCommentaireMe() {
+    for (int i = 0; i < commentaires.length; i++) {
+      if (commentaires[i]['sender'] == userData['givenId']) {
+        commentairesMe.add(commentaires[i]);
+      }
+    }
+  }
+
+  _updateCompteur() {
+    _getCommentaireMe();
+
+    bool skipQuestion = false;
+    int i = 0;
+
+    compteurM = 0;
+  compteurE = 0;
+  compteurT = 0;
+   compteurI = 0;
+   compteurE1 = 0;
+   compteurR = 0;
+   compteurMtot = 0;
+   compteurEtot =0;
+   compteurTtot = 0;
+   compteurItot = 0;
+   compteurE1tot = 0;
+   compteurRtot = 0;
+
+    for (int z=0;z<questions.length;z++){
+        if(questions[z]['type']=='M'){
+        compteurMtot++;
+
+      } else if(questions[z]['type']=='É'){
+        compteurEtot++;
+
+      } else if(questions[z]['type']=='T'){
+        compteurTtot++;
+
+      } else if(questions[z]['type']=='I'){
+        compteurItot++;
+
+      } else if(questions[z]['type']=='E'){
+        compteurE1tot++;
+
+      } else if(questions[z]['type']=='R'){
+        compteurRtot++;
+
+      } 
+      }
+
+
+
+    
+
+    while (i < questions.length) {
+      skipQuestion = false;
+      
+      print(i);
+      for (int index = 0; index < commentairesMe.length; index++) {
+        if (i < questions.length &&
+            (commentairesMe[index]['questionId'] == questions[i]['_id']) &&
+            questions[i]['type'] == 'M') {
+          print(questions[i]['_id']);
+          compteurM++;
+
+          i++;
+          skipQuestion = true;
+        } else if (i < questions.length &&
+            (commentairesMe[index]['questionId'] == questions[i]['_id']) &&
+            questions[i]['type'] == "É") {
+          print(questions[i]['_id']);
+          compteurE++;
+
+          i++;
+          skipQuestion = true;
+        } else if (i < questions.length &&
+            (commentairesMe[index]['questionId'] == questions[i]['_id']) &&
+            questions[i]['type'] == 'T') {
+          print(questions[i]['_id']);
+          compteurT++;
+
+          i++;
+          skipQuestion = true;
+        } else if (i < questions.length &&
+            (commentairesMe[index]['questionId'] == questions[i]['_id']) &&
+            questions[i]['type'] == 'I') {
+          print(questions[i]['_id']);
+          compteurI++;
+
+          i++;
+          skipQuestion = true;
+        } else if (i < questions.length &&
+            (commentairesMe[index]['questionId'] == questions[i]['_id']) &&
+            questions[i]['type'] == 'E') {
+          print(questions[i]['_id']);
+          compteurE1++;
+
+          i++;
+          skipQuestion = true;
+        } else if (i < questions.length &&
+            (commentairesMe[index]['questionId'] == questions[i]['_id']) &&
+            questions[i]['type'] == 'R') {
+          print(questions[i]['_id']);
+          compteurR++;
+
+          i++;
+          skipQuestion = true;
+        }
+      }
+      if (!skipQuestion) {
+        i++;
+      }
+
+    }
+    print(commentairesMe);
+    print(questions);
+    print(compteurM);
+    print(compteurE);
+    print(compteurT);
+    print(compteurI);
+    print(compteurE1);
+    print(compteurR);
+    print(compteurMtot);
+    print(compteurEtot);
+    print(compteurTtot);
+    print(compteurItot);
+    print(compteurE1tot);
+    print(compteurRtot);
+
+    
+
+setState(() {
+  
+
+    percentageM=(((compteurM.toDouble()/compteurMtot)*100).toInt());
+    percentageE1=(((compteurE.toDouble()/compteurEtot)*100).toInt());
+    percentageT=(((compteurT.toDouble()/compteurTtot)*100).toInt());
+    percentageI=(((compteurI.toDouble()/compteurItot)*100).toInt());
+    percentageE2=(((compteurE1.toDouble()/compteurE1tot)*100).toInt());
+    percentageR=(((compteurR.toDouble()/compteurRtot)*100).toInt());
+
+    print(percentageM);
+    print(percentageE1);
+    print(percentageT);
+    print(percentageI);
+    print(percentageE2);
+    print(percentageR);
+
+    percTot = (percentageE1 +
           percentageE2 +
           percentageI +
           percentageM +
           percentageR +
-          percentageT) ~/
-      6;
+          percentageT) ~/ 6;
+
+          isLoading=false;
+
+
+});
+
+  }
+
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(milliseconds: 500)).then((_) {
+      setState(() {
+        userData = ModalRoute.of(context).settings.arguments;
+
+        _getCommentaires().then((data) {
+          _getQuestions().then((data) {
+            _updateCompteur();
+          });
+        });
+      });
+    });
+    return null;
+  }
 
   @override
   void initState() {
@@ -31,6 +246,7 @@ class progressionEleveState extends State<progressionEleve> {
     Future.delayed(Duration(milliseconds: 100)).then((_) {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
+        _refresh();
       });
     });
   }
@@ -67,7 +283,11 @@ class progressionEleveState extends State<progressionEleve> {
               SizedBox(width: 43),
             ]),
       ),
-      body: Container(
+      body: isLoading ? Container(
+              color: Color(0xff141a24),
+              child: Center(
+                  child: SpinKitDoubleBounce(size: 40, color: Colors.white))):new RefreshIndicator(
+            child: Container(
         color: Color(0xff141a24),
         child: CustomScrollView(
           slivers: <Widget>[
@@ -116,7 +336,7 @@ class progressionEleveState extends State<progressionEleve> {
                               Text(
                                 '$percentageM%',
                                 style: TextStyle(
-                                    fontSize: 25.0, fontFamily: 'Arboria'),
+                                    fontSize: 22.0, fontFamily: 'Arboria'),
                               ),
                             ],
                           ),
@@ -146,7 +366,7 @@ class progressionEleveState extends State<progressionEleve> {
                               Text(
                                 '$percentageE1%',
                                 style: TextStyle(
-                                    fontSize: 25.0, fontFamily: 'Arboria'),
+                                    fontSize: 22.0, fontFamily: 'Arboria'),
                               ),
                             ],
                           ),
@@ -174,7 +394,7 @@ class progressionEleveState extends State<progressionEleve> {
                               Text(
                                 '$percentageT%',
                                 style: TextStyle(
-                                    fontSize: 25.0, fontFamily: 'Arboria'),
+                                    fontSize: 22.0, fontFamily: 'Arboria'),
                               ),
                             ],
                           ),
@@ -202,7 +422,7 @@ class progressionEleveState extends State<progressionEleve> {
                               Text(
                                 '$percentageI%',
                                 style: TextStyle(
-                                    fontSize: 25.0, fontFamily: 'Arboria'),
+                                    fontSize: 22.0, fontFamily: 'Arboria'),
                               ),
                             ],
                           ),
@@ -230,7 +450,7 @@ class progressionEleveState extends State<progressionEleve> {
                               Text(
                                 '$percentageE2%',
                                 style: TextStyle(
-                                    fontSize: 25.0, fontFamily: 'Arboria'),
+                                    fontSize: 22.0, fontFamily: 'Arboria'),
                               ),
                             ],
                           ),
@@ -258,7 +478,7 @@ class progressionEleveState extends State<progressionEleve> {
                               Text(
                                 '$percentageR%',
                                 style: TextStyle(
-                                    fontSize: 25.0, fontFamily: 'Arboria'),
+                                    fontSize: 22.0, fontFamily: 'Arboria'),
                               ),
                             ],
                           ),
@@ -266,7 +486,7 @@ class progressionEleveState extends State<progressionEleve> {
                       ),
                       Container(
                         color: Colors.grey[750],
-                        padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -305,7 +525,7 @@ class progressionEleveState extends State<progressionEleve> {
             ),
           ],
         ),
-      ),
+      ), onRefresh: _refresh),
     );
   }
 }

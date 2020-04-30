@@ -23,6 +23,11 @@ class mainPage extends State<MainPage> {
   String type;
   String section = 'M';
   bool isSearching = false;
+  String nomEleve;
+  Text titreEnseignant = Text("Mes questions",
+      style: TextStyle(
+        fontFamily: 'Arboria',
+      ));
 
   List filteredQuestionTab = [];
   List questionSectionTab = [];
@@ -110,7 +115,6 @@ class mainPage extends State<MainPage> {
         section = 'R';
         _getQuestionSection();
         filteredQuestionTab = questionSectionTab;
-
       }
     });
   }
@@ -179,7 +183,8 @@ class mainPage extends State<MainPage> {
                                           ["sender"]) ??
                                       "",
                               style: TextStyle(fontFamily: 'Arboria')),
-                          leading: Icon(Icons.work, size: 40,color:Colors.blueGrey),
+                          leading: Icon(Icons.work,
+                              size: 40, color: Colors.blueGrey),
                           contentPadding: EdgeInsets.all(20),
                           onTap: () {
                             Navigator.pushNamed(context, '/pageCommentaire',
@@ -206,7 +211,13 @@ class mainPage extends State<MainPage> {
     await Future.delayed(Duration(milliseconds: 500)).then((_) {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
+
         _getData().then((data) {
+          nomEleve = userData['nomEleve'];
+          titreEnseignant = Text("Mes questions | " + "$nomEleve",
+              style: TextStyle(
+                fontFamily: 'Arboria',
+              ));
           _getQuestionSection();
           filteredQuestionTab = questionSectionTab;
         });
@@ -245,7 +256,6 @@ class mainPage extends State<MainPage> {
     }
     if (userData['role'] == 'S') {
       return Scaffold(
-        
         appBar: AppBar(
             flexibleSpace: Container(
               decoration: BoxDecoration(
@@ -296,7 +306,6 @@ class mainPage extends State<MainPage> {
             ]),
         body: new RefreshIndicator(
             child: _getBody(_currentIndex), onRefresh: _refresh),
-        
         bottomNavigationBar: FABBottomAppBar(
           role: userData['role'],
           questionEleve: userData['questionEleve'],
@@ -331,10 +340,7 @@ class mainPage extends State<MainPage> {
                       children: [
                           Center(
                               child: !userData['questionEleve']
-                                  ? Text("Mes questions",
-                                      style: TextStyle(
-                                        fontFamily: 'Arboria',
-                                      ))
+                                  ? titreEnseignant
                                   : Text("Questions d'élèves",
                                       style: TextStyle(
                                         fontFamily: 'Arboria',
@@ -373,14 +379,16 @@ class mainPage extends State<MainPage> {
               child: _getBody(_currentIndex), onRefresh: _refresh),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: !userData['questionEleve']? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(CupertinoPageRoute(
-                    builder: (context) => (creationQuestion(
-                        userData["givenId"], userData['idStudent']))));
-              },
-              backgroundColor: Color(0xff444d5d),
-              child: Icon(Icons.add, color: Colors.white)):null,
+          floatingActionButton: !userData['questionEleve']
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).push(CupertinoPageRoute(
+                        builder: (context) => (creationQuestion(
+                            userData["givenId"], userData['idStudent']))));
+                  },
+                  backgroundColor: Color(0xff444d5d),
+                  child: Icon(Icons.add, color: Colors.white))
+              : null,
           bottomNavigationBar: FABBottomAppBar(
             role: userData['role'],
             questionEleve: userData['questionEleve'],
