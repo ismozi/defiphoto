@@ -1,0 +1,329 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
+import 'package:vue_prof_version2/pageProfEleveV2.dart';
+import 'package:vue_prof_version2/pageQuestionV2.dart';
+import 'drawerProfV2.dart';
+import 'modelVueProf.dart';
+import 'searchPageV2.dart';
+
+
+class ProfBottomSheet extends SolidBottomSheet {
+  String anneScolaire;
+  Professeur professeur;
+  BuildContext context;
+  Widget body;
+  Function onShow=(){};
+  Function onHide=(){};
+
+  SolidController solidController;
+  static final double radius = 30;
+  static const double HEADER_HEIGHT= 50;
+
+  ProfBottomSheet({this.professeur, this.context,this.solidController,this.body,this.onHide,this.onShow})
+      : super(
+    headerBar: Container(
+      height: HEADER_HEIGHT,
+      child: Container(
+        decoration: BoxDecoration(
+            color: Colors.grey[600],
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(radius), topRight: Radius.circular(radius))
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+               Text("Changer d'anné scolaire", style: TextStyle(fontSize: 14, color: Colors.black,fontWeight: FontWeight.w300),),
+               IconButton(
+              icon: Icon(Icons.cancel),
+              onPressed: (){Navigator.pop(context);},
+              tooltip: 'Fermer',
+              color: Colors.red[900],
+            )
+],
+        ),
+      ),
+      decoration: BoxDecoration(
+        color: Colors.transparent,),
+    ),
+    body:SafeArea(
+      bottom: true,
+      child: Container(
+          color: Colors.white,
+          child: body),
+    ),
+    maxHeight: MediaQuery.of(context).size.height * 0.25,
+    elevation: 12,
+    controller: solidController,
+    onHide:onHide,
+    onShow:onShow
+  );
+}
+
+class ProfAppBar extends AppBar {
+  String titre;
+  Widget widgetTitre;
+  bool centerTitre;
+  Professeur professeur;
+  BuildContext context;
+  Widget iconBtn;
+
+  ProfAppBar(this.titre, this.centerTitre, this.professeur, this.context,this.iconBtn)
+      : super(
+          elevation: 7,
+          title: Text(titre), // TODO  si mettre un widget c plus facile
+          actions: [
+            iconBtn,
+            IconButton(
+                onPressed: () {
+                  showSearch(context: context, delegate: SearchPage(
+                          listEtudiant:
+                              professeur.anneScolaireActuelle.listEtudiant,
+                          hintText: 'Cherchez un étudiant...',
+                          recentEtudiant:
+                              professeur.anneScolaireActuelle.recentEtudiant));
+                },
+                icon: Icon(
+                  Icons.search,
+                  size: 20,
+                  color: Colors.white,
+                )),
+            IconButton(
+              icon: Icon(
+                Icons.more_vert,
+                color: Colors.white,
+              ),
+              onPressed:(){}
+            ),
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(
+                  Icons.notifications,
+                  color: Colors.yellow[400],
+                ),
+                onPressed: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+              ),
+            ),
+          ],
+          centerTitle: centerTitre,
+        );
+}
+
+class AcceuilProf extends StatefulWidget {
+
+  Professeur professeur;
+
+
+  AcceuilProf({this.professeur});
+
+  @override
+  _AcceuilProfState createState() => _AcceuilProfState();
+}
+
+class _AcceuilProfState extends State<AcceuilProf> {
+
+  static const List<String> listTitre=['Mes Eleves','Mes Questions'];
+  SolidController _solidController;
+  PageController _pageController;
+  SlidableController _slidableController;
+  int currentIndex;
+  static int indexEleve=0;
+  static int indexQuestion=1;
+
+  int id;
+  bool isBottShtOn;
+
+  PageProfQuestion pageQuestion;
+  PageProfEleve pageEleve;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initialiser();
+  }
+
+  void initialiser() {
+    currentIndex=0;
+    _solidController=SolidController();
+    _pageController= new PageController(initialPage: 0,keepPage: true);
+    id = widget.professeur.anneScolaireActuelle.idPosition;
+    pageEleve= PageProfEleve(professeur: widget.professeur,);
+    pageQuestion= PageProfQuestion(professeur: widget.professeur,solidController: _solidController,);
+
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+
+  }
+
+  void changerPage(int index){
+    setState(() {
+      _pageController.animateToPage(index, duration: Duration(milliseconds: 1800), curve: Curves.slowMiddle);
+      currentIndex=index;
+    });
+  }
+
+  void changerAnneSco(AnneScolaireProf anneS, context) {
+    setState(() {
+      this.widget.professeur.setAnneScolaireActuelle(anneS.idPosition);
+      id=anneS.idPosition;
+      Scaffold.of(context).showBottomSheet((context)=>buildBottomSheet(context));
+      if(currentIndex==indexEleve){ pageEleve=new PageProfEleve(professeur: widget.professeur);
+      }
+      else{  pageQuestion=new PageProfQuestion(professeur: widget.professeur,solidController: _solidController,);
+      }
+    });
+  }
+
+  Widget buildBottomSheet(context)=>ProfBottomSheet(
+    professeur: widget.professeur,
+    context: context,
+    body:ListView(
+      shrinkWrap: true,
+      children: [ListTile(
+        title: Center(child: Text('Selectionner une anné scolaire',style: TextStyle(),)),
+      ) ]+widget.professeur.anneScolaires.map((anneS) => ListTile(
+        leading: Icon(Icons.calendar_today),
+        subtitle: Text(
+          'Élève: ${anneS.listEtudiant.length}',
+          style:
+          TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+        ),
+        title: Text(
+          anneS.idPosition==id? '${anneS.afficherAnne()}  (Actuelle)':'${anneS.afficherAnne()}',
+          style: TextStyle(fontWeight: FontWeight.w300),
+        ),
+        trailing: Icon(Icons.arrow_forward_ios),
+        onTap: () {changerAnneSco(anneS, context);},
+        selected: anneS.idPosition==id?true:false,
+        // enabled: anneS.idPosition==id?false:true,
+      )).toList()+[ListTile(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            RaisedButton.icon(
+              onPressed: (){_solidController.hide();},
+              icon: Icon(Icons.arrow_drop_down),
+              label: Text('Cacher',style: TextStyle(),),
+              elevation: 3,
+            ),
+            SizedBox(width: 8,),
+            RaisedButton.icon(
+              onPressed: (){
+                Navigator.pop(context);},
+              icon: Icon(Icons.close),
+              label: Text('Fermer'),
+              color: Colors.red[400],)
+          ],
+        ),
+
+      )],
+    ),
+    solidController: _solidController,
+
+  );
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+      body: PageView(
+        controller: _pageController,
+        physics: NeverScrollableScrollPhysics(),
+        children: <Widget>[pageEleve,pageQuestion],
+
+      ),
+      appBar: ProfAppBar(listTitre[currentIndex], false, widget.professeur,
+          context,Builder(builder: (context)=>IconButton(
+        icon: Icon(Icons.calendar_today),
+        onPressed: (){
+          Scaffold.of(context).showBottomSheet((context)=>buildBottomSheet(context),elevation: 3);
+
+        },
+        tooltip: "Changer d'anné scolaire ",
+      ),)),
+      floatingActionButton: currentIndex==indexEleve?FloatingActionButton(
+      child: Icon(Icons.person_add),
+      elevation: 14,
+      tooltip: 'Ajouter un élève',
+      backgroundColor: Colors.cyan[300],
+      onPressed: () {
+        // TODO navigation vers une page pour ajouter l'éleve
+      },
+    ): SpeedDial(
+      marginBottom:ProfBottomSheet.HEADER_HEIGHT-25, // todo arranger
+      elevation: 10,
+      animatedIcon: AnimatedIcons.menu_close,
+      overlayColor: Colors.black87,
+      curve: Curves.elasticIn,
+      tooltip: 'Action',
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.question_answer),
+          label: 'Ajouter une question au groupe',
+          labelStyle: TextStyle(color: Colors.black),
+          onTap: () {},
+          backgroundColor: Colors.cyan[300],
+          elevation: 12,
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.question_answer),
+          label: 'Ajouter une question a un stage en particulier',
+          labelStyle: TextStyle(color: Colors.black),
+          onTap: () {},
+          backgroundColor: Colors.cyan[200],
+          elevation: 12,
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.question_answer),
+          label: "Ajouter une question a un groupe d'élève",
+          labelStyle: TextStyle(color: Colors.black),
+          onTap: () {},
+          backgroundColor: Colors.cyan[100],
+          elevation: 12,
+        ),
+        SpeedDialChild(
+          child: Icon(Icons.question_answer),
+          label: "Ajouter une question a la section actuelle",
+          labelStyle: TextStyle(color: Colors.black),
+          onTap: () {print(PageProfQuestion.listSection[pageQuestion.currentTabIndex]);
+             print(pageQuestion.currentTabIndex);},
+          backgroundColor: Colors.cyan[50],
+          elevation: 12,
+        ),
+      ],
+
+    ),
+      bottomNavigationBar: BottomNavigationBar(
+        showUnselectedLabels: true,
+        showSelectedLabels: true,
+        onTap: (index){changerPage(index);},
+       items: [
+         BottomNavigationBarItem(icon: Icon(Icons.group,size:28.5,),title: Text('Mes Éleves')),
+         BottomNavigationBarItem(icon: Icon(Icons.question_answer,size: 28.5,),title: Text('Mes Questions')),
+       ],
+        currentIndex: currentIndex,
+        elevation: 15,
+
+      ),
+      drawer: DrawerProfWrap.side(
+        drawer: DrawerProf(widget.professeur,
+            context: context),radius: 40,),
+      endDrawer: DrawerProfWrap.sideEnd(
+        drawer: EndDrawerProf(
+          professeur: widget.professeur),radius: 40,),
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+      extendBodyBehindAppBar: false,
+      extendBody: true,
+      resizeToAvoidBottomInset: true,
+    );
+
+}
