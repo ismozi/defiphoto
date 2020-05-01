@@ -136,7 +136,9 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/login')}
+            onTap: () {
+              logout();
+              Navigator.of(context).pushReplacementNamed('/login');}
           ),
         ],
       )),
