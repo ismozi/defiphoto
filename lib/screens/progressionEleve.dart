@@ -14,32 +14,32 @@ class progressionEleve extends StatefulWidget {
 class progressionEleveState extends State<progressionEleve> {
   Map userData = {};
 
-  static int percentageM ;
+  static int percentageM;
   static int percentageE1;
   static int percentageT;
   static int percentageI;
   static int percentageE2;
   static int percentageR;
-   int percTot ;
-   bool isLoading=true;
-  
+  int percTot;
+  bool isLoading = true;
+
   String eAccent = "É";
   Map questionData = {};
   List commentaires = [{}];
   List questions = [{}];
   List commentairesMe = [{}];
-  int compteurM ;
-  int compteurE ;
-  int compteurT ;
-  int compteurI ;
-  int compteurE1 ;
-  int compteurR ;
-  int compteurMtot ;
-  int compteurEtot ;
-  int compteurTtot ;
-  int compteurItot ;
-  int compteurE1tot ;
-  int compteurRtot ;
+  int compteurM;
+  int compteurE;
+  int compteurT;
+  int compteurI;
+  int compteurE1;
+  int compteurR;
+  int compteurMtot;
+  int compteurEtot;
+  int compteurTtot;
+  int compteurItot;
+  int compteurE1tot;
+  int compteurRtot;
 
   _getCommentaires() async {
     var response =
@@ -78,47 +78,37 @@ class progressionEleveState extends State<progressionEleve> {
     int i = 0;
 
     compteurM = 0;
-  compteurE = 0;
-  compteurT = 0;
-   compteurI = 0;
-   compteurE1 = 0;
-   compteurR = 0;
-   compteurMtot = 0;
-   compteurEtot =0;
-   compteurTtot = 0;
-   compteurItot = 0;
-   compteurE1tot = 0;
-   compteurRtot = 0;
+    compteurE = 0;
+    compteurT = 0;
+    compteurI = 0;
+    compteurE1 = 0;
+    compteurR = 0;
+    compteurMtot = 0;
+    compteurEtot = 0;
+    compteurTtot = 0;
+    compteurItot = 0;
+    compteurE1tot = 0;
+    compteurRtot = 0;
 
-    for (int z=0;z<questions.length;z++){
-        if(questions[z]['type']=='M'){
+    for (int z = 0; z < questions.length; z++) {
+      if (questions[z]['type'] == 'M') {
         compteurMtot++;
-
-      } else if(questions[z]['type']=='É'){
+      } else if (questions[z]['type'] == 'É') {
         compteurEtot++;
-
-      } else if(questions[z]['type']=='T'){
+      } else if (questions[z]['type'] == 'T') {
         compteurTtot++;
-
-      } else if(questions[z]['type']=='I'){
+      } else if (questions[z]['type'] == 'I') {
         compteurItot++;
-
-      } else if(questions[z]['type']=='E'){
+      } else if (questions[z]['type'] == 'E') {
         compteurE1tot++;
-
-      } else if(questions[z]['type']=='R'){
+      } else if (questions[z]['type'] == 'R') {
         compteurRtot++;
-
-      } 
       }
-
-
-
-    
+    }
 
     while (i < questions.length) {
       skipQuestion = false;
-      
+
       print(i);
       for (int index = 0; index < commentairesMe.length; index++) {
         if (i < questions.length &&
@@ -174,54 +164,28 @@ class progressionEleveState extends State<progressionEleve> {
       if (!skipQuestion) {
         i++;
       }
-
     }
-    print(commentairesMe);
-    print(questions);
-    print(compteurM);
-    print(compteurE);
-    print(compteurT);
-    print(compteurI);
-    print(compteurE1);
-    print(compteurR);
-    print(compteurMtot);
-    print(compteurEtot);
-    print(compteurTtot);
-    print(compteurItot);
-    print(compteurE1tot);
-    print(compteurRtot);
 
-    
+    print(userData['profId']);
 
-setState(() {
-  
+    setState(() {
+      percentageM = (((compteurM.toDouble() / compteurMtot) * 100).toInt());
+      percentageE1 = (((compteurE.toDouble() / compteurEtot) * 100).toInt());
+      percentageT = (((compteurT.toDouble() / compteurTtot) * 100).toInt());
+      percentageI = (((compteurI.toDouble() / compteurItot) * 100).toInt());
+      percentageE2 = (((compteurE1.toDouble() / compteurE1tot) * 100).toInt());
+      percentageR = (((compteurR.toDouble() / compteurRtot) * 100).toInt());
 
-    percentageM=(((compteurM.toDouble()/compteurMtot)*100).toInt());
-    percentageE1=(((compteurE.toDouble()/compteurEtot)*100).toInt());
-    percentageT=(((compteurT.toDouble()/compteurTtot)*100).toInt());
-    percentageI=(((compteurI.toDouble()/compteurItot)*100).toInt());
-    percentageE2=(((compteurE1.toDouble()/compteurE1tot)*100).toInt());
-    percentageR=(((compteurR.toDouble()/compteurRtot)*100).toInt());
+      percTot = (percentageE1 +
+              percentageE2 +
+              percentageI +
+              percentageM +
+              percentageR +
+              percentageT) ~/
+          6;
 
-    print(percentageM);
-    print(percentageE1);
-    print(percentageT);
-    print(percentageI);
-    print(percentageE2);
-    print(percentageR);
-
-    percTot = (percentageE1 +
-          percentageE2 +
-          percentageI +
-          percentageM +
-          percentageR +
-          percentageT) ~/ 6;
-
-          isLoading=false;
-
-
-});
-
+      isLoading = false;
+    });
   }
 
   Future<Null> _refresh() async {
@@ -283,249 +247,272 @@ setState(() {
               SizedBox(width: 43),
             ]),
       ),
-      body: isLoading ? Container(
+      body: isLoading
+          ? Container(
               color: Color(0xff141a24),
               child: Center(
-                  child: SpinKitDoubleBounce(size: 40, color: Colors.white))):new RefreshIndicator(
-            child: Container(
-        color: Color(0xff141a24),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  if (index > 0) return null;
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 15),
-                      Container(
-                          padding: EdgeInsets.fromLTRB(0, 3, 0, 0),
-                          child: Text('PROGRESSION PAR CATÉGORIE',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: 'Arboria',
-                                  color: Colors.white))),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: Divider(
-                          height: 20,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Color(0xFF222b3b),
-                          padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: SpinKitDoubleBounce(size: 40, color: Colors.white)))
+          : new RefreshIndicator(
+              child: Container(
+                color: Color(0xff141a24),
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (BuildContext context, int index) {
+                          if (index > 0) return null;
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Text(
-                                'M',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'Arboria'),
+                              SizedBox(height: 15),
+                              Container(
+                                  padding: EdgeInsets.fromLTRB(0, 3, 0, 0),
+                                  child: Text('PROGRESSION PAR CATÉGORIE',
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontFamily: 'Arboria',
+                                          color: Colors.white))),
+                              Container(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                child: Divider(
+                                  height: 20,
+                                  color: Colors.grey[800],
+                                ),
                               ),
-                              LinearPercentIndicator(
-                                width: 230.0,
-                                lineHeight: 14.0,
-                                percent: percentageM / 100,
-                                backgroundColor: Colors.grey[300],
-                                progressColor: Colors.cyan,
+                              Card(
+                                child: Container(
+                                  color: Color(0xFF222b3b),
+                                  padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'M',
+                                        style: TextStyle(
+                                            fontSize: 28.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      LinearPercentIndicator(
+                                        width: 230.0,
+                                        lineHeight: 14.0,
+                                        percent: percentageM / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        progressColor: Colors.cyan,
+                                      ),
+                                      Text(
+                                        '$percentageM%',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              Text(
-                                '$percentageM%',
-                                style: TextStyle(
-                                    fontSize: 22.0, fontFamily: 'Arboria'),
+                              Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: Container(
+                                  color: Color(0xFF222b3b),
+                                  padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'É',
+                                        style: TextStyle(
+                                            fontSize: 28.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      LinearPercentIndicator(
+                                        width: 230.0,
+                                        lineHeight: 14.0,
+                                        percent: percentageE1 / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        progressColor: Colors.cyan,
+                                      ),
+                                      Text(
+                                        '$percentageE1%',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                child: Container(
+                                  color: Color(0xFF222b3b),
+                                  padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'T',
+                                        style: TextStyle(
+                                            fontSize: 28.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      LinearPercentIndicator(
+                                        width: 230.0,
+                                        lineHeight: 14.0,
+                                        percent: percentageT / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        progressColor: Colors.cyan,
+                                      ),
+                                      Text(
+                                        '$percentageT%',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                child: Container(
+                                  color: Color(0xFF222b3b),
+                                  padding: EdgeInsets.fromLTRB(24, 3, 20, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'I',
+                                        style: TextStyle(
+                                            fontSize: 28.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      LinearPercentIndicator(
+                                        width: 230.0,
+                                        lineHeight: 14.0,
+                                        percent: percentageI / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        progressColor: Colors.cyan,
+                                      ),
+                                      Text(
+                                        '$percentageI%',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                child: Container(
+                                  color: Color(0xFF222b3b),
+                                  padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'E',
+                                        style: TextStyle(
+                                            fontSize: 28.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      LinearPercentIndicator(
+                                        width: 230.0,
+                                        lineHeight: 14.0,
+                                        percent: percentageE2 / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        progressColor: Colors.cyan,
+                                      ),
+                                      Text(
+                                        '$percentageE2%',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Card(
+                                child: Container(
+                                  color: Color(0xFF222b3b),
+                                  padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'R',
+                                        style: TextStyle(
+                                            fontSize: 28.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      LinearPercentIndicator(
+                                        width: 230.0,
+                                        lineHeight: 14.0,
+                                        percent: percentageR / 100,
+                                        backgroundColor: Colors.grey[300],
+                                        progressColor: Colors.cyan,
+                                      ),
+                                      Text(
+                                        '$percentageR%',
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                color: Colors.grey[750],
+                                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'PROGRESSION TOTALE',
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontFamily: 'Arboria',
+                                          color: Colors.white),
+                                    ),
+                                    Divider(
+                                      height: 20,
+                                      color: Colors.grey[800],
+                                    ),
+                                    CircularPercentIndicator(
+                                      radius: 175.0,
+                                      progressColor: Colors.cyan,
+                                      backgroundColor: Colors.grey[300],
+                                      percent: percTot / 100,
+                                      animation: true,
+                                      lineWidth: 30.0,
+                                      center: Text(
+                                        '$percTot%',
+                                        style: TextStyle(
+                                            fontSize: 35.0,
+                                            fontFamily: 'Arboria'),
+                                      ),
+                                      circularStrokeCap:
+                                          CircularStrokeCap.round,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                      Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30)),
-                        child: Container(
-                          color: Color(0xFF222b3b),
-                          padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'É',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'Arboria'),
-                              ),
-                              LinearPercentIndicator(
-                                width: 230.0,
-                                lineHeight: 14.0,
-                                percent: percentageE1 / 100,
-                                backgroundColor: Colors.grey[300],
-                                progressColor: Colors.cyan,
-                              ),
-                              Text(
-                                '$percentageE1%',
-                                style: TextStyle(
-                                    fontSize: 22.0, fontFamily: 'Arboria'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Color(0xFF222b3b),
-                          padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'T',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'Arboria'),
-                              ),
-                              LinearPercentIndicator(
-                                width: 230.0,
-                                lineHeight: 14.0,
-                                percent: percentageT / 100,
-                                backgroundColor: Colors.grey[300],
-                                progressColor: Colors.cyan,
-                              ),
-                              Text(
-                                '$percentageT%',
-                                style: TextStyle(
-                                    fontSize: 22.0, fontFamily: 'Arboria'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Color(0xFF222b3b),
-                          padding: EdgeInsets.fromLTRB(24, 3, 20, 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'I',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'Arboria'),
-                              ),
-                              LinearPercentIndicator(
-                                width: 230.0,
-                                lineHeight: 14.0,
-                                percent: percentageI / 100,
-                                backgroundColor: Colors.grey[300],
-                                progressColor: Colors.cyan,
-                              ),
-                              Text(
-                                '$percentageI%',
-                                style: TextStyle(
-                                    fontSize: 22.0, fontFamily: 'Arboria'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Color(0xFF222b3b),
-                          padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'E',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'Arboria'),
-                              ),
-                              LinearPercentIndicator(
-                                width: 230.0,
-                                lineHeight: 14.0,
-                                percent: percentageE2 / 100,
-                                backgroundColor: Colors.grey[300],
-                                progressColor: Colors.cyan,
-                              ),
-                              Text(
-                                '$percentageE2%',
-                                style: TextStyle(
-                                    fontSize: 22.0, fontFamily: 'Arboria'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Container(
-                          color: Color(0xFF222b3b),
-                          padding: EdgeInsets.fromLTRB(20, 3, 20, 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                'R',
-                                style: TextStyle(
-                                    fontSize: 28.0, fontFamily: 'Arboria'),
-                              ),
-                              LinearPercentIndicator(
-                                width: 230.0,
-                                lineHeight: 14.0,
-                                percent: percentageR / 100,
-                                backgroundColor: Colors.grey[300],
-                                progressColor: Colors.cyan,
-                              ),
-                              Text(
-                                '$percentageR%',
-                                style: TextStyle(
-                                    fontSize: 22.0, fontFamily: 'Arboria'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        color: Colors.grey[750],
-                        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'PROGRESSION TOTALE',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontFamily: 'Arboria',
-                                  color: Colors.white),
-                            ),
-                            Divider(
-                              height: 20,
-                              color: Colors.grey[800],
-                            ),
-                            CircularPercentIndicator(
-                              radius: 175.0,
-                              progressColor: Colors.cyan,
-                              backgroundColor: Colors.grey[300],
-                              percent: percTot / 100,
-                              animation: true,
-                              lineWidth: 30.0,
-                              center: Text(
-                                '$percTot%',
-                                style: TextStyle(
-                                    fontSize: 35.0, fontFamily: 'Arboria'),
-                              ),
-                              circularStrokeCap: CircularStrokeCap.round,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ), onRefresh: _refresh),
+              onRefresh: _refresh),
     );
   }
 }

@@ -187,6 +187,7 @@ class _QuestionsState extends State<Questions> {
   _getQuestions() async {
     var sender = widget.id;
     var reciever = widget.idProf;
+    print(widget.idProf);
     var data = {"sender": sender.toString(), "recievers": reciever.toString()};
     var response = await http.post(
         "https://defiphoto-api.herokuapp.com/questions/auProfs",
@@ -241,9 +242,13 @@ class _QuestionsState extends State<Questions> {
         ),
       ),
       body: isLoading
-          ? Text("Loading...")
+          ? Center(child: SpinKitDoubleBounce(size: 40,color: Colors.white))
           : isEmpty
-              ? Text('Null')
+              ? Center(child:Text("Vous n'avez pas posé de questions", style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 20,
+                       
+                        fontFamily: 'Arboria')))
               : Container(
                   color:Color(0xff141a24),
                   child: ListView.builder(

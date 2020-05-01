@@ -38,6 +38,7 @@ dependencies:
   sider_bar: ^0.1.1
   flutter_page_transition: ^0.1.0
   sticky_headers: ^0.1.8
+  shared_preferences: ^0.5.1+2
 
 
   
