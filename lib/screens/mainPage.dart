@@ -53,10 +53,10 @@ class mainPage extends State<MainPage> {
   }
 
   Future _read(String text) async {
-    // Wenn noch am Reden, dann Klappe halten!
+    
     await flutterTts.stop();
     if (text != null && text.isNotEmpty) {
-      /// Als Kleinbuchstaben aussprechen lassen, da sonst immer "Großbuchstabe X" statt nur "X" gesagt wird...
+     
 
       await flutterTts.speak(text.toLowerCase());
     }
