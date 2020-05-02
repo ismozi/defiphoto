@@ -7,6 +7,7 @@ import '../widgets/fabbottomappbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 Widget appBarTitle = Text('Matières et produits',
     style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
@@ -32,6 +33,34 @@ class mainPage extends State<MainPage> {
   List filteredQuestionTab = [];
   List questionSectionTab = [];
   var questionSection;
+
+  FlutterTts flutterTts;
+
+  String language = 'fr-FR';
+
+  initTts() {
+    flutterTts = FlutterTts();
+    flutterTts.setLanguage(language);
+    flutterTts.setSpeechRate(1.0);
+    flutterTts.setVolume(1.0);
+    flutterTts.setPitch(1.0);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    flutterTts.stop();
+  }
+
+  Future _read(String text) async {
+    // Wenn noch am Reden, dann Klappe halten!
+    await flutterTts.stop();
+    if (text != null && text.isNotEmpty) {
+      /// Als Kleinbuchstaben aussprechen lassen, da sonst immer "Großbuchstabe X" statt nur "X" gesagt wird...
+
+      await flutterTts.speak(text.toLowerCase());
+    }
+  }
 
   _getData() async {
     String id = userData["givenId"];
@@ -172,21 +201,29 @@ class mainPage extends State<MainPage> {
                           title: Text(
                             filteredQuestionTab[index]["text"] ?? '',
                             style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: 19.0,
                                 color: Colors.white,
                                 fontFamily: 'Arboria'),
                           ),
                           subtitle: Text(
-                              !userData['questionEleve']
+                              !userData['questionEleve']&&userData['role']=="P"
                                   ? 'Moi'
                                   : _getUsername(filteredQuestionTab[index]
                                           ["sender"]) ??
                                       "",
                               style: TextStyle(fontFamily: 'Arboria')),
-                          leading: Icon(Icons.work,
-                              size: 40, color: Colors.blueGrey),
+                          trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+   
+                                VerticalDivider(thickness: 1.5),
+                                IconButton(
+                                    icon: Icon(Icons.volume_up, size: 30),
+                                    onPressed: () {_read(filteredQuestionTab[index]["text"]);})
+                              ]),
                           contentPadding: EdgeInsets.all(20),
                           onTap: () {
+                          
                             Navigator.pushNamed(context, '/pageCommentaire',
                                 arguments: {
                                   'questionId': filteredQuestionTab[index]
@@ -243,6 +280,7 @@ class mainPage extends State<MainPage> {
   void initState() {
     super.initState();
     _refresh();
+    initTts();
   }
 
   @override
