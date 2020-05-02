@@ -37,17 +37,16 @@ dependencies:
   flutter_slidable: ^0.5.4
   sider_bar: ^0.1.1
   flutter_page_transition: ^0.1.0
-  
+  sticky_headers: ^0.1.8
+  shared_preferences: ^0.5.1+2
+  flutter_tts: 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   http : any
   jwt_decode: ^0.1.0
-  
-  
-
-
+ 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

@@ -113,6 +113,7 @@ class _listeEleveState extends State<listeEleve> {
             'yearDebut' : userData['schoolYearBegin'],
             'yearFin' : userData['schoolYearEnd'],
             'idStudent' : array[index]["givenId"],
+            'nomEleve': array[index]["firstName"],
             'questionEleve' : false
             
         })

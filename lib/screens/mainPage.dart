@@ -7,6 +7,7 @@ import '../widgets/fabbottomappbar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 Widget appBarTitle = Text('Matières et produits',
     style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
@@ -23,10 +24,43 @@ class mainPage extends State<MainPage> {
   String type;
   String section = 'M';
   bool isSearching = false;
+  String nomEleve;
+  Text titreEnseignant = Text("Mes questions",
+      style: TextStyle(
+        fontFamily: 'Arboria',
+      ));
 
   List filteredQuestionTab = [];
   List questionSectionTab = [];
   var questionSection;
+
+  FlutterTts flutterTts;
+
+  String language = 'fr-FR';
+
+  initTts() {
+    flutterTts = FlutterTts();
+    flutterTts.setLanguage(language);
+    flutterTts.setSpeechRate(1.0);
+    flutterTts.setVolume(1.0);
+    flutterTts.setPitch(1.0);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    flutterTts.stop();
+  }
+
+  Future _read(String text) async {
+    
+    await flutterTts.stop();
+    if (text != null && text.isNotEmpty) {
+     
+
+      await flutterTts.speak(text.toLowerCase());
+    }
+  }
 
   _getData() async {
     String id = userData["givenId"];
@@ -110,7 +144,6 @@ class mainPage extends State<MainPage> {
         section = 'R';
         _getQuestionSection();
         filteredQuestionTab = questionSectionTab;
-
       }
     });
   }
@@ -168,20 +201,29 @@ class mainPage extends State<MainPage> {
                           title: Text(
                             filteredQuestionTab[index]["text"] ?? '',
                             style: TextStyle(
-                                fontSize: 20.0,
+                                fontSize: 19.0,
                                 color: Colors.white,
                                 fontFamily: 'Arboria'),
                           ),
                           subtitle: Text(
-                              !userData['questionEleve']
+                              !userData['questionEleve']&&userData['role']=="P"
                                   ? 'Moi'
                                   : _getUsername(filteredQuestionTab[index]
                                           ["sender"]) ??
                                       "",
                               style: TextStyle(fontFamily: 'Arboria')),
-                          leading: Icon(Icons.work, size: 40,color:Colors.blueGrey),
+                          trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+   
+                                VerticalDivider(thickness: 1.5),
+                                IconButton(
+                                    icon: Icon(Icons.volume_up, size: 30),
+                                    onPressed: () {_read(filteredQuestionTab[index]["text"]);})
+                              ]),
                           contentPadding: EdgeInsets.all(20),
                           onTap: () {
+                          
                             Navigator.pushNamed(context, '/pageCommentaire',
                                 arguments: {
                                   'questionId': filteredQuestionTab[index]
@@ -206,7 +248,13 @@ class mainPage extends State<MainPage> {
     await Future.delayed(Duration(milliseconds: 500)).then((_) {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
+
         _getData().then((data) {
+          nomEleve = userData['nomEleve'];
+          titreEnseignant = Text("Mes questions | " + "$nomEleve",
+              style: TextStyle(
+                fontFamily: 'Arboria',
+              ));
           _getQuestionSection();
           filteredQuestionTab = questionSectionTab;
         });
@@ -232,6 +280,7 @@ class mainPage extends State<MainPage> {
   void initState() {
     super.initState();
     _refresh();
+    initTts();
   }
 
   @override
@@ -245,7 +294,6 @@ class mainPage extends State<MainPage> {
     }
     if (userData['role'] == 'S') {
       return Scaffold(
-        
         appBar: AppBar(
             flexibleSpace: Container(
               decoration: BoxDecoration(
@@ -296,7 +344,6 @@ class mainPage extends State<MainPage> {
             ]),
         body: new RefreshIndicator(
             child: _getBody(_currentIndex), onRefresh: _refresh),
-        
         bottomNavigationBar: FABBottomAppBar(
           role: userData['role'],
           questionEleve: userData['questionEleve'],
@@ -331,10 +378,7 @@ class mainPage extends State<MainPage> {
                       children: [
                           Center(
                               child: !userData['questionEleve']
-                                  ? Text("Mes questions",
-                                      style: TextStyle(
-                                        fontFamily: 'Arboria',
-                                      ))
+                                  ? titreEnseignant
                                   : Text("Questions d'élèves",
                                       style: TextStyle(
                                         fontFamily: 'Arboria',
@@ -373,14 +417,16 @@ class mainPage extends State<MainPage> {
               child: _getBody(_currentIndex), onRefresh: _refresh),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: !userData['questionEleve']? FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(CupertinoPageRoute(
-                    builder: (context) => (creationQuestion(
-                        userData["givenId"], userData['idStudent']))));
-              },
-              backgroundColor: Color(0xff444d5d),
-              child: Icon(Icons.add, color: Colors.white)):null,
+          floatingActionButton: !userData['questionEleve']
+              ? FloatingActionButton(
+                  onPressed: () {
+                    Navigator.of(context).push(CupertinoPageRoute(
+                        builder: (context) => (creationQuestion(
+                            userData["givenId"], userData['idStudent']))));
+                  },
+                  backgroundColor: Color(0xff444d5d),
+                  child: Icon(Icons.add, color: Colors.white))
+              : null,
           bottomNavigationBar: FABBottomAppBar(
             role: userData['role'],
             questionEleve: userData['questionEleve'],

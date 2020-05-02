@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_flutter/screens/pageQuestion.dart';
 
 
@@ -7,6 +8,13 @@ import 'package:test_flutter/screens/pageQuestion.dart';
 class customDrawer extends StatelessWidget {
   Map userData= {};
   customDrawer({this.userData});
+
+  Future<Null> logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('givenId', null);
+    prefs.setString('password', null);
+  
+  }
   
 
 
@@ -60,7 +68,7 @@ class customDrawer extends StatelessWidget {
             ListTile(
             leading: Icon(Icons.question_answer),
             title: Text('Poser des questions',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => pageQuestion(userData['givenId'],userData['role'])))},
+            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(userData['profId'],userData['givenId'],userData['role'])))},
           ),
           ListTile(
             leading: Icon(Icons.portrait),
@@ -75,7 +83,9 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/login')}
+            onTap: ()  {
+              logout();
+              Navigator.of(context).pushReplacementNamed('/login');}
           ),
         ]: <Widget>[
           DrawerHeader(
@@ -126,7 +136,9 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Se déconnecter',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pushReplacementNamed('/login')}
+            onTap: () {
+              logout();
+              Navigator.of(context).pushReplacementNamed('/login');}
           ),
         ],
       )),
