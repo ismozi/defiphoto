@@ -299,7 +299,7 @@ class progressionEleveState extends State<progressionEleve> {
                                         lineHeight: 14.0,
                                         percent: percentageM / 100,
                                         backgroundColor: Colors.grey[300],
-                                        progressColor: Colors.cyan,
+                                        progressColor: Colors.blueGrey,
                                       ),
                                       Text(
                                         '$percentageM%',
@@ -332,7 +332,7 @@ class progressionEleveState extends State<progressionEleve> {
                                         lineHeight: 14.0,
                                         percent: percentageE1 / 100,
                                         backgroundColor: Colors.grey[300],
-                                        progressColor: Colors.cyan,
+                                        progressColor: Colors.blueGrey,
                                       ),
                                       Text(
                                         '$percentageE1%',
@@ -363,7 +363,7 @@ class progressionEleveState extends State<progressionEleve> {
                                         lineHeight: 14.0,
                                         percent: percentageT / 100,
                                         backgroundColor: Colors.grey[300],
-                                        progressColor: Colors.cyan,
+                                        progressColor: Colors.blueGrey,
                                       ),
                                       Text(
                                         '$percentageT%',
@@ -394,7 +394,7 @@ class progressionEleveState extends State<progressionEleve> {
                                         lineHeight: 14.0,
                                         percent: percentageI / 100,
                                         backgroundColor: Colors.grey[300],
-                                        progressColor: Colors.cyan,
+                                        progressColor: Colors.blueGrey,
                                       ),
                                       Text(
                                         '$percentageI%',
@@ -425,7 +425,8 @@ class progressionEleveState extends State<progressionEleve> {
                                         lineHeight: 14.0,
                                         percent: percentageE2 / 100,
                                         backgroundColor: Colors.grey[300],
-                                        progressColor: Colors.cyan,
+                                        progressColor: Colors.blueGrey
+                                        ,
                                       ),
                                       Text(
                                         '$percentageE2%',
@@ -456,7 +457,7 @@ class progressionEleveState extends State<progressionEleve> {
                                         lineHeight: 14.0,
                                         percent: percentageR / 100,
                                         backgroundColor: Colors.grey[300],
-                                        progressColor: Colors.cyan,
+                                        progressColor: Colors.blueGrey,
                                       ),
                                       Text(
                                         '$percentageR%',
@@ -487,7 +488,8 @@ class progressionEleveState extends State<progressionEleve> {
                                     ),
                                     CircularPercentIndicator(
                                       radius: 175.0,
-                                      progressColor: Colors.cyan,
+                                      progressColor: Colors.blueGrey
+                                      ,
                                       backgroundColor: Colors.grey[300],
                                       percent: percTot / 100,
                                       animation: true,

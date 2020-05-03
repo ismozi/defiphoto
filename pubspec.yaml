@@ -40,6 +40,12 @@ dependencies:
   sticky_headers: ^0.1.8
   shared_preferences: ^0.5.1+2
   flutter_tts: 
+  flutter_sound: ^4.0.0
+  speech_recognition:
+  medcorder_audio:
+  audio_recorder:
+  path_provider:
+  audioplayers: ^0.15.1
 
 dev_dependencies:
   flutter_test:
