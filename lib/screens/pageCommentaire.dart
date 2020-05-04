@@ -592,7 +592,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                   child: InkWell(
                                     child: Icon(
                                       Icons.keyboard_voice,
-                                      color: Colors.black,
+                                      color: _isRecording? Colors.blue:Colors.black,
                                     ),
                                     onTap: () {
                                       setState(() {

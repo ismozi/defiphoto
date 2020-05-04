@@ -68,7 +68,7 @@ class customDrawer extends StatelessWidget {
             ListTile(
             leading: Icon(Icons.question_answer),
             title: Text('Poser des questions',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => { Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(userData['profId'],userData['givenId'],userData['role'])))},
+            onTap: () => { print(userData['profID']),Navigator.push(context,MaterialPageRoute(builder: (context) => Questions(userData['profId'],userData['givenId'],userData['role'])))},
           ),
           ListTile(
             leading: Icon(Icons.portrait),

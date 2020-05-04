@@ -77,6 +77,7 @@ class _LoginState extends State<Login> {
                   'yearFin': userData['schoolYearEnd'],
                 });
           }
+          print(userData['profId']);
         });
       }
     } else {
