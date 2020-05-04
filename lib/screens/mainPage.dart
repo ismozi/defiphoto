@@ -56,8 +56,6 @@ class mainPage extends State<MainPage> {
     
     await flutterTts.stop();
     if (text != null && text.isNotEmpty) {
-     
-
       await flutterTts.speak(text.toLowerCase());
     }
   }

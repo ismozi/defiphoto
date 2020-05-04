@@ -238,6 +238,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     return Scaffold(
       appBar: AppBar( 
         leading: IconButton(icon: Icon(Icons.exit_to_app),onPressed: () => {Navigator.of(context).pushReplacementNamed('/login')}),
+        //Faut delete les info pour deconnecter
         actions: <Widget>[IconButton(icon: Icon(Icons.search),onPressed: null)],
         flexibleSpace: Container(
           decoration: BoxDecoration(
