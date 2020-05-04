@@ -652,7 +652,7 @@ class _imagePageState extends State<imagePage> {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
-              initialScale: 1.0,
+              initialScale: 0.5,
               minScale: 0.5,
             ))));
   }
