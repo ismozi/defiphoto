@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class mainPageAdmin extends StatefulWidget {
   @override
@@ -16,6 +17,13 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   List questions = [{}];
   List comments = [{}];
   Map userData = {};
+
+  Future<Null> logout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('givenId', null);
+    prefs.setString('password', null);
+  
+  }
 
 
  _getUsers() async {
@@ -237,8 +245,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     userData = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar( 
-        leading: IconButton(icon: Icon(Icons.exit_to_app),onPressed: () => {Navigator.of(context).pushReplacementNamed('/login')}),
-        //Faut delete les info pour deconnecter
+        leading: IconButton(icon: Icon(Icons.exit_to_app),onPressed: () {logout();
+          Navigator.of(context).pushReplacementNamed('/login');}),
         actions: <Widget>[IconButton(icon: Icon(Icons.search),onPressed: null)],
         flexibleSpace: Container(
           decoration: BoxDecoration(

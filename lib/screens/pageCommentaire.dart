@@ -7,9 +7,19 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:medcorder_audio/medcorder_audio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:file/file.dart';
+import 'package:file/local.dart';
+import 'package:audio_recorder/audio_recorder.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:math';
 
 class pageCommentaire extends StatefulWidget {
-  pageCommentaire();
+  final LocalFileSystem localFileSystem;
+
+  pageCommentaire({localFileSystem})
+      : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
@@ -22,6 +32,49 @@ class pageCommentaireState extends State<pageCommentaire> {
   List commentaires = [{}];
   bool _isLoading = true;
   ScrollController _scrollController = new ScrollController();
+
+  Recording _recording = new Recording();
+  bool _isRecording = false;
+  Random random = new Random();
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  play(String url) async {
+    int result = await audioPlayer.play(url);
+    if (result == 1) {
+      // success
+    }
+  }
+
+  _start() async {
+    try {
+      if (await AudioRecorder.hasPermissions) {
+        await AudioRecorder.start();
+
+        bool isRecording = await AudioRecorder.isRecording;
+        setState(() {
+          _recording = new Recording(duration: new Duration(), path: "");
+          _isRecording = isRecording;
+        });
+      } else {
+        print("ACCEPT");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _stop() async {
+    var recording = await AudioRecorder.stop();
+    print("Stop recording: ${recording.path}");
+    bool isRecording = await AudioRecorder.isRecording;
+    File file = widget.localFileSystem.file(recording.path);
+    print("  File length: ${await file.length()}");
+    setState(() {
+      _recording = recording;
+      _isRecording = isRecording;
+      _envoyerImage(recording.path);
+    });
+  }
 
   _getCommentaires() async {
     String id = questionData["questionId"];
@@ -80,7 +133,7 @@ class pageCommentaireState extends State<pageCommentaire> {
             child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: fromData
+                child: fromData&&!filePath.contains('m4a')
                     ? Material(
                         child: InkWell(
                         onTap: () {
@@ -105,15 +158,75 @@ class pageCommentaireState extends State<pageCommentaire> {
                                   ImageChunkEvent loadingProgress) {
                                 if (loadingProgress == null) return child;
                                 return Center(
-                                  child: SpinKitWave(                                   
-                                   size: 20, color: Colors.white
-                                  ),
+                                  child: SpinKitWave(
+                                      size: 20, color: Colors.white),
                                 );
                               },
                             ),
                           ),
                         ),
                       ))
+                    : fromData&&filePath.contains('.m4a') ? 
+                    InkWell(
+                        onLongPress: () {
+                          if (questionData['role'] == "P" ||
+                              questionData['role'] == "A") {
+                            return showDialog<void>(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Avertissement',
+                                      style: TextStyle(fontFamily: 'Arboria')),
+                                  content: SingleChildScrollView(
+                                    child: ListBody(
+                                      children: <Widget>[
+                                        Text('Voulez-vous enlevez ce message?',
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria')),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    FlatButton(
+                                      child: Text('Oui',
+                                          style:
+                                              TextStyle(fontFamily: 'Arboria')),
+                                      onPressed: () {
+                                        if (this.mounted) {
+                                          setState(() {
+                                            _enleverCommentaire(message);
+                                            Navigator.of(context).pop();
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    FlatButton(
+                                      child: Text('Non',
+                                          style:
+                                              TextStyle(fontFamily: 'Arboria')),
+                                      onPressed: () {
+                                        if (this.mounted) {
+                                          setState(() {
+                                            Navigator.of(context).pop();
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        child: IconButton(icon: Icon(Icons.play_circle_filled), onPressed: () {
+                                        if (this.mounted) {
+                                          setState(() {
+                                            play(url);
+                                          });
+                                        }
+                                      }))
+                    
                     : InkWell(
                         onLongPress: () {
                           if (questionData['role'] == "P" ||
@@ -271,6 +384,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     stream();
   }
 
@@ -480,8 +594,17 @@ class pageCommentaireState extends State<pageCommentaire> {
                                       Icons.keyboard_voice,
                                       color: Colors.black,
                                     ),
-                                    onLongPress: () {
-                                      setState(() {});
+                                    onTap: () {
+                                      setState(() {
+                                        if(!_isRecording){
+                                          _start();
+                                      
+
+                                        }else if(_isRecording){
+                                          _stop();
+
+                                        }
+                                      });
                                     },
                                   ),
                                 )
