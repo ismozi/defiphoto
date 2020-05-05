@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_sound/flutter_sound_recorder.dart';
 import 'package:test_flutter/screens/information.dart';
 import 'customDrawer.dart';
 import 'pageQuestion.dart';
@@ -11,7 +10,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tts/flutter_tts.dart';
-import 'package:flutter_sound/flutter_sound.dart';
 import '../models/database_helpers.dart';
 
 Widget appBarTitle = Text('Matières et produits',
