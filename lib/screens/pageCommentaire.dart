@@ -86,6 +86,7 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   _getCommentaires() async {
     String id = questionData["questionId"];
+    try{
     var response =
         await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
     if (response.statusCode == 200 && this.mounted) {
@@ -93,6 +94,11 @@ class pageCommentaireState extends State<pageCommentaire> {
         _isLoading = false;
         commentaires = json.decode(response.body);
       });
+    }
+    } catch(e) {
+      if (e is SocketException) {
+     
+      }
     }
   }
 
@@ -351,12 +357,18 @@ class pageCommentaireState extends State<pageCommentaire> {
         "questionId": questionData["questionId"].toString(),
         "role": questionData["role"].toString()
       };
+      try{
       var response = await http.post(
           "https://defiphoto-api.herokuapp.com/comments/noFile",
           body: data);
           if (response.statusCode == 200){
           Timer(Duration(milliseconds: 500), () =>_scrollController.jumpTo(_scrollController.position.maxScrollExtent));
           }
+      } catch (e) {
+      if (e is SocketException) {
+        
+      }
+    }
     }
     
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_sound/flutter_sound_recorder.dart';
@@ -62,10 +64,7 @@ class mainPage extends State<MainPage> {
     List questionsLocales = await helper.queryAllRows();
     if (question == null) {
       print('YA RIEN');
-    } else {
-      
-      
-    }
+    } else {}
   }
 
   initTts() {
@@ -89,15 +88,12 @@ class mainPage extends State<MainPage> {
     }
   }
 
-  _getDataOffline() async{
+  _getDataOffline() async {
     DatabaseHelper helper = DatabaseHelper.instance;
-     questions = await helper.queryAllRows();
+    questions = await helper.queryAllRows();
     if (questions == null) {
       print('YA RIEN');
-    } else {
-      
-    }
-
+    } else {}
   }
 
   _getDataOnline() async {
@@ -113,23 +109,32 @@ class mainPage extends State<MainPage> {
       id = userData["givenId"];
     }
 
-    response =
-        await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+    try {
+      response =
+          await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
 
-    if (response.statusCode == 200 && this.mounted) {
-      setState(() {
-        questions = json.decode(response.body);
-        _save();
-      });
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          questions = json.decode(response.body);
+          _save();
+        });
+      }
+    } catch (e, stackTrace) {
+      if (e is SocketException) {}
     }
   }
 
   _getUser() async {
-    var response = await http.get("https://defiphoto-api.herokuapp.com/users");
-    if (response.statusCode == 200 && this.mounted) {
-      setState(() {
-        users = json.decode(response.body);
-      });
+    try {
+      var response =
+          await http.get("https://defiphoto-api.herokuapp.com/users");
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          users = json.decode(response.body);
+        });
+      }
+    } catch (e, stackTrace) {
+      if (e is SocketException) {}
     }
   }
 
@@ -188,12 +193,11 @@ class mainPage extends State<MainPage> {
   }
 
   _getQuestionSection() {
-    
     questionSectionTab = new List();
-    if(userData['connection'])
-    _getDataOnline();
-    else if(!userData['connection']){
-    _getDataOffline();
+    if (userData['connection'])
+      _getDataOnline();
+    else if (!userData['connection']) {
+      _getDataOffline();
     }
 
     if (userData['role'] == 'P' && !userData['questionEleve']) {
@@ -268,14 +272,17 @@ class mainPage extends State<MainPage> {
                                     })
                               ]),
                           contentPadding: EdgeInsets.all(20),
-                          onTap: () {!userData['connection']?null:
-                            Navigator.pushNamed(context, '/pageCommentaire',
-                                arguments: {
-                                  'questionId': filteredQuestionTab[index]
-                                      ["id"],
-                                  'givenId': userData['givenId'],
-                                  'role': userData['role']
-                                });
+                          onTap: () {
+                            !userData['connection']
+                                ? null
+                                : Navigator.pushNamed(
+                                    context, '/pageCommentaire',
+                                    arguments: {
+                                        'questionId': filteredQuestionTab[index]
+                                            ["id"],
+                                        'givenId': userData['givenId'],
+                                        'role': userData['role']
+                                      });
                           },
                         ),
                       ));
@@ -304,20 +311,15 @@ class mainPage extends State<MainPage> {
             filteredQuestionTab = questionSectionTab;
           });
           _getUser();
-        } else if (!userData['connection']){
+        } else if (!userData['connection']) {
           setState(() {
-
-          _getDataOffline().then((data) {
-            
-            _getQuestionSection();
-            setState(() {
-              filteredQuestionTab = questionSectionTab;
+            _getDataOffline().then((data) {
+              _getQuestionSection();
+              setState(() {
+                filteredQuestionTab = questionSectionTab;
+              });
             });
-           
           });
-            
-          
-});
         }
       });
     });
@@ -339,10 +341,9 @@ class mainPage extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    
+
     _refresh();
-    
-    
+
     initTts();
   }
 

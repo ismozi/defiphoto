@@ -29,10 +29,18 @@ class pageQuestionState extends State<pageQuestion> {
   _getPeople() async {
     var response;
     if (widget.role == "P" || widget.role == "A") {
-      response = await http.get("https://defiphoto-api.herokuapp.com/users/");
+      try {
+        response = await http.get("https://defiphoto-api.herokuapp.com/users/");
+      } catch (e) {
+        if (e is SocketException) {}
+      }
     } else {
-      response =
-          await http.get("https://defiphoto-api.herokuapp.com/users/profs");
+      try {
+        response =
+            await http.get("https://defiphoto-api.herokuapp.com/users/profs");
+      } catch (e) {
+        if (e is SocketException) {}
+      }
     }
 
     if (response.statusCode == 200 && this.mounted) {
@@ -60,11 +68,19 @@ class pageQuestionState extends State<pageQuestion> {
     var response;
     String id = widget.id;
     if (widget.role == "S") {
-      response = await http
-          .get("https://defiphoto-api.herokuapp.com/questions/sender/$id");
+      try {
+        response = await http
+            .get("https://defiphoto-api.herokuapp.com/questions/sender/$id");
+      } catch (e) {
+        if (e is SocketException) {}
+      }
     } else {
-      response =
-          await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+      try {
+        response =
+            await http.get("https://defiphoto-api.herokuapp.com/questions/$id");
+      } catch (e) {
+        if (e is SocketException) {}
+      }
     }
 
     if (response.statusCode == 200 && this.mounted) {
@@ -123,8 +139,7 @@ class pageQuestionState extends State<pageQuestion> {
         body: isLoading
             ? Center(child: SpinKitDoubleBounce(size: 40, color: Colors.white))
             : Container(
-              color:Color(0xff141a24),
-                
+                color: Color(0xff141a24),
                 child: ListView.builder(
                     itemCount: users.length,
                     itemBuilder: (context, index) {
@@ -189,20 +204,24 @@ class _QuestionsState extends State<Questions> {
     var reciever = widget.idProf;
     print(widget.idProf);
     var data = {"sender": sender.toString(), "recievers": reciever.toString()};
-    var response = await http.post(
-        "https://defiphoto-api.herokuapp.com/questions/auProfs",
-        body: data);
-    if (response.statusCode == 200 && this.mounted) {
-      setState(() {
-        questions = json.decode(response.body);
-        if (questions.isEmpty) {
-          isEmpty = true;
-          isLoading = false;
-        } else {
-          isEmpty = false;
-          isLoading = false;
-        }
-      });
+    try {
+      var response = await http.post(
+          "https://defiphoto-api.herokuapp.com/questions/auProfs",
+          body: data);
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          questions = json.decode(response.body);
+          if (questions.isEmpty) {
+            isEmpty = true;
+            isLoading = false;
+          } else {
+            isEmpty = false;
+            isLoading = false;
+          }
+        });
+      }
+    } catch (e) {
+      if (e is SocketException) {}
     }
   }
 
@@ -230,10 +249,10 @@ class _QuestionsState extends State<Questions> {
     return Scaffold(
       backgroundColor: Color(0xff141a24),
       appBar: AppBar(
-        title:Text("Mes questions posées",
-                                style: TextStyle(
-                                  fontFamily: 'Arboria',
-                                )),
+        title: Text("Mes questions posées",
+            style: TextStyle(
+              fontFamily: 'Arboria',
+            )),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.pop(context)),
@@ -242,15 +261,16 @@ class _QuestionsState extends State<Questions> {
         ),
       ),
       body: isLoading
-          ? Center(child: SpinKitDoubleBounce(size: 40,color: Colors.white))
+          ? Center(child: SpinKitDoubleBounce(size: 40, color: Colors.white))
           : isEmpty
-              ? Center(child:Text("Vous n'avez pas posé de questions", style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 20,
-                       
-                        fontFamily: 'Arboria')))
+              ? Center(
+                  child: Text("Vous n'avez pas posé de questions",
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 20,
+                          fontFamily: 'Arboria')))
               : Container(
-                  color:Color(0xff141a24),
+                  color: Color(0xff141a24),
                   child: ListView.builder(
                       itemCount: questions.length,
                       itemBuilder: (context, index) {
@@ -328,7 +348,6 @@ class creationQuestion extends StatefulWidget {
 
 class _creationQuestionState extends State<creationQuestion> {
   _envoyerQuestion(String text, String type) async {
-    
     if (text.trim().isNotEmpty) {
       var data = {
         "text": text.trim().toString(),
@@ -336,10 +355,14 @@ class _creationQuestionState extends State<creationQuestion> {
         "recievers": widget.idReceiver.toString(),
         "type": type.trim().toString()
       };
-      var response = await http
-          .post("https://defiphoto-api.herokuapp.com/questions", body: data);
-      if (response.statusCode == 200) {
-        print("Done!");
+      try {
+        var response = await http
+            .post("https://defiphoto-api.herokuapp.com/questions", body: data);
+        if (response.statusCode == 200) {
+          print("Done!");
+        }
+      } catch (e) {
+        if (e is SocketException) {}
       }
     }
   }
@@ -352,11 +375,10 @@ class _creationQuestionState extends State<creationQuestion> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: 
-                    Text("Poser une question",
-                        style: TextStyle(
-                          fontFamily: 'Arboria',
-                        )),
+          title: Text("Poser une question",
+              style: TextStyle(
+                fontFamily: 'Arboria',
+              )),
           leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context)),
@@ -423,10 +445,11 @@ class _creationQuestionState extends State<creationQuestion> {
                           ],
                         ),
                         child: Column(children: [
-                          Text(" M     É     T     I     E    R  ",style:TextStyle(fontFamily: 'Arboria',
-                          fontSize: 25)),
+                          Text(" M     É     T     I     E    R  ",
+                              style: TextStyle(
+                                  fontFamily: 'Arboria', fontSize: 25)),
                           Row(children: [
-                            SizedBox(width:5),
+                            SizedBox(width: 5),
                             Radio(
                               value: 0,
                               groupValue: _indexType,

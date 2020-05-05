@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,144 +23,173 @@ class _LoginState extends State<Login> {
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
 
-  
-
   bool _hasNetworkConnection;
 
   void signIn(String id, String password) async {
-    
+    var response;
     var data = {
       "givenId": id.trim().toString(),
       "password": password.trim().toString()
     };
-    var response = await http
-        .post("https://defiphoto-api.herokuapp.com/users/login", body: data);
-    if (response.statusCode == 200) {
-      Map authData = json.decode(response.body);
-      var token = authData["token"];
-      var userData = Jwt.parseJwt(token);
 
-      if (this.mounted) {
-        setState(() {
-          
-          loginUser(userData,password);
-          _isLoading = false;
-          if (userData["role"] == "S") {
-            Navigator.pushReplacementNamed(context, '/mainPageStudent',
-                arguments: {
-                  'givenId': userData["givenId"],
-                  'firstName': userData["firstName"],
-                  'lastName': userData["lastName"],
-                  'email': userData["email"],
-                  'role': userData["role"],
-                  'profId': userData["profId"],
-                  'stageName': userData['stageName'],
-                  'yearDebut': userData['schoolYearBegin'],
-                  'yearFin': userData['schoolYearEnd'],
-                  'questionEleve': false,
-                  'connection' : _hasNetworkConnection
-                });
-          }
-          if (userData["role"] == "A") {
-            Navigator.pushReplacementNamed(context, '/mainPageAdmin',
-                arguments: {
-                  'givenId': userData["givenId"],
-                  'firstName': userData["firstName"],
-                  'lastName': userData["lastName"],
-                  'email': userData["email"],
-                  'role': userData["role"],
-                  'stageName': userData['stageName'],
-                  'yearDebut': userData['schoolYearBegin'],
-                  'yearFin': userData['schoolYearEnd'],
-                });
-          }
-          if (userData["role"] == "P") {
-            Navigator.pushReplacementNamed(context, '/mainPageProf',
-                arguments: {
-                  'givenId': userData["givenId"],
-                  'firstName': userData["firstName"],
-                  'lastName': userData["lastName"],
-                  'email': userData["email"],
-                  'role': userData["role"],
-                  'stageName': userData['stageName'],
-                  'yearDebut': userData['schoolYearBegin'],
-                  'yearFin': userData['schoolYearEnd'],
-                  'connection' : _hasNetworkConnection
-                });
-          }
-          print(userData['profId']);
-        });
-      }
-    } else {
-      return showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Erreur', style: TextStyle(fontFamily: 'Arboria')),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('Mauvais ID ou Mot de passe!',
+    try {
+      response = await http
+          .post("https://defiphoto-api.herokuapp.com/users/login", body: data);
+      if (response.statusCode == 200) {
+        Map authData = json.decode(response.body);
+        var token = authData["token"];
+        var userData = Jwt.parseJwt(token);
+
+        if (this.mounted) {
+          setState(() {
+            loginUser(userData, password);
+            _isLoading = false;
+            if (userData["role"] == "S") {
+              Navigator.pushReplacementNamed(context, '/mainPageStudent',
+                  arguments: {
+                    'givenId': userData["givenId"],
+                    'firstName': userData["firstName"],
+                    'lastName': userData["lastName"],
+                    'email': userData["email"],
+                    'role': userData["role"],
+                    'profId': userData["profId"],
+                    'stageName': userData['stageName'],
+                    'yearDebut': userData['schoolYearBegin'],
+                    'yearFin': userData['schoolYearEnd'],
+                    'questionEleve': false,
+                    'connection': _hasNetworkConnection
+                  });
+            }
+            if (userData["role"] == "A") {
+              Navigator.pushReplacementNamed(context, '/mainPageAdmin',
+                  arguments: {
+                    'givenId': userData["givenId"],
+                    'firstName': userData["firstName"],
+                    'lastName': userData["lastName"],
+                    'email': userData["email"],
+                    'role': userData["role"],
+                    'stageName': userData['stageName'],
+                    'yearDebut': userData['schoolYearBegin'],
+                    'yearFin': userData['schoolYearEnd'],
+                  });
+            }
+            if (userData["role"] == "P") {
+              Navigator.pushReplacementNamed(context, '/mainPageProf',
+                  arguments: {
+                    'givenId': userData["givenId"],
+                    'firstName': userData["firstName"],
+                    'lastName': userData["lastName"],
+                    'email': userData["email"],
+                    'role': userData["role"],
+                    'stageName': userData['stageName'],
+                    'yearDebut': userData['schoolYearBegin'],
+                    'yearFin': userData['schoolYearEnd'],
+                    'connection': _hasNetworkConnection
+                  });
+            }
+            print(userData['profId']);
+          });
+        }
+      } else {
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Erreur', style: TextStyle(fontFamily: 'Arboria')),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Mauvais ID ou Mot de passe!',
+                        style: TextStyle(fontFamily: 'Arboria')),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Re-essayer',
                       style: TextStyle(fontFamily: 'Arboria')),
-                ],
+                  onPressed: () {
+                    if (this.mounted) {
+                      setState(() {
+                        _isLoading = false;
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e, stackTrace) {
+      if (e is SocketException) {
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Échec de connexion', style: TextStyle(fontFamily: 'Arboria')),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text("Vous n'avez pas de connexion internet",
+                        style: TextStyle(fontFamily: 'Arboria')),
+                  ],
+                ),
               ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child:
-                    Text('Re-essayer', style: TextStyle(fontFamily: 'Arboria')),
-                onPressed: () {
-                  if (this.mounted) {
-                    setState(() {
-                      _isLoading = false;
-                      Navigator.of(context).pop();
-                    });
-                  }
-                },
-              ),
-            ],
-          );
-        },
-      );
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Re-essayer',
+                      style: TextStyle(fontFamily: 'Arboria')),
+                  onPressed: () {
+                    if (this.mounted) {
+                      setState(() {
+                        _isLoading = false;
+                        Navigator.of(context).pop();
+                      });
+                    }
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
+
+  
 
   @override
   void initState() {
     super.initState();
-    
+
     _hasNetworkConnection = false;
 
     ConnectionStatusSingleton connectionStatus =
         ConnectionStatusSingleton.getInstance();
 
     _updateConnectivity(connectionStatus);
-    
-    
   }
 
   void _updateConnectivity(ConnectionStatusSingleton connectionStatus) {
     connectionStatus.checkConnection().then((hasConnection) {
-  _hasNetworkConnection=hasConnection;
+      _hasNetworkConnection = hasConnection;
 
-  if (!_hasNetworkConnection) {
-      setState(() {
-        autoLogIn();
-        print("DÉCONNECTÉ");
-      });
-    } else {
-      setState(() {
-        autoLogIn();
-        print("CONNECTÉ");
-
-      });
-    }
- 
-  
-  });
-    
-    
+      if (!_hasNetworkConnection) {
+        setState(() {
+          autoLogIn();
+          print("DÉCONNECTÉ");
+        });
+      } else {
+        setState(() {
+          autoLogIn();
+          print("CONNECTÉ");
+        });
+      }
+    });
   }
 
   void autoLogIn() async {
@@ -174,54 +204,70 @@ class _LoginState extends State<Login> {
     final String yearDebut = prefs.getString('yearDebut');
     final String yearFin = prefs.getString('yearFin');
     print(_hasNetworkConnection);
-    
-    if(userId != null && password != null &&!_hasNetworkConnection){
-      if(this.mounted){
-      setState(() {
-         Navigator.pushReplacementNamed(context, '/mainPageStudent',
-         arguments: {
-                  'givenId': userId,
-                  'firstName': firstName,
-                  'lastName': lastName,
-                  'email': email,
-                  'role': role,             
-                  'stageName': stageName,
-                  'yearDebut': yearDebut,
-                  'yearFin': yearFin,  
-                  'questionEleve': false,               
-                  'connection' : false
-           }
-                );
-      });
+
+    if (userId != null && password != null && !_hasNetworkConnection && role=='S') {
+      if (this.mounted) {
+        setState(() {
+          Navigator.pushReplacementNamed(context, '/mainPageStudent',
+              arguments: {
+                'givenId': userId,
+                'firstName': firstName,
+                'lastName': lastName,
+                'email': email,
+                'role': role,
+                'stageName': stageName,
+                'yearDebut': yearDebut,
+                'yearFin': yearFin,
+                'questionEleve': false,
+                'connection': false
+              });
+        });
+      }
+    } else if (userId != null && password != null && !_hasNetworkConnection && role=='P') {
+      if (this.mounted) {
+        setState(() {
+          Navigator.pushReplacementNamed(context, '/mainPageProf',
+              arguments: {
+                'givenId': userId,
+                'firstName': firstName,
+                'lastName': lastName,
+                'email': email,
+                'role': role,
+                'stageName': stageName,
+                'yearDebut': yearDebut,
+                'yearFin': yearFin,
+                'questionEleve': false,
+                'connection': false
+              });
+        });
       }
     }else if (userId != null && password != null && _hasNetworkConnection) {
-      if(this.mounted){
-      setState(() {
-        signIn(userId, password);
-      });
-      return;
+      if (this.mounted) {
+        setState(() {
+          signIn(userId, password);
+        });
+        return;
       }
-    } else if (userId==null&& password==null){
-      if(this.mounted){
-      setState(() {
-        isLoading1 = false;
-      });
+    } else if (userId == null && password == null) {
+      if (this.mounted) {
+        setState(() {
+          isLoading1 = false;
+        });
       }
     }
   }
 
-  Future<Null> loginUser(var userData,String password) async {
+  Future<Null> loginUser(var userData, String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('givenId', userData["givenId"]);
     prefs.setString('password', password);
-          prefs.setString('firstName', userData["firstName"]);
-          prefs.setString('lastName', userData["lastName"]);
-          prefs.setString('email', userData["email"]);
-          prefs.setString('role', userData["role"]);
-          prefs.setString('stageName', userData["stageName"]);
-          prefs.setString('yearDebut', userData["schoolYearBegin"]);
-          prefs.setString('yearFin', userData["schoolYearEnd"]);
-   
+    prefs.setString('firstName', userData["firstName"]);
+    prefs.setString('lastName', userData["lastName"]);
+    prefs.setString('email', userData["email"]);
+    prefs.setString('role', userData["role"]);
+    prefs.setString('stageName', userData["stageName"]);
+    prefs.setString('yearDebut', userData["schoolYearBegin"]);
+    prefs.setString('yearFin', userData["schoolYearEnd"]);
   }
 
   @override

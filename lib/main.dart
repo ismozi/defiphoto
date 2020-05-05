@@ -6,7 +6,6 @@ import 'screens/listeEleve.dart';
 import 'screens/mainPageAdmin.dart';
 import 'screens/pageCommentaire.dart';
 import 'screens/information.dart';
-import 'screens/profile_tabbar.dart';
 import 'screens/ajoutUtilisateur.dart';
 import 'screens/progressionEleve.dart';
 import 'screens/profilEleve.dart';

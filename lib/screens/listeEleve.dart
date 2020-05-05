@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.dart';
+import '../main.dart';
 import 'customDrawer.dart';
 
 class listeEleve extends StatefulWidget {
@@ -19,14 +22,19 @@ class _listeEleveState extends State<listeEleve> {
   bool isSearching = false;
   var eleve;
   Map userDataDrawer = {};
-
+  bool hasConnection;
 
   _getUsers() async {
-    var response = await http.get("https://defiphoto-api.herokuapp.com/users");
-    if (response.statusCode == 200) {
-      setState(() {
-        users = json.decode(response.body);
-      });
+    try {
+      var response =
+          await http.get("https://defiphoto-api.herokuapp.com/users");
+      if (response.statusCode == 200) {
+        setState(() {
+          users = json.decode(response.body);
+        });
+      }
+    } catch (e) {
+      if (e is SocketException) {}
     }
   }
 
@@ -50,6 +58,34 @@ class _listeEleveState extends State<listeEleve> {
     }
   }
 
+  void stream() async {
+    Duration interval = Duration(milliseconds: 500);
+    Stream<int> stream = Stream<int>.periodic(interval);
+    await for (int i in stream) {
+      if (this.mounted) {
+        try {
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            hasConnection = true;
+            print('YESS');
+          } else {
+            hasConnection = false;
+            print('FUK');
+          }
+        } on SocketException catch (_) {
+          hasConnection = false;
+          print('FUKMAN');
+        }
+        if (userData['connection'] == !hasConnection) {
+          if (this.mounted) {
+            setState(() {
+              RestartWidget.restartApp(context);
+            });
+          }
+        }
+      }
+    }
+  }
 
   void _filterEleves(value) {
     setState(() {
@@ -65,8 +101,6 @@ class _listeEleveState extends State<listeEleve> {
   Widget _getBody() {
     return _createList(filteredEleveTab);
   }
-
-
 
   _createList(dynamic array) {
     String url;
@@ -101,23 +135,23 @@ class _listeEleveState extends State<listeEleve> {
                   trailing:
                       Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.message, size: 30), onPressed: () => {
-                              Navigator.of(context).pushNamed('/mainPage',
-                                  arguments: {
-          'givenId': userData["givenId"],
-            'firstName': userData["firstName"],
-            'lastName': userData["lastName"],
-            'email': userData["email"],
-            'role': userData["role"],
-            'stageName' : userData['stageName'],
-            'yearDebut' : userData['schoolYearBegin'],
-            'yearFin' : userData['schoolYearEnd'],
-            'idStudent' : array[index]["givenId"],
-            'nomEleve': array[index]["firstName"],
-            'questionEleve' : false,
-            'connection':userData['connection']
-            
-        })
+                        icon: Icon(Icons.message, size: 30),
+                        onPressed: () => {
+                              Navigator.of(context)
+                                  .pushNamed('/mainPage', arguments: {
+                                'givenId': userData["givenId"],
+                                'firstName': userData["firstName"],
+                                'lastName': userData["lastName"],
+                                'email': userData["email"],
+                                'role': userData["role"],
+                                'stageName': userData['stageName'],
+                                'yearDebut': userData['schoolYearBegin'],
+                                'yearFin': userData['schoolYearEnd'],
+                                'idStudent': array[index]["givenId"],
+                                'nomEleve': array[index]["firstName"],
+                                'questionEleve': false,
+                                'connection': userData['connection']
+                              })
                             }),
                     SizedBox(width: 1),
                     VerticalDivider(thickness: 1.5),
@@ -154,9 +188,13 @@ class _listeEleveState extends State<listeEleve> {
                                   style: TextStyle(fontFamily: 'Arboria')),
                               onPressed: () async {
                                 String id = array[index]['givenId'];
-                                var response = await http.delete(
-                                    "https://defiphoto-api.herokuapp.com/users/$id");
-                                print('Done!');
+                                try {
+                                  var response = await http.delete(
+                                      "https://defiphoto-api.herokuapp.com/users/$id");
+                                  print('Done!');
+                                } catch (e) {
+                                  if (e is SocketException) {}
+                                }
 
                                 Navigator.of(context).pop();
                               },
@@ -187,20 +225,21 @@ class _listeEleveState extends State<listeEleve> {
     // TODO: implement initState
     super.initState();
     setState(() {
+      stream();
       _getUsers().then((data) {
         _getEleve();
         filteredEleveTab = eleveTab;
-        userDataDrawer={
-            'givenId': userData["givenId"],
-            'firstName': userData["firstName"],
-            'lastName': userData["lastName"],
-            'email': userData["email"],
-            'role': userData["role"],
-            'stageName' : userData['stageName'],
-            'yearDebut' : userData['schoolYearBegin'],
-            'yearFin' : userData['schoolYearEnd'],
-            'questionEleve' : true,
-            'connection' : userData['connection']
+        userDataDrawer = {
+          'givenId': userData["givenId"],
+          'firstName': userData["firstName"],
+          'lastName': userData["lastName"],
+          'email': userData["email"],
+          'role': userData["role"],
+          'stageName': userData['stageName'],
+          'yearDebut': userData['schoolYearBegin'],
+          'yearFin': userData['schoolYearEnd'],
+          'questionEleve': true,
+          'connection': userData['connection']
         };
       });
     });
@@ -210,7 +249,13 @@ class _listeEleveState extends State<listeEleve> {
   Widget build(BuildContext context) {
     userData = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      drawer: !isSearching ? Container(color:Colors.grey[900],child:customDrawer(userData: userDataDrawer,)):null,
+      drawer: !isSearching && userData['connection']
+          ? Container(
+              color: Colors.grey[900],
+              child: customDrawer(
+                userData: userDataDrawer,
+              ))
+          : null,
       appBar: AppBar(
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -230,12 +275,19 @@ class _listeEleveState extends State<listeEleve> {
                                 fontSize: 18,
                                 fontFamily: 'Arboria',
                               ))),
-                      Opacity(
-                        opacity: 0.5,
-                        child: Text("Mes élèves",
-                            style:
-                                TextStyle(fontFamily: 'Arboria', fontSize: 16)),
-                      )
+                      userData['connection']
+                          ? Opacity(
+                              opacity: 0.5,
+                              child: Text("Mes élèves",
+                                  style: TextStyle(
+                                      fontFamily: 'Arboria', fontSize: 16)),
+                            )
+                          : Opacity(
+                              opacity: 0.5,
+                              child: Text("Mode hors-ligne",
+                                  style: TextStyle(
+                                      fontFamily: 'Arboria', fontSize: 16)),
+                            )
                     ])
               : TextField(
                   onChanged: (value) {
@@ -244,32 +296,53 @@ class _listeEleveState extends State<listeEleve> {
                   decoration: InputDecoration(
                       icon: Icon(Icons.search),
                       hintText: "Rechercher la question")),
-          actions: <Widget>[
-            !isSearching
-                ? IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      setState(() {
-                        this.isSearching = true;
-                      });
-                    })
-                : IconButton(
-                    icon: Icon(Icons.cancel),
-                    onPressed: () {
-                      setState(() {
-                        this.isSearching = false;
-                        filteredEleveTab=eleveTab;
-                      });
-                    })
-          ]),
+          actions: userData['connection']
+              ? <Widget>[
+                  !isSearching
+                      ? IconButton(
+                          icon: Icon(Icons.search),
+                          onPressed: () {
+                            setState(() {
+                              this.isSearching = true;
+                            });
+                          })
+                      : IconButton(
+                          icon: Icon(Icons.cancel),
+                          onPressed: () {
+                            setState(() {
+                              this.isSearching = false;
+                              filteredEleveTab = eleveTab;
+                            });
+                          })
+                ]
+              : null),
       backgroundColor: Color(0xff141a24),
-      body: filteredEleveTab.length > 0 ? _getBody() : Center(
-                child: Text("Vous n'avez pas d'étudiants",
-                    style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 20,
-                        letterSpacing: 1.2,
-                        fontFamily: 'Arboria'))),
+      body: filteredEleveTab.length > 0 && userData['connection']
+          ? _getBody()
+          : filteredEleveTab.length == 0 && userData['connection']
+              ? Center(
+                  child: Text("Vous n'avez pas d'étudiants",
+                      style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 20,
+                          letterSpacing: 1.2,
+                          fontFamily: 'Arboria')))
+              : Container(
+                  color: Color(0xff141a24),
+                  child: ListView(children: <Widget>[
+                    SizedBox(height: 200),
+                    Center(
+                        child: RichText(
+                            text: TextSpan(
+                                text:
+                                    "Vous êtes en mode hors-ligne. \nVous devez vous connecter à\ninternet pour effectuer des actions.",
+                                style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontSize: 20,
+                                    fontFamily: 'Arboria')),
+                            textAlign: TextAlign.center)),
+                    SizedBox(height: 100)
+                  ])),
     );
   }
 }
