@@ -326,13 +326,13 @@ class mainPage extends State<MainPage> {
 
   void _filterQuestions(value) {
     setState(() {
-      print(value);
+      // print(value);
       filteredQuestionTab = questionSectionTab
           .where((questionSection) => questionSection["text"]
               .toLowerCase()
               .contains(value.toLowerCase()))
           .toList();
-      print(filteredQuestionTab);
+      // print(filteredQuestionTab);
     });
   }
 

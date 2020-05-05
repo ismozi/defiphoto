@@ -87,6 +87,7 @@ class _LoginState extends State<Login> {
                   'connection' : _hasNetworkConnection
                 });
           }
+          print(userData['profId']);
         });
       }
     } else {
