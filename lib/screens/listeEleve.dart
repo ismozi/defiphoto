@@ -114,7 +114,8 @@ class _listeEleveState extends State<listeEleve> {
             'yearFin' : userData['schoolYearEnd'],
             'idStudent' : array[index]["givenId"],
             'nomEleve': array[index]["firstName"],
-            'questionEleve' : false
+            'questionEleve' : false,
+            'connection':userData['connection']
             
         })
                             }),
@@ -198,7 +199,8 @@ class _listeEleveState extends State<listeEleve> {
             'stageName' : userData['stageName'],
             'yearDebut' : userData['schoolYearBegin'],
             'yearFin' : userData['schoolYearEnd'],
-            'questionEleve' : true
+            'questionEleve' : true,
+            'connection' : userData['connection']
         };
       });
     });

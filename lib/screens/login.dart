@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'mainPage.dart';
@@ -6,6 +8,7 @@ import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../models/connectivityStatus.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -13,14 +16,18 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool isLoading1 = false;
+  bool isLoading1 = true;
 
   bool _isLoading = false;
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
+
   
 
+  bool _hasNetworkConnection;
+
   void signIn(String id, String password) async {
+    
     var data = {
       "givenId": id.trim().toString(),
       "password": password.trim().toString()
@@ -34,7 +41,8 @@ class _LoginState extends State<Login> {
 
       if (this.mounted) {
         setState(() {
-          loginUser(id, password);
+          
+          loginUser(userData,password);
           _isLoading = false;
           if (userData["role"] == "S") {
             Navigator.pushReplacementNamed(context, '/mainPageStudent',
@@ -48,7 +56,8 @@ class _LoginState extends State<Login> {
                   'stageName': userData['stageName'],
                   'yearDebut': userData['schoolYearBegin'],
                   'yearFin': userData['schoolYearEnd'],
-                  'questionEleve': false
+                  'questionEleve': false,
+                  'connection' : _hasNetworkConnection
                 });
           }
           if (userData["role"] == "A") {
@@ -75,6 +84,7 @@ class _LoginState extends State<Login> {
                   'stageName': userData['stageName'],
                   'yearDebut': userData['schoolYearBegin'],
                   'yearFin': userData['schoolYearEnd'],
+                  'connection' : _hasNetworkConnection
                 });
           }
         });
@@ -117,50 +127,118 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    autoLogIn();
+    
+    _hasNetworkConnection = false;
+
+    ConnectionStatusSingleton connectionStatus =
+        ConnectionStatusSingleton.getInstance();
+
+    _updateConnectivity(connectionStatus);
+    
+    
+  }
+
+  void _updateConnectivity(ConnectionStatusSingleton connectionStatus) {
+    connectionStatus.checkConnection().then((hasConnection) {
+  _hasNetworkConnection=hasConnection;
+
+  if (!_hasNetworkConnection) {
+      setState(() {
+        autoLogIn();
+        print("DÉCONNECTÉ");
+      });
+    } else {
+      setState(() {
+        autoLogIn();
+        print("CONNECTÉ");
+
+      });
+    }
+ 
+  
+  });
+    
+    
   }
 
   void autoLogIn() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userId = prefs.getString('givenId');
     final String password = prefs.getString('password');
-
-    if (userId != null && password != null) {
+    final String firstName = prefs.getString('firstName');
+    final String lastName = prefs.getString('lastName');
+    final String email = prefs.getString('email');
+    final String role = prefs.getString('role');
+    final String stageName = prefs.getString('stageName');
+    final String yearDebut = prefs.getString('yearDebut');
+    final String yearFin = prefs.getString('yearFin');
+    print(_hasNetworkConnection);
+    
+    if(userId != null && password != null &&!_hasNetworkConnection){
+      if(this.mounted){
+      setState(() {
+         Navigator.pushReplacementNamed(context, '/mainPageStudent',
+         arguments: {
+                  'givenId': userId,
+                  'firstName': firstName,
+                  'lastName': lastName,
+                  'email': email,
+                  'role': role,             
+                  'stageName': stageName,
+                  'yearDebut': yearDebut,
+                  'yearFin': yearFin,  
+                  'questionEleve': false,               
+                  'connection' : false
+           }
+                );
+      });
+      }
+    }else if (userId != null && password != null && _hasNetworkConnection) {
+      if(this.mounted){
       setState(() {
         signIn(userId, password);
       });
       return;
-    } else {
+      }
+    } else if (userId==null&& password==null){
+      if(this.mounted){
       setState(() {
-        isLoading1 = true;
+        isLoading1 = false;
       });
+      }
     }
   }
 
-  Future<Null> loginUser(String id, String pssword) async {
+  Future<Null> loginUser(var userData,String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('givenId', id);
-    prefs.setString('password', pssword);
+    prefs.setString('givenId', userData["givenId"]);
+    prefs.setString('password', password);
+          prefs.setString('firstName', userData["firstName"]);
+          prefs.setString('lastName', userData["lastName"]);
+          prefs.setString('email', userData["email"]);
+          prefs.setString('role', userData["role"]);
+          prefs.setString('stageName', userData["stageName"]);
+          prefs.setString('yearDebut', userData["schoolYearBegin"]);
+          prefs.setString('yearFin', userData["schoolYearEnd"]);
+   
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: !isLoading1
+        body: isLoading1
             ? Container(
                 color: Color(0xff141a24),
                 child: ListView(children: <Widget>[
                   SizedBox(
-                      height: (MediaQuery.of(context).size.height / 2) - (169.86)),
+                      height:
+                          (MediaQuery.of(context).size.height / 2) - (169.86)),
                   Center(
-                      child: Image.asset(
-                    'assets/logo.png',
-                    width: 203.65,
-                    height: 169.86
-                  )),
+                      child: Image.asset('assets/logo.png',
+                          width: 203.65, height: 169.86)),
                   SizedBox(height: 75),
-                  Center(child:SpinKitThreeBounce(
-                              size: 40, color: Colors.grey))
+                  Center(
+                      child: SpinKitThreeBounce(size: 40, color: Colors.grey))
                 ]))
             : Container(
                 color: Color(0xff141a24),

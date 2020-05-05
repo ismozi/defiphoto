@@ -32,17 +32,25 @@ class pageCommentaireState extends State<pageCommentaire> {
   List commentaires = [{}];
   bool _isLoading = true;
   ScrollController _scrollController = new ScrollController();
+  bool canScroll = true;
+  bool messageBuilt = false;
 
   Recording _recording = new Recording();
   bool _isRecording = false;
   Random random = new Random();
   AudioPlayer audioPlayer = AudioPlayer();
+  bool isPlaying = false;
+  Color couleurPlay=Colors.white;
+  
 
   play(String url) async {
     int result = await audioPlayer.play(url);
     if (result == 1) {
-      // success
+      isPlaying=true;
+      
     }
+
+   
   }
 
   _start() async {
@@ -105,6 +113,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       filePath = message['fileName'];
       url = "https://defiphoto-api.herokuapp.com/comments/file/$filePath";
     }
+
     return Padding(
       padding: EdgeInsets.all(10),
       child: Column(
@@ -133,7 +142,7 @@ class pageCommentaireState extends State<pageCommentaire> {
             child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                child: fromData&&!filePath.contains('m4a')
+                child: fromData && !filePath.contains('m4a')
                     ? Material(
                         child: InkWell(
                         onTap: () {
@@ -166,150 +175,154 @@ class pageCommentaireState extends State<pageCommentaire> {
                           ),
                         ),
                       ))
-                    : fromData&&filePath.contains('.m4a') ? 
-                    InkWell(
-                        onLongPress: () {
-                          if (questionData['role'] == "P" ||
-                              questionData['role'] == "A") {
-                            return showDialog<void>(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Avertissement',
-                                      style: TextStyle(fontFamily: 'Arboria')),
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        Text('Voulez-vous enlevez ce message?',
-                                            style: TextStyle(
-                                                fontFamily: 'Arboria')),
+                    : fromData && filePath.contains('.m4a')
+                        ? InkWell(
+                            onLongPress: () {
+                              if (questionData['role'] == "P" ||
+                                  questionData['role'] == "A") {
+                                return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Avertissement',
+                                          style:
+                                              TextStyle(fontFamily: 'Arboria')),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(
+                                                'Voulez-vous enlevez ce message?',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Oui',
+                                              style: TextStyle(
+                                                  fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted) {
+                                              setState(() {
+                                                _enleverCommentaire(message);
+                                                Navigator.of(context).pop();
+                                              });
+                                            }
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Non',
+                                              style: TextStyle(
+                                                  fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted) {
+                                              setState(() {
+                                                Navigator.of(context).pop();
+                                              });
+                                            }
+                                          },
+                                        ),
                                       ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Oui',
-                                          style:
-                                              TextStyle(fontFamily: 'Arboria')),
-                                      onPressed: () {
-                                        if (this.mounted) {
-                                          setState(() {
-                                            _enleverCommentaire(message);
-                                            Navigator.of(context).pop();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('Non',
-                                          style:
-                                              TextStyle(fontFamily: 'Arboria')),
-                                      onPressed: () {
-                                        if (this.mounted) {
-                                          setState(() {
-                                            Navigator.of(context).pop();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 );
-                              },
-                            );
-                          }
-                        },
-                        child: IconButton(icon: Icon(Icons.play_circle_filled), onPressed: () {
-                                        if (this.mounted) {
-                                          setState(() {
-                                            play(url);
-                                          });
-                                        }
-                                      }))
-                    
-                    : InkWell(
-                        onLongPress: () {
-                          if (questionData['role'] == "P" ||
-                              questionData['role'] == "A") {
-                            return showDialog<void>(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: Text('Avertissement',
-                                      style: TextStyle(fontFamily: 'Arboria')),
-                                  content: SingleChildScrollView(
-                                    child: ListBody(
-                                      children: <Widget>[
-                                        Text('Voulez-vous enlevez ce message?',
-                                            style: TextStyle(
-                                                fontFamily: 'Arboria')),
+                              }
+                            },
+                            child:  IconButton(
+                                    icon: Icon(Icons.play_circle_filled,color: Colors.white,size: 35,),
+                                    onPressed: () {
+                                      if (this.mounted) {
+                                        setState(() {
+                                          
+                                          play(url);
+                                        });
+                                      }
+                                    })
+                                )
+                        : InkWell(
+                            onLongPress: () {
+                              if (questionData['role'] == "P" ||
+                                  questionData['role'] == "A") {
+                                return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Avertissement',
+                                          style:
+                                              TextStyle(fontFamily: 'Arboria')),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(
+                                                'Voulez-vous enlevez ce message?',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Oui',
+                                              style: TextStyle(
+                                                  fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted) {
+                                              setState(() {
+                                                _enleverCommentaire(message);
+                                                Navigator.of(context).pop();
+                                              });
+                                            }
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Non',
+                                              style: TextStyle(
+                                                  fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted) {
+                                              setState(() {
+                                                Navigator.of(context).pop();
+                                              });
+                                            }
+                                          },
+                                        ),
                                       ],
-                                    ),
-                                  ),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('Oui',
-                                          style:
-                                              TextStyle(fontFamily: 'Arboria')),
-                                      onPressed: () {
-                                        if (this.mounted) {
-                                          setState(() {
-                                            _enleverCommentaire(message);
-                                            Navigator.of(context).pop();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('Non',
-                                          style:
-                                              TextStyle(fontFamily: 'Arboria')),
-                                      onPressed: () {
-                                        if (this.mounted) {
-                                          setState(() {
-                                            Navigator.of(context).pop();
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 );
-                              },
-                            );
-                          }
-                        },
-                        child: Text(
-                          message['text'] ?? "",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ))),
+                              }
+                            },
+                            child: Text(
+                              message['text'] ?? "",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ))),
           ),
         ],
       ),
     );
+    setState(() {});
   }
 
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     // var compImage = await _compresserImage(image,'/storage');
-    this.setState(() {
-      imageFile = image;
-    });
-    _envoyerImage(imageFile.path);
+
+    _envoyerImage(image.path);
     // compImage.delete();
   }
 
   _ouvrirCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
     // var compImage = await _compresserImage(image, '/storage');
-    this.setState(() {
-      imageFile = image;
-    });
-    _envoyerImage(imageFile.path);
+
+    _envoyerImage(image.path);
     // compImage.delete();
   }
 
@@ -341,7 +354,11 @@ class pageCommentaireState extends State<pageCommentaire> {
       var response = await http.post(
           "https://defiphoto-api.herokuapp.com/comments/noFile",
           body: data);
+          if (response.statusCode == 200){
+          Timer(Duration(milliseconds: 500), () =>_scrollController.jumpTo(_scrollController.position.maxScrollExtent));
+          }
     }
+    
   }
 
   _envoyerImage(dynamic filePath) async {
@@ -352,7 +369,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       ..fields['role'] = questionData["role"].toString()
       ..files.add(await http.MultipartFile.fromPath('commentFile', filePath));
     var res = await reponse.send();
-    if (res.statusCode == 200) print('Uploaded!');
+    if (res.statusCode == 200) Timer(Duration(milliseconds: 1000), () =>_scrollController.jumpTo(_scrollController.position.maxScrollExtent));
   }
 
   Future<Null> _refresh() async {
@@ -380,6 +397,15 @@ class pageCommentaireState extends State<pageCommentaire> {
     }
   }
 
+  Future<void> autoScrollStart() async {
+    if (canScroll) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      canScroll = false;
+    }
+  }
+
+ 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -394,6 +420,8 @@ class pageCommentaireState extends State<pageCommentaire> {
     bool isMe;
     bool isStudent;
     bool fromData;
+
+    autoScrollStart();
 
     return Scaffold(
         appBar: AppBar(
@@ -547,6 +575,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                                 _envoyerCommentaire(
                                                     messageSend.text);
                                                 messageSend.clear();
+
                                                 FocusScope.of(context)
                                                     .requestFocus(
                                                         new FocusNode());
@@ -587,22 +616,23 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 Container(
                                   padding: const EdgeInsets.all(15.0),
                                   decoration: BoxDecoration(
-                                      color: Color(0xff444d5d),
+                                      color: _isRecording
+                                          ? Colors.red
+                                          : Color(0xff444d5d),
                                       shape: BoxShape.circle),
                                   child: InkWell(
                                     child: Icon(
                                       Icons.keyboard_voice,
-                                      color: Colors.black,
+                                      color: _isRecording
+                                          ? Colors.white
+                                          : Colors.black,
                                     ),
                                     onTap: () {
                                       setState(() {
-                                        if(!_isRecording){
+                                        if (!_isRecording) {
                                           _start();
-                                      
-
-                                        }else if(_isRecording){
+                                        } else if (_isRecording) {
                                           _stop();
-
                                         }
                                       });
                                     },

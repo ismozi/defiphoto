@@ -10,6 +10,7 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import '../models/database_helpers.dart';
 
 Widget appBarTitle = Text('Matières et produits',
     style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
@@ -19,7 +20,6 @@ class MainPage extends StatefulWidget {
 }
 
 class mainPage extends State<MainPage> {
-  
   List questions = [{}];
   List users = [{}];
   Map userData = {};
@@ -41,6 +41,33 @@ class mainPage extends State<MainPage> {
 
   String language = 'fr-FR';
 
+  _save() async {
+    DatabaseHelper helper = DatabaseHelper.instance;
+    helper.deleteAll();
+    for (int i = 0; i < questions.length; i++) {
+      Question question = Question();
+      question.id = questions[i]['_id'];
+      question.text = questions[i]['text'];
+      question.type = questions[i]['type'];
+      question.sender = questions[i]['sender'];
+
+      int id = await helper.insert(question);
+      print('inserted row: $id');
+    }
+    _readDB();
+  }
+
+  _readDB() async {
+    DatabaseHelper helper = DatabaseHelper.instance;
+    List questionsLocales = await helper.queryAllRows();
+    if (question == null) {
+      print('YA RIEN');
+    } else {
+      
+      
+    }
+  }
+
   initTts() {
     flutterTts = FlutterTts();
     flutterTts.setLanguage(language);
@@ -56,16 +83,24 @@ class mainPage extends State<MainPage> {
   }
 
   Future _read(String text) async {
-    
     await flutterTts.stop();
     if (text != null && text.isNotEmpty) {
-     
-
       await flutterTts.speak(text.toLowerCase());
     }
   }
 
-  _getData() async {
+  _getDataOffline() async{
+    DatabaseHelper helper = DatabaseHelper.instance;
+     questions = await helper.queryAllRows();
+    if (questions == null) {
+      print('YA RIEN');
+    } else {
+      
+    }
+
+  }
+
+  _getDataOnline() async {
     String id = userData["givenId"];
     var response;
 
@@ -84,6 +119,7 @@ class mainPage extends State<MainPage> {
     if (response.statusCode == 200 && this.mounted) {
       setState(() {
         questions = json.decode(response.body);
+        _save();
       });
     }
   }
@@ -152,8 +188,13 @@ class mainPage extends State<MainPage> {
   }
 
   _getQuestionSection() {
+    
     questionSectionTab = new List();
-    _getData();
+    if(userData['connection'])
+    _getDataOnline();
+    else if(!userData['connection']){
+    _getDataOffline();
+    }
 
     if (userData['role'] == 'P' && !userData['questionEleve']) {
       for (var i = 0; i < questions.length; i++) {
@@ -209,7 +250,8 @@ class mainPage extends State<MainPage> {
                                 fontFamily: 'Arboria'),
                           ),
                           subtitle: Text(
-                              !userData['questionEleve']&&userData['role']=="P"
+                              !userData['questionEleve'] &&
+                                      userData['role'] == "P"
                                   ? 'Moi'
                                   : _getUsername(filteredQuestionTab[index]
                                           ["sender"]) ??
@@ -218,15 +260,15 @@ class mainPage extends State<MainPage> {
                           trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-   
                                 VerticalDivider(thickness: 1.5),
                                 IconButton(
                                     icon: Icon(Icons.volume_up, size: 30),
-                                    onPressed: () {_read(filteredQuestionTab[index]["text"]);})
+                                    onPressed: () {
+                                      _read(filteredQuestionTab[index]["text"]);
+                                    })
                               ]),
                           contentPadding: EdgeInsets.all(20),
-                          onTap: () {
-                          
+                          onTap: () {!userData['connection']?null:
                             Navigator.pushNamed(context, '/pageCommentaire',
                                 arguments: {
                                   'questionId': filteredQuestionTab[index]
@@ -251,18 +293,33 @@ class mainPage extends State<MainPage> {
     await Future.delayed(Duration(milliseconds: 500)).then((_) {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
+        if (userData['connection']) {
+          _getDataOnline().then((data) {
+            nomEleve = userData['nomEleve'];
+            titreEnseignant = Text("Mes questions | " + "$nomEleve",
+                style: TextStyle(
+                  fontFamily: 'Arboria',
+                ));
+            _getQuestionSection();
+            filteredQuestionTab = questionSectionTab;
+          });
+          _getUser();
+        } else if (!userData['connection']){
+          setState(() {
 
-        _getData().then((data) {
-          nomEleve = userData['nomEleve'];
-          titreEnseignant = Text("Mes questions | " + "$nomEleve",
-              style: TextStyle(
-                fontFamily: 'Arboria',
-              ));
-          _getQuestionSection();
-          filteredQuestionTab = questionSectionTab;
-        });
+          _getDataOffline().then((data) {
+            
+            _getQuestionSection();
+            setState(() {
+              filteredQuestionTab = questionSectionTab;
+            });
+           
+          });
+            
+          
+});
+        }
       });
-      _getUser();
     });
     return null;
   }
@@ -282,7 +339,10 @@ class mainPage extends State<MainPage> {
   @override
   void initState() {
     super.initState();
+    
     _refresh();
+    
+    
     initTts();
   }
 
