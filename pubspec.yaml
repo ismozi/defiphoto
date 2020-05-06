@@ -42,12 +42,11 @@ dependencies:
   flutter_tts: 
   speech_recognition:
   medcorder_audio:
-  audio_recorder: '^1.0.1'
+  audio_recorder:
   path_provider:
   audioplayers: ^0.15.1
   connectivity:
   sqflite:
-  
 
 dev_dependencies:
   flutter_test:

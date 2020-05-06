@@ -12,8 +12,6 @@ import 'screens/profilEleve.dart';
 
 
 
-
-
 void main() => runApp(App());
 
 class App extends StatelessWidget {
@@ -80,5 +78,4 @@ class _RestartWidgetState extends State<RestartWidget> {
       child: widget.child,
     );
   }
-  
 }
