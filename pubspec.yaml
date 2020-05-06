@@ -42,7 +42,6 @@ dependencies:
   flutter_tts: 
   speech_recognition:
   medcorder_audio:
-  audio_recorder:
   path_provider:
   audioplayers: ^0.15.1
   connectivity:

@@ -9,17 +9,15 @@ import 'package:photo_view/photo_view.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:file/file.dart';
-import 'package:file/local.dart';
-import 'package:audio_recorder/audio_recorder.dart';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:math';
 
 class pageCommentaire extends StatefulWidget {
-  final LocalFileSystem localFileSystem;
+ 
 
-  pageCommentaire({localFileSystem})
-      : this.localFileSystem = localFileSystem ?? LocalFileSystem();
+  pageCommentaire();
+    
 
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
@@ -35,7 +33,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   bool canScroll = true;
   bool messageBuilt = false;
 
-  Recording _recording = new Recording();
+  
   bool _isRecording = false;
   Random random = new Random();
   AudioPlayer audioPlayer = AudioPlayer();
@@ -53,36 +51,8 @@ class pageCommentaireState extends State<pageCommentaire> {
    
   }
 
-  _start() async {
-    try {
-      if (await AudioRecorder.hasPermissions) {
-        await AudioRecorder.start();
-
-        bool isRecording = await AudioRecorder.isRecording;
-        setState(() {
-          _recording = new Recording(duration: new Duration(), path: "");
-          _isRecording = isRecording;
-        });
-      } else {
-        print("ACCEPT");
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _stop() async {
-    var recording = await AudioRecorder.stop();
-    print("Stop recording: ${recording.path}");
-    bool isRecording = await AudioRecorder.isRecording;
-    File file = widget.localFileSystem.file(recording.path);
-    print("  File length: ${await file.length()}");
-    setState(() {
-      _recording = recording;
-      _isRecording = isRecording;
-      _envoyerImage(recording.path);
-    });
-  }
+  
+  
 
   _getCommentaires() async {
     String id = questionData["questionId"];
@@ -642,9 +612,9 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     onTap: () {
                                       setState(() {
                                         if (!_isRecording) {
-                                          _start();
+                                          
                                         } else if (_isRecording) {
-                                          _stop();
+                                          
                                         }
                                       });
                                     },
