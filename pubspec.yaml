@@ -47,7 +47,7 @@ dependencies:
   audioplayers: ^0.15.1
   connectivity:
   sqflite:
-  simple_permissions: '^0.1.9'
+  
 
 dev_dependencies:
   flutter_test:
