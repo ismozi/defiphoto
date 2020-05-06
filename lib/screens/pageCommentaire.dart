@@ -55,7 +55,7 @@ class pageCommentaireState extends State<pageCommentaire> {
 
   _start() async {
     try {
-      if (await AudioRecorder.hasPermissions) {
+      
         await AudioRecorder.start();
 
         bool isRecording = await AudioRecorder.isRecording;
@@ -63,9 +63,7 @@ class pageCommentaireState extends State<pageCommentaire> {
           _recording = new Recording(duration: new Duration(), path: "");
           _isRecording = isRecording;
         });
-      } else {
-        print("ACCEPT");
-      }
+      
     } catch (e) {
       print(e);
     }
