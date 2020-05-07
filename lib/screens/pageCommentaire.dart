@@ -9,15 +9,17 @@ import 'package:photo_view/photo_view.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'package:file/file.dart';
+import 'package:file/local.dart';
+import 'package:audio_recorder/audio_recorder.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:math';
 
 class pageCommentaire extends StatefulWidget {
- 
+  final LocalFileSystem localFileSystem;
 
-  pageCommentaire();
-    
+  pageCommentaire({localFileSystem})
+      : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
   State<StatefulWidget> createState() => pageCommentaireState();
@@ -33,44 +35,70 @@ class pageCommentaireState extends State<pageCommentaire> {
   bool canScroll = true;
   bool messageBuilt = false;
 
-  
+  int currentMessageLenght;
+  int previousMessageLenght = 0;
+
+   Recording _recording = new Recording();
   bool _isRecording = false;
   Random random = new Random();
   AudioPlayer audioPlayer = AudioPlayer();
   bool isPlaying = false;
-  Color couleurPlay=Colors.white;
-  
+  Color couleurPlay = Colors.white;
 
   play(String url) async {
     int result = await audioPlayer.play(url);
     if (result == 1) {
-      isPlaying=true;
-      
+      isPlaying = true;
     }
-
-   
   }
-
-  
-  
 
   _getCommentaires() async {
     String id = questionData["questionId"];
-    try{
-    var response =
-        await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
-    if (response.statusCode == 200 && this.mounted) {
-      setState(() {
-        _isLoading = false;
-        commentaires = json.decode(response.body);
-      });
-    }
-    } catch(e) {
-      if (e is SocketException) {
-     
+    try {
+      var response =
+          await http.get("https://defiphoto-api.herokuapp.com/comments/$id");
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          _isLoading = false;
+          commentaires = json.decode(response.body);
+        });
       }
+    } catch (e) {
+      if (e is SocketException) {}
     }
   }
+
+  _start() async {
+    try {
+      if (await AudioRecorder.hasPermissions) {
+        await AudioRecorder.start();
+
+        bool isRecording = await AudioRecorder.isRecording;
+        setState(() {
+          _recording = new Recording(duration: new Duration(), path: "");
+          _isRecording = isRecording;
+        });
+      } else {
+        print("ACCEPT");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _stop() async {
+    var recording = await AudioRecorder.stop();
+    print("Stop recording: ${recording.path}");
+    bool isRecording = await AudioRecorder.isRecording;
+    File file = widget.localFileSystem.file(recording.path);
+    print("  File length: ${await file.length()}");
+    setState(() {
+      _recording = recording;
+      _isRecording = isRecording;
+      _envoyerImage(recording.path);
+    });
+  }
+
 
   _enleverCommentaire(dynamic message) async {
     String id = message['_id'];
@@ -206,17 +234,19 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 );
                               }
                             },
-                            child:  IconButton(
-                                    icon: Icon(Icons.play_circle_filled,color: Colors.white,size: 35,),
-                                    onPressed: () {
-                                      if (this.mounted) {
-                                        setState(() {
-                                          
-                                          play(url);
-                                        });
-                                      }
-                                    })
-                                )
+                            child: IconButton(
+                                icon: Icon(
+                                  Icons.play_circle_filled,
+                                  color: Colors.white,
+                                  size: 35,
+                                ),
+                                onPressed: () {
+                                  if (this.mounted) {
+                                    setState(() {
+                                      play(url);
+                                    });
+                                  }
+                                }))
                         : InkWell(
                             onLongPress: () {
                               if (questionData['role'] == "P" ||
@@ -327,20 +357,20 @@ class pageCommentaireState extends State<pageCommentaire> {
         "questionId": questionData["questionId"].toString(),
         "role": questionData["role"].toString()
       };
-      try{
-      var response = await http.post(
-          "https://defiphoto-api.herokuapp.com/comments/noFile",
-          body: data);
-          if (response.statusCode == 200){
-          Timer(Duration(milliseconds: 500), () =>_scrollController.jumpTo(_scrollController.position.maxScrollExtent));
-          }
+      try {
+        var response = await http.post(
+            "https://defiphoto-api.herokuapp.com/comments/noFile",
+            body: data);
+        if (response.statusCode == 200) {
+          Timer(
+              Duration(milliseconds: 1),
+              () => _scrollController
+                  .jumpTo(_scrollController.position.maxScrollExtent));
+        }
       } catch (e) {
-      if (e is SocketException) {
-        
+        if (e is SocketException) {}
       }
     }
-    }
-    
   }
 
   _envoyerImage(dynamic filePath) async {
@@ -351,7 +381,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       ..fields['role'] = questionData["role"].toString()
       ..files.add(await http.MultipartFile.fromPath('commentFile', filePath));
     var res = await reponse.send();
-    if (res.statusCode == 200) Timer(Duration(milliseconds: 1000), () =>_scrollController.jumpTo(_scrollController.position.maxScrollExtent));
+   
   }
 
   Future<Null> _refresh() async {
@@ -372,6 +402,16 @@ class pageCommentaireState extends State<pageCommentaire> {
     await for (int i in stream) {
       if (this.mounted) {
         setState(() {
+          if (!_isLoading) {
+            currentMessageLenght = commentaires.length;
+            if (currentMessageLenght > previousMessageLenght) {
+              Timer(
+                  Duration(milliseconds: 1),
+                  () => _scrollController
+                      .jumpTo(_scrollController.position.maxScrollExtent));
+                previousMessageLenght=commentaires.length;      
+            }
+          }
           questionData = ModalRoute.of(context).settings.arguments;
           _getCommentaires();
         });
@@ -380,13 +420,13 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   Future<void> autoScrollStart() async {
-    if (canScroll) {
-      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
-      canScroll = false;
+    if (_scrollController.hasClients) {
+      if (canScroll) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        canScroll = false;
+      }
     }
   }
-
- 
 
   @override
   void initState() {
@@ -403,7 +443,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     bool isStudent;
     bool fromData;
 
-    autoScrollStart();
+    if (!_isLoading) autoScrollStart();
 
     return Scaffold(
         appBar: AppBar(
@@ -612,9 +652,9 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     onTap: () {
                                       setState(() {
                                         if (!_isRecording) {
-                                          
+                                          _start();
                                         } else if (_isRecording) {
-                                          
+                                          _stop();
                                         }
                                       });
                                     },

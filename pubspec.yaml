@@ -43,6 +43,7 @@ dependencies:
   speech_recognition:
   medcorder_audio:
   path_provider:
+  audio_recorder:
   audioplayers: ^0.15.1
   connectivity:
   sqflite:

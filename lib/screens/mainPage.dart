@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:test_flutter/screens/information.dart';
-import 'customDrawer.dart';
 import 'pageQuestion.dart';
 import '../widgets/fabbottomappbar.dart';
 import 'package:http/http.dart' as http;
@@ -27,6 +26,7 @@ class mainPage extends State<MainPage> {
   String type;
   String section = 'M';
   bool isSearching = false;
+  bool isLoading = true;
   String nomEleve;
   Text titreEnseignant = Text("Mes questions",
       style: TextStyle(
@@ -52,7 +52,7 @@ class mainPage extends State<MainPage> {
       question.sender = questions[i]['sender'];
 
       int id = await helper.insert(question);
-      print('inserted row: $id');
+     
     }
     _readDB();
   }
@@ -60,7 +60,7 @@ class mainPage extends State<MainPage> {
   _readDB() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     List questionsLocales = await helper.queryAllRows();
-    if (question == null) {
+    if (questionsLocales == null) {
       print('YA RIEN');
     } else {}
   }
@@ -92,6 +92,7 @@ class mainPage extends State<MainPage> {
     if (questions == null) {
       print('YA RIEN');
     } else {}
+    isLoading = false;
   }
 
   _getDataOnline() async {
@@ -115,10 +116,13 @@ class mainPage extends State<MainPage> {
         setState(() {
           questions = json.decode(response.body);
           _save();
+          isLoading = false;
         });
       }
-    } catch (e, stackTrace) {
-      if (e is SocketException) {}
+    } catch (e) {
+      if (e is SocketException) {
+        isLoading = false;
+      }
     }
   }
 
@@ -131,7 +135,7 @@ class mainPage extends State<MainPage> {
           users = json.decode(response.body);
         });
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       if (e is SocketException) {}
     }
   }
@@ -226,72 +230,79 @@ class mainPage extends State<MainPage> {
   }
 
   _getBody(int currentIndex) {
-    return Container(
-        color: Color(0xff141a24),
-        child: filteredQuestionTab.length > 0
-            ? ListView.builder(
-                itemCount: filteredQuestionTab.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                      padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
-                      child: Card(
-                        color: Color(0xFF222b3b),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              bottomRight: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                              bottomLeft: Radius.circular(20),
-                              topLeft: Radius.circular(20)),
-                        ),
-                        child: ListTile(
-                          title: Text(
-                            filteredQuestionTab[index]["text"] ?? '',
-                            style: TextStyle(
-                                fontSize: 19.0,
-                                color: Colors.white,
-                                fontFamily: 'Arboria'),
-                          ),
-                          subtitle: Text(
-                              !userData['questionEleve'] &&
-                                      userData['role'] == "P"
-                                  ? 'Moi'
-                                  : _getUsername(filteredQuestionTab[index]
-                                          ["sender"]) ??
-                                      "",
-                              style: TextStyle(fontFamily: 'Arboria')),
-                          trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                VerticalDivider(thickness: 1.5),
-                                IconButton(
-                                    icon: Icon(Icons.volume_up, size: 30),
-                                    onPressed: () {
-                                      _read(filteredQuestionTab[index]["text"]);
-                                    })
-                              ]),
-                          contentPadding: EdgeInsets.all(20),
-                          onTap: () {
-                            !userData['connection']
-                                ? null
-                                : Navigator.pushNamed(
-                                    context, '/pageCommentaire',
-                                    arguments: {
-                                        'questionId': filteredQuestionTab[index]
-                                            ["id"],
-                                        'givenId': userData['givenId'],
-                                        'role': userData['role']
-                                      });
-                          },
-                        ),
-                      ));
-                })
-            : Center(
-                child: Text("Il n'y a pas de questions",
-                    style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 20,
-                        letterSpacing: 1.2,
-                        fontFamily: 'Arboria'))));
+    return isLoading
+        ? Container(
+            color: Color(0xff141a24),
+            child: Center(
+                child: SpinKitDoubleBounce(size: 40, color: Colors.white)))
+        : Container(
+            color: Color(0xff141a24),
+            child: filteredQuestionTab.length > 0
+                ? ListView.builder(
+                    itemCount: filteredQuestionTab.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                          padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
+                          child: Card(
+                            color: Color(0xFF222b3b),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  bottomRight: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                  bottomLeft: Radius.circular(20),
+                                  topLeft: Radius.circular(20)),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                filteredQuestionTab[index]["text"] ?? '',
+                                style: TextStyle(
+                                    fontSize: 19.0,
+                                    color: Colors.white,
+                                    fontFamily: 'Arboria'),
+                              ),
+                              subtitle: !userData['connection']? null:Text(
+                                  !userData['questionEleve'] &&
+                                          userData['role'] == "P"
+                                      ? 'Moi'
+                                      : _getUsername(filteredQuestionTab[index]
+                                              ["sender"]) ??
+                                          "",
+                                  style: TextStyle(fontFamily: 'Arboria')),
+                              trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    VerticalDivider(thickness: 1.5),
+                                    IconButton(
+                                        icon: Icon(Icons.volume_up, size: 30),
+                                        onPressed: () {
+                                          _read(filteredQuestionTab[index]
+                                              ["text"]);
+                                        })
+                                  ]),
+                              contentPadding: EdgeInsets.all(20),
+                              onTap: () {
+                                !userData['connection']
+                                    ? null
+                                    : Navigator.pushNamed(
+                                        context, '/pageCommentaire',
+                                        arguments: {
+                                            'questionId':
+                                                filteredQuestionTab[index]
+                                                    ["id"],
+                                            'givenId': userData['givenId'],
+                                            'role': userData['role']
+                                          });
+                              },
+                            ),
+                          ));
+                    })
+                : Center(
+                    child: Text("Il n'y a pas de questions",
+                        style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 20,
+                            letterSpacing: 1.2,
+                            fontFamily: 'Arboria'))));
   }
 
   Future<Null> _refresh() async {
@@ -315,6 +326,7 @@ class mainPage extends State<MainPage> {
               _getQuestionSection();
               setState(() {
                 filteredQuestionTab = questionSectionTab;
+                
               });
             });
           });

@@ -6,7 +6,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'customDrawer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'customDrawer.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 
@@ -15,37 +14,47 @@ class progressionEleve extends StatefulWidget {
 }
 
 class progressionEleveState extends State<progressionEleve> {
+  //Données de l'utilisateur de l'application
   Map userData = {};
 
-  static int percentageM;
-  static int percentageE1;
-  static int percentageT;
-  static int percentageI;
-  static int percentageE2;
-  static int percentageR;
-  int percTot;
-  bool isLoading = true;
+  //Variable de pourcentage pour chaque catégories
+  static int percentageM=0,
+      percentageE1=0,
+      percentageT=0,
+      percentageI=0,
+      percentageE2=0,
+      percentageR=0;
 
-  String eAccent = "É";
+  //Compteur pour vérifier combien de question on été répondu par l'élève
+  int compteurM, 
+      compteurE, 
+      compteurT, 
+      compteurI, 
+      compteurE1, 
+      compteurR;
+  
+  //Compteur pour vérifier combien de question sont destiné à l'élève
+  int compteurMtot,
+      compteurEtot,
+      compteurTtot,
+      compteurItot,
+      compteurE1tot,
+      compteurRtot,
+      compteurTOT;
+
+  //Pourcentage total
+  int percTot;
+ 
+  //Listes et Map pour stocker les commentaire et questions
   Map questionData = {};
   List commentaires = [{}];
   List questions = [{}];
   List commentairesMe = [{}];
-  int compteurM;
-  int compteurE;
-  int compteurT;
-  int compteurI;
-  int compteurE1;
-  int compteurR;
-  int compteurMtot;
-  int compteurEtot;
-  int compteurTtot;
-  int compteurItot;
-  int compteurE1tot;
-  int compteurRtot;
-
+ 
+  bool isLoading = true;
   bool hasConnection;
-
+  
+  //Appel à l'api pour obtenir tout les commentaires
   _getCommentaires() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     if (userData['connection']) {
@@ -57,11 +66,15 @@ class progressionEleveState extends State<progressionEleve> {
           print(prefs.getString('givenId'));
         }
       } catch (e) {
-        if (e is SocketException) {}
+        if (e is SocketException) {
+          isLoading=false;
+
+        }
       }
     }
   }
-
+  
+  //Appel à l'api pour obtenir tout les questions destinées à l'élève
   _getQuestions() async {
     if (userData['connection']) {
       String id = userData["givenId"];
@@ -75,11 +88,14 @@ class progressionEleveState extends State<progressionEleve> {
           questions = json.decode(response.body);
         }
       } catch (e) {
-        if (e is SocketException) {}
+        if (e is SocketException) {
+          isLoading=false;
+        }
       }
     }
   }
-
+  
+  //Méthode pour filtrer les commentaires qui ont été envoyés par l'élève
   _getCommentaireMe() {
     for (int i = 0; i < commentaires.length; i++) {
       if (commentaires[i]['sender'] == userData['givenId']) {
@@ -88,12 +104,14 @@ class progressionEleveState extends State<progressionEleve> {
     }
   }
 
+  //Grosse méthode qui gère tout le calcul des pourcentages de la progression
   _updateCompteur() {
+    
     _getCommentaireMe();
-
     bool skipQuestion = false;
     int i = 0;
-
+    
+    //Initialiser les compteur à 0
     compteurM = 0;
     compteurE = 0;
     compteurT = 0;
@@ -106,7 +124,10 @@ class progressionEleveState extends State<progressionEleve> {
     compteurItot = 0;
     compteurE1tot = 0;
     compteurRtot = 0;
+    compteurTOT=0;
+    
 
+    //Boucle for pour compter le nombre de question total de chq catégorie
     for (int z = 0; z < questions.length; z++) {
       if (questions[z]['type'] == 'M') {
         compteurMtot++;
@@ -122,7 +143,8 @@ class progressionEleveState extends State<progressionEleve> {
         compteurRtot++;
       }
     }
-
+    
+    //Boucle while pour compter le nombre de question répondu de chq catégorie
     while (i < questions.length) {
       skipQuestion = false;
 
@@ -176,34 +198,47 @@ class progressionEleveState extends State<progressionEleve> {
       }
     }
 
-    print(userData['connection']);
-
+    //Setstate pour update les pourcentages affichés
     setState(() {
+      
+      if(compteurMtot!=0)
       percentageM = (((compteurM.toDouble() / compteurMtot) * 100).toInt());
+      if(compteurEtot!=0)
       percentageE1 = (((compteurE.toDouble() / compteurEtot) * 100).toInt());
+      if(compteurTtot!=0)
       percentageT = (((compteurT.toDouble() / compteurTtot) * 100).toInt());
+      if(compteurItot!=0)
       percentageI = (((compteurI.toDouble() / compteurItot) * 100).toInt());
+      if(compteurE1tot!=0)
       percentageE2 = (((compteurE1.toDouble() / compteurE1tot) * 100).toInt());
+      if(compteurRtot!=0)
       percentageR = (((compteurR.toDouble() / compteurRtot) * 100).toInt());
 
+      compteurTOT=compteurMtot+
+                  compteurEtot+
+                  compteurTtot+
+                  compteurItot+
+                  compteurE1tot+
+                  compteurRtot;
+      
       percTot = ((compteurM.toDouble() +
-              compteurE.toDouble() +
-              compteurT.toDouble() +
-              compteurI.toDouble() +
-              compteurE1.toDouble() +
-              compteurR.toDouble()) /
-          (compteurMtot+
-          compteurEtot+
-          compteurTtot+
-          compteurItot+
-          compteurE1tot+
-          compteurRtot)*100).toInt();
-         
+                  compteurE.toDouble() +
+                  compteurT.toDouble() +
+                  compteurI.toDouble() +
+                  compteurE1.toDouble() +
+                  compteurR.toDouble()) /
+              (compteurTOT) *
+              100)
+          .round();
+
+      print("COMPTEUR TOT: $compteurTOT");    
 
       isLoading = false;
     });
   }
 
+  //Méthode Future<null> pour refresh les commentaires lorsqu'on swipe
+  //par vers le bas
   Future<Null> _refresh() async {
     await Future.delayed(Duration(milliseconds: 500)).then((_) {
       if (this.mounted) {
@@ -220,7 +255,10 @@ class progressionEleveState extends State<progressionEleve> {
     });
     return null;
   }
+  
 
+  //Méthode du stream que permet de vérifier si il y a une connexion internet et couvre toute 
+  //l'application
   void stream() async {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
@@ -229,15 +267,12 @@ class progressionEleveState extends State<progressionEleve> {
         try {
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            hasConnection = true;
-            print('YESS');
+            hasConnection = true;        
           } else {
             hasConnection = false;
-            print('FUK');
           }
         } on SocketException catch (_) {
           hasConnection = false;
-          print('FUKMAN');
         }
         if (userData['connection'] == !hasConnection) {
           if (this.mounted) {
@@ -250,6 +285,8 @@ class progressionEleveState extends State<progressionEleve> {
     }
   }
 
+  //Première fonction qui est appelé, initialise les données d'utilisateur,
+  //la méthode refresh ainsi que le stream
   @override
   void initState() {
     // TODO: implement initState
@@ -266,6 +303,7 @@ class progressionEleveState extends State<progressionEleve> {
     });
   }
 
+  //Méthode qui construit l'affichage
   @override
   Widget build(BuildContext context) {
     if (userData['connection'] != null && !isLoading) {
