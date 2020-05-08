@@ -74,6 +74,7 @@ class mainPageProfState extends State<mainPageProf> {
             hasConnection = true;
           } else {
             hasConnection = false;
+            print('FUK');
           }
         } on SocketException catch (_) {
           hasConnection = false;
@@ -90,8 +91,6 @@ class mainPageProfState extends State<mainPageProf> {
     }
   }
 
-  
-
   void _filterEleves(value) {
     setState(() {
       print(value);
@@ -107,54 +106,6 @@ class mainPageProfState extends State<mainPageProf> {
     return _createList(filteredEleveTab);
   }
 
-  enleverEleve(List eleveSelected) {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Avertissement', style: TextStyle(fontFamily: 'Arboria')),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Voulez-vous enlevez cet utilisateur?',
-                    style: TextStyle(fontFamily: 'Arboria')),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Oui', style: TextStyle(fontFamily: 'Arboria')),
-              onPressed: () async {
-                for (int i = 0; i < eleveSelected.length; i++) {
-                  String id = eleveSelected[i].toString();
-                  try {
-                    var response = await http.delete(
-                        "https://defiphoto-api.herokuapp.com/users/$id");
-                    print('Done!');
-                  } catch (e) {
-                    if (e is SocketException) {}
-                  }
-                }
-
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: Text('Non', style: TextStyle(fontFamily: 'Arboria')),
-              onPressed: () {
-                if (this.mounted) {
-                  setState(() {
-                    Navigator.of(context).pop();
-                  });
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   _createList(dynamic array) {
     String url;
@@ -244,13 +195,12 @@ class mainPageProfState extends State<mainPageProf> {
                   },
                   onLongPress: () {
                     setState(() {
-                      if (!selectedEleveTab
-                            .contains(array[index]['givenId'])) {
-                      selectionState = true;
-                      array[index]['colorSelect'] = Color(0xFF39475e);
-                      selectedEleveTab.add(array[index]['givenId']);
-                      print(selectedEleveTab);
-                            }
+                      if (!selectedEleveTab.contains(array[index]['givenId'])) {
+                        selectionState = true;
+                        array[index]['colorSelect'] = Color(0xFF39475e);
+                        selectedEleveTab.add(array[index]['givenId']);
+                        print(selectedEleveTab);
+                      }
                     });
                   },
                 ),
@@ -295,7 +245,7 @@ class mainPageProfState extends State<mainPageProf> {
   Widget build(BuildContext context) {
     userData = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      drawer: !isSearching && userData['connection'] && !selectionState
+      drawer: !isSearching && userData['connection'] 
           ? Container(
               color: Colors.grey[900],
               child: customDrawer(
@@ -310,19 +260,7 @@ class mainPageProfState extends State<mainPageProf> {
                     end: Alignment.bottomRight,
                     colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
           ),
-          leading: selectionState
-              ? Builder(
-                  builder: (BuildContext context) {
-                    return IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          enleverEleve(selectedEleveTab);
-                          Timer(Duration(milliseconds: 500),
-                                () => resetSelected());
-                        });
-                  },
-                )
-              : null,
+          
           title: !isSearching
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
