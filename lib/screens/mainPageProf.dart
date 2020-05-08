@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,15 +7,16 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.dart';
+import 'package:test_flutter/screens/pageQuestion.dart';
 import '../main.dart';
 import 'customDrawer.dart';
 
-class listeEleve extends StatefulWidget {
+class mainPageProf extends StatefulWidget {
   @override
-  _listeEleveState createState() => _listeEleveState();
+  mainPageProfState createState() => mainPageProfState();
 }
 
-class _listeEleveState extends State<listeEleve> {
+class mainPageProfState extends State<mainPageProf> {
   List users = [{}];
   Map userData = {};
   List eleveTab = [];
@@ -23,6 +25,8 @@ class _listeEleveState extends State<listeEleve> {
   var eleve;
   Map userDataDrawer = {};
   bool hasConnection;
+  bool selectionState = false;
+  List<String> selectedEleveTab = [];
 
   _getUsers() async {
     try {
@@ -50,7 +54,8 @@ class _listeEleveState extends State<listeEleve> {
         "stageName": users[i]["stageName"],
         "email": users[i]["email"],
         "yearDebut": users[i]["schoolYearBegin"],
-        "yearFin": users[i]["schoolYearEnd"]
+        "yearFin": users[i]["schoolYearEnd"],
+        "colorSelect": Color(0xFF222b3b)
       };
       if (users[i]["role"] == "S") {
         eleveTab.add(eleve);
@@ -67,10 +72,8 @@ class _listeEleveState extends State<listeEleve> {
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             hasConnection = true;
-            print('YESS');
           } else {
             hasConnection = false;
-            print('FUK');
           }
         } on SocketException catch (_) {
           hasConnection = false;
@@ -87,6 +90,8 @@ class _listeEleveState extends State<listeEleve> {
     }
   }
 
+  
+
   void _filterEleves(value) {
     setState(() {
       print(value);
@@ -102,6 +107,55 @@ class _listeEleveState extends State<listeEleve> {
     return _createList(filteredEleveTab);
   }
 
+  enleverEleve(List eleveSelected) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Avertissement', style: TextStyle(fontFamily: 'Arboria')),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Voulez-vous enlevez cet utilisateur?',
+                    style: TextStyle(fontFamily: 'Arboria')),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Oui', style: TextStyle(fontFamily: 'Arboria')),
+              onPressed: () async {
+                for (int i = 0; i < eleveSelected.length; i++) {
+                  String id = eleveSelected[i].toString();
+                  try {
+                    var response = await http.delete(
+                        "https://defiphoto-api.herokuapp.com/users/$id");
+                    print('Done!');
+                  } catch (e) {
+                    if (e is SocketException) {}
+                  }
+                }
+
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text('Non', style: TextStyle(fontFamily: 'Arboria')),
+              onPressed: () {
+                if (this.mounted) {
+                  setState(() {
+                    Navigator.of(context).pop();
+                  });
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   _createList(dynamic array) {
     String url;
     return ListView.builder(
@@ -110,7 +164,7 @@ class _listeEleveState extends State<listeEleve> {
           return Padding(
               padding: EdgeInsets.fromLTRB(6, 7, 6, 0),
               child: Card(
-                color: Color(0xFF222b3b),
+                color: array[index]['colorSelect'],
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                       bottomRight: Radius.circular(20),
@@ -138,7 +192,7 @@ class _listeEleveState extends State<listeEleve> {
                         icon: Icon(Icons.message, size: 30),
                         onPressed: () => {
                               Navigator.of(context)
-                                  .pushNamed('/mainPage', arguments: {
+                                  .pushNamed('/questionsStage', arguments: {
                                 'givenId': userData["givenId"],
                                 'firstName': userData["firstName"],
                                 'lastName': userData["lastName"],
@@ -165,55 +219,39 @@ class _listeEleveState extends State<listeEleve> {
 
                   //leading: Icon(Icons.work, size: 40),
                   contentPadding: EdgeInsets.all(20),
-                  onTap: () {},
+                  onTap: () {
+                    if (selectionState) {
+                      setState(() {
+                        if (!selectedEleveTab
+                            .contains(array[index]['givenId'])) {
+                          array[index]['colorSelect'] = Color(0xFF39475e);
+                          selectedEleveTab.add(array[index]['givenId']);
+                          print(selectedEleveTab);
+                        } else if (selectedEleveTab
+                            .contains(array[index]['givenId'])) {
+                          array[index]['colorSelect'] = Color(0xFF222b3b);
+                          selectedEleveTab.remove(array[index]['givenId']);
+                          print(selectedEleveTab);
+                        }
+                        if (selectedEleveTab.length == 0) {
+                          setState(() {
+                            print(selectedEleveTab.length);
+                            selectionState = false;
+                          });
+                        }
+                      });
+                    }
+                  },
                   onLongPress: () {
-                    return showDialog<void>(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: Text('Avertissement',
-                              style: TextStyle(fontFamily: 'Arboria')),
-                          content: SingleChildScrollView(
-                            child: ListBody(
-                              children: <Widget>[
-                                Text('Voulez-vous enlevez cet utilisateur?',
-                                    style: TextStyle(fontFamily: 'Arboria')),
-                              ],
-                            ),
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('Oui',
-                                  style: TextStyle(fontFamily: 'Arboria')),
-                              onPressed: () async {
-                                String id = array[index]['givenId'];
-                                try {
-                                  var response = await http.delete(
-                                      "https://defiphoto-api.herokuapp.com/users/$id");
-                                  print('Done!');
-                                } catch (e) {
-                                  if (e is SocketException) {}
-                                }
-
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            FlatButton(
-                              child: Text('Non',
-                                  style: TextStyle(fontFamily: 'Arboria')),
-                              onPressed: () {
-                                if (this.mounted) {
-                                  setState(() {
-                                    Navigator.of(context).pop();
-                                  });
-                                }
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    setState(() {
+                      if (!selectedEleveTab
+                            .contains(array[index]['givenId'])) {
+                      selectionState = true;
+                      array[index]['colorSelect'] = Color(0xFF39475e);
+                      selectedEleveTab.add(array[index]['givenId']);
+                      print(selectedEleveTab);
+                            }
+                    });
                   },
                 ),
               ));
@@ -245,11 +283,19 @@ class _listeEleveState extends State<listeEleve> {
     });
   }
 
+  resetSelected() {
+    for (int i = 0; i < eleveTab.length; i++) {
+      eleveTab[i]['colorSelect'] = Color(0xFF222b3b);
+    }
+    selectedEleveTab = [];
+    selectionState = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     userData = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      drawer: !isSearching && userData['connection']
+      drawer: !isSearching && userData['connection'] && !selectionState
           ? Container(
               color: Colors.grey[900],
               child: customDrawer(
@@ -264,6 +310,19 @@ class _listeEleveState extends State<listeEleve> {
                     end: Alignment.bottomRight,
                     colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
           ),
+          leading: selectionState
+              ? Builder(
+                  builder: (BuildContext context) {
+                    return IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          enleverEleve(selectedEleveTab);
+                          Timer(Duration(milliseconds: 500),
+                                () => resetSelected());
+                        });
+                  },
+                )
+              : null,
           title: !isSearching
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -298,22 +357,32 @@ class _listeEleveState extends State<listeEleve> {
                       hintText: "Rechercher la question")),
           actions: userData['connection']
               ? <Widget>[
-                  !isSearching
+                  selectionState
                       ? IconButton(
-                          icon: Icon(Icons.search),
+                          icon: Icon(Icons.add),
                           onPressed: () {
-                            setState(() {
-                              this.isSearching = true;
-                            });
+                            Navigator.of(context).push(CupertinoPageRoute(
+                                builder: (context) => (creationQuestionGroupe(
+                                    userData["givenId"], selectedEleveTab))));
+                            Timer(Duration(milliseconds: 1000),
+                                () => resetSelected());
                           })
-                      : IconButton(
-                          icon: Icon(Icons.cancel),
-                          onPressed: () {
-                            setState(() {
-                              this.isSearching = false;
-                              filteredEleveTab = eleveTab;
-                            });
-                          })
+                      : !isSearching
+                          ? IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                setState(() {
+                                  this.isSearching = true;
+                                });
+                              })
+                          : IconButton(
+                              icon: Icon(Icons.cancel),
+                              onPressed: () {
+                                setState(() {
+                                  this.isSearching = false;
+                                  filteredEleveTab = eleveTab;
+                                });
+                              })
                 ]
               : null),
       backgroundColor: Color(0xff141a24),

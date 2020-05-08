@@ -9,11 +9,11 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:http/http.dart' as http;
 import '../main.dart';
 
-class progressionEleve extends StatefulWidget {
-  progressionEleveState createState() => new progressionEleveState();
+class mainPageEleve extends StatefulWidget {
+  mainPageEleveState createState() => new mainPageEleveState();
 }
 
-class progressionEleveState extends State<progressionEleve> {
+class mainPageEleveState extends State<mainPageEleve> {
   //Données de l'utilisateur de l'application
   Map userData = {};
 

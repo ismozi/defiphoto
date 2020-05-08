@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:test_flutter/screens/information.dart';
-import 'screens/mainPage.dart';
+import 'screens/questionsStage.dart';
 import 'screens/login.dart';
-import 'screens/listeEleve.dart';
+import 'screens/mainPageProf.dart';
 import 'screens/mainPageAdmin.dart';
 import 'screens/pageCommentaire.dart';
-import 'screens/information.dart';
+import 'screens/pageAide.dart';
 import 'screens/ajoutUtilisateur.dart';
-import 'screens/progressionEleve.dart';
+import 'screens/mainPageEleve.dart';
 import 'screens/profilEleve.dart';
 
 
@@ -24,14 +23,14 @@ class App extends StatelessWidget {
   
   routes: <String, WidgetBuilder> {
     '/login': (BuildContext context) => new Login(),
-    '/mainPage' : (BuildContext context) => new MainPage(),
+    '/questionsStage' : (BuildContext context) => new questionStage(),
     '/mainPageAdmin' : (BuildContext context) => new mainPageAdmin(),
     '/profilEleve' : (BuildContext context) => new profilEleve(),
     '/ajoutUtilisateur' : (BuildContext context) => new ajoutUtilisateur(),
     '/pageCommentaire' :(BuildContext context) => new pageCommentaire(),
-    '/aide' : (BuildContext context) => new Inpage(),
-    '/mainPageProf' : (BuildContext context) => new listeEleve(),
-    '/mainPageStudent' : (BuildContext context) => new progressionEleve(),
+    '/pageAide' : (BuildContext context) => new pageAide(),
+    '/mainPageProf' : (BuildContext context) => new mainPageProf(),
+    '/mainPageEleve' : (BuildContext context) => new mainPageEleve(),
 
 
 

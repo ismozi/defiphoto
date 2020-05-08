@@ -549,6 +549,224 @@ class _creationQuestionState extends State<creationQuestion> {
   }
 }
 
+class creationQuestionGroupe extends StatefulWidget {
+  String idSender;
+  List idReceivers;
+
+  creationQuestionGroupe(String idSender, List idReceivers) {
+    this.idSender = idSender;
+    this.idReceivers = idReceivers;
+  }
+
+  @override
+  _creationQuestionGroupeState createState() => _creationQuestionGroupeState();
+}
+
+class _creationQuestionGroupeState extends State<creationQuestionGroupe> {
+  _envoyerQuestion(String text, String type) async {
+    for(int index=0;index<widget.idReceivers.length;index++){
+    if (text.trim().isNotEmpty) {
+      var data = {
+        "text": text.trim().toString(),
+        "sender": widget.idSender.toString(),
+        "recievers": widget.idReceivers[index].toString(),
+        "type": type.trim().toString()
+      };
+      try {
+        var response = await http
+            .post("https://defiphoto-api.herokuapp.com/questions", body: data);
+        if (response.statusCode == 200) {
+          print("Done!");
+        }
+      } catch (e) {
+        if (e is SocketException) {}
+      }
+    }
+    }
+  }
+
+  TextEditingController questionText = new TextEditingController();
+  int _indexType;
+  List<String> types = ["M", "É", "T", "I", "E", "R"];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: Text("Poser une question",
+              style: TextStyle(
+                fontFamily: 'Arboria',
+              )),
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context)),
+          flexibleSpace: Container(decoration: customBoxDecoration())),
+      backgroundColor: Color(0xff141a24),
+      body: ListView(
+        children: <Widget>[
+          SizedBox(
+            height: 50.0,
+          ),
+          new Card(
+              color: Color(0xFF222b3b),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                    bottomLeft: Radius.circular(15),
+                    topLeft: Radius.circular(15)),
+              ),
+              child: Padding(
+                  padding: EdgeInsets.fromLTRB(15, 45, 15, 15),
+                  child: Column(children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0, 3),
+                              blurRadius: 5,
+                              color: Colors.black)
+                        ],
+                      ),
+                      child: TextField(
+                        controller: questionText,
+                        style: new TextStyle(fontSize: 20, color: Colors.black),
+                        decoration: InputDecoration(
+                            hintStyle:
+                                TextStyle(fontSize: 20.0, color: Colors.grey),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: Colors.grey,
+                            ),
+                            border: InputBorder.none,
+                            hintText: "QUESTION"),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2b3444),
+                          borderRadius: BorderRadius.circular(15.0),
+                          boxShadow: [
+                            BoxShadow(
+                                offset: Offset(0, 3),
+                                blurRadius: 5,
+                                color: Colors.black)
+                          ],
+                        ),
+                        child: Column(children: [
+                          Text(" M     É     T     I     E    R  ",
+                              style: TextStyle(
+                                  fontFamily: 'Arboria', fontSize: 25)),
+                          Row(children: [
+                            SizedBox(width: 5),
+                            Radio(
+                              value: 0,
+                              groupValue: _indexType,
+                              onChanged: (T) {
+                                setState(() {
+                                  _indexType = T;
+                                });
+                              },
+                            ),
+                            Radio(
+                              value: 1,
+                              groupValue: _indexType,
+                              onChanged: (T) {
+                                setState(() {
+                                  _indexType = T;
+                                });
+                              },
+                            ),
+                            Radio(
+                              value: 2,
+                              groupValue: _indexType,
+                              onChanged: (T) {
+                                setState(() {
+                                  _indexType = T;
+                                });
+                              },
+                            ),
+                            Radio(
+                              value: 3,
+                              groupValue: _indexType,
+                              onChanged: (T) {
+                                setState(() {
+                                  print(T);
+                                  _indexType = T;
+                                });
+                              },
+                            ),
+                            Radio(
+                              value: 4,
+                              groupValue: _indexType,
+                              onChanged: (T) {
+                                setState(() {
+                                  _indexType = T;
+                                });
+                              },
+                            ),
+                            Radio(
+                              value: 5,
+                              groupValue: _indexType,
+                              onChanged: (T) {
+                                setState(() {
+                                  _indexType = T;
+                                });
+                              },
+                            ),
+                          ])
+                        ])),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 25.0),
+                      width: double.infinity,
+                      child: RaisedButton(
+                        elevation: 5.0,
+                        onPressed: () {
+                          setState(() {
+                            _envoyerQuestion(
+                                questionText.text.toString().trim(),
+                                types[_indexType].toString().trim());
+                            Navigator.of(context).pop();
+                          });
+                        },
+                        padding: EdgeInsets.all(15.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        color: Color(0xff444d5d),
+                        child: Text(
+                          'ENVOYER',
+                          style: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: 1.5,
+                            fontSize: 18.0,
+                            fontFamily: 'Arboria',
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                  ])))
+        ],
+      ),
+    );
+  }
+}
+
 BoxDecoration customBoxDecoration() {
   return BoxDecoration(
       gradient: LinearGradient(

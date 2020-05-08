@@ -44,7 +44,7 @@ class _LoginState extends State<Login> {
             loginUser(userData, password);
             _isLoading = false;
             if (userData["role"] == "S") {
-              Navigator.pushReplacementNamed(context, '/mainPageStudent',
+              Navigator.pushReplacementNamed(context, '/mainPageEleve',
                   arguments: {
                     'givenId': userData["givenId"],
                     'firstName': userData["firstName"],
@@ -207,7 +207,7 @@ class _LoginState extends State<Login> {
     if (userId != null && password != null && !_hasNetworkConnection && role=='S') {
       if (this.mounted) {
         setState(() {
-          Navigator.pushReplacementNamed(context, '/mainPageStudent',
+          Navigator.pushReplacementNamed(context, '/mainPageEleve',
               arguments: {
                 'givenId': userId,
                 'firstName': firstName,

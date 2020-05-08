@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:test_flutter/screens/information.dart';
 import 'pageQuestion.dart';
 import '../widgets/fabbottomappbar.dart';
 import 'package:http/http.dart' as http;
@@ -14,11 +13,11 @@ import '../models/database_helpers.dart';
 Widget appBarTitle = Text('Matières et produits',
     style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
 
-class MainPage extends StatefulWidget {
-  mainPage createState() => new mainPage();
+class questionStage extends StatefulWidget {
+  questionStageState createState() => new questionStageState();
 }
 
-class mainPage extends State<MainPage> {
+class questionStageState extends State<questionStage> {
   List questions = [{}];
   List users = [{}];
   Map userData = {};

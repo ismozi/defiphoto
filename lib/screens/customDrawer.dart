@@ -70,7 +70,7 @@ class customDrawer extends StatelessWidget {
            ListTile(
             leading: Icon(Icons.message),
             title: Text('Questions de stage',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/mainPage', arguments: userData)},
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/questionsStage', arguments: userData)},
           ),
           
             ListTile(
@@ -86,7 +86,7 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.info),
             title: Text('Aide',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/aide')}
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/pageAide')}
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
@@ -132,12 +132,12 @@ class customDrawer extends StatelessWidget {
            ListTile(
             leading: Icon(Icons.message),
             title: Text('Questions de stage',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/mainPage', arguments: userData)},
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/questionsStage', arguments: userData)},
           ),
           ListTile(
             leading: Icon(Icons.info),
             title: Text('Aide',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/aide')}
+            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/pageAide')}
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
@@ -182,16 +182,9 @@ class customDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.question_answer),
             title: Text("Questions d'élèves",style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(), Navigator.of(context).pushNamed('/mainPage',
+            onTap: () => {Navigator.of(context).pop(), Navigator.of(context).pushNamed('/questionsStage',
                                   arguments: userData)
                             },
-          ),
-          
-          
-          ListTile(
-            leading: Icon(Icons.info),
-            title: Text('Aide',style:TextStyle(fontFamily:'Arboria')),
-            onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/aide')}
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
