@@ -167,28 +167,40 @@ class _LoginState extends State<Login> {
 
     _hasNetworkConnection = false;
 
-    ConnectionStatusSingleton connectionStatus =
-        ConnectionStatusSingleton.getInstance();
+    
 
-    _updateConnectivity(connectionStatus);
+    
+
+    _updateConnectivity();
   }
 
-  void _updateConnectivity(ConnectionStatusSingleton connectionStatus) {
-    connectionStatus.checkConnection().then((hasConnection) {
-      _hasNetworkConnection = hasConnection;
+  void _updateConnectivity() async{
+    if (this.mounted) {
+        try {
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            setState(() {
+              _hasNetworkConnection = true;
+              autoLogIn();
 
-      if (!_hasNetworkConnection) {
-        setState(() {
-          autoLogIn();
-          print("DÉCONNECTÉ");
-        });
-      } else {
-        setState(() {
-          autoLogIn();
-          print("CONNECTÉ");
-        });
+            });
+            
+
+          } else {
+            setState(() {
+              _hasNetworkConnection = false;
+              autoLogIn();
+
+            });
+          }
+        } on SocketException catch (_) {
+          setState(() {
+              _hasNetworkConnection = false;
+              autoLogIn();
+
+            });
+        }
       }
-    });
   }
 
   void autoLogIn() async {

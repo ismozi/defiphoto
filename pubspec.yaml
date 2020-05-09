@@ -45,7 +45,6 @@ dependencies:
   path_provider:
   audio_recorder:
   audioplayers: ^0.15.1
-  connectivity:
   sqflite:
 
 dev_dependencies:
