@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../models/connectivityStatus.dart';
+
 
 class Login extends StatefulWidget {
   @override
@@ -17,6 +17,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool isLoading1 = true;
+
 
   bool _isLoading = false;
   TextEditingController givenId = new TextEditingController();
@@ -129,7 +130,8 @@ class _LoginState extends State<Login> {
           barrierDismissible: false,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text('Échec de connexion', style: TextStyle(fontFamily: 'Arboria')),
+              title: Text('Échec de connexion',
+                  style: TextStyle(fontFamily: 'Arboria')),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
@@ -159,48 +161,38 @@ class _LoginState extends State<Login> {
     }
   }
 
-  
-
   @override
   void initState() {
     super.initState();
 
     _hasNetworkConnection = false;
 
-    
-
-    
-
     _updateConnectivity();
+    print("allo");
   }
 
-  void _updateConnectivity() async{
+  void _updateConnectivity() async {
     if (this.mounted) {
-        try {
-          final result = await InternetAddress.lookup('google.com');
-          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            setState(() {
-              _hasNetworkConnection = true;
-              autoLogIn();
-
-            });
-            
-
-          } else {
-            setState(() {
-              _hasNetworkConnection = false;
-              autoLogIn();
-
-            });
-          }
-        } on SocketException catch (_) {
+      try {
+        final result = await InternetAddress.lookup('google.com');
+        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           setState(() {
-              _hasNetworkConnection = false;
-              autoLogIn();
-
-            });
+            _hasNetworkConnection = true;
+            autoLogIn();
+          });
+        } else {
+          setState(() {
+            _hasNetworkConnection = false;
+            autoLogIn();
+          });
         }
+      } on SocketException catch (_) {
+        setState(() {
+          _hasNetworkConnection = false;
+          autoLogIn();
+        });
       }
+    }
   }
 
   void autoLogIn() async {
@@ -216,43 +208,47 @@ class _LoginState extends State<Login> {
     final String yearFin = prefs.getString('yearFin');
     print(_hasNetworkConnection);
 
-    if (userId != null && password != null && !_hasNetworkConnection && role=='S') {
+    if (userId != null &&
+        password != null &&
+        !_hasNetworkConnection &&
+        role == 'S') {
       if (this.mounted) {
         setState(() {
-          Navigator.pushReplacementNamed(context, '/mainPageEleve',
-              arguments: {
-                'givenId': userId,
-                'firstName': firstName,
-                'lastName': lastName,
-                'email': email,
-                'role': role,
-                'stageName': stageName,
-                'yearDebut': yearDebut,
-                'yearFin': yearFin,
-                'questionEleve': false,
-                'connection': false
-              });
+          Navigator.pushReplacementNamed(context, '/mainPageEleve', arguments: {
+            'givenId': userId,
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'role': role,
+            'stageName': stageName,
+            'yearDebut': yearDebut,
+            'yearFin': yearFin,
+            'questionEleve': false,
+            'connection': false
+          });
         });
       }
-    } else if (userId != null && password != null && !_hasNetworkConnection && role=='P') {
+    } else if (userId != null &&
+        password != null &&
+        !_hasNetworkConnection &&
+        role == 'P') {
       if (this.mounted) {
         setState(() {
-          Navigator.pushReplacementNamed(context, '/mainPageProf',
-              arguments: {
-                'givenId': userId,
-                'firstName': firstName,
-                'lastName': lastName,
-                'email': email,
-                'role': role,
-                'stageName': stageName,
-                'yearDebut': yearDebut,
-                'yearFin': yearFin,
-                'questionEleve': false,
-                'connection': false
-              });
+          Navigator.pushReplacementNamed(context, '/mainPageProf', arguments: {
+            'givenId': userId,
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'role': role,
+            'stageName': stageName,
+            'yearDebut': yearDebut,
+            'yearFin': yearFin,
+            'questionEleve': false,
+            'connection': false
+          });
         });
       }
-    }else if (userId != null && password != null && _hasNetworkConnection) {
+    } else if (userId != null && password != null && _hasNetworkConnection) {
       if (this.mounted) {
         setState(() {
           signIn(userId, password);
