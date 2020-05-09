@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file/file.dart';
