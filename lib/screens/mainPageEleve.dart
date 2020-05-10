@@ -18,21 +18,16 @@ class mainPageEleveState extends State<mainPageEleve> {
   Map userData = {};
 
   //Variable de pourcentage pour chaque catégories
-  static int percentageM=0,
-      percentageE1=0,
-      percentageT=0,
-      percentageI=0,
-      percentageE2=0,
-      percentageR=0;
+  static int percentageM = 0,
+      percentageE1 = 0,
+      percentageT = 0,
+      percentageI = 0,
+      percentageE2 = 0,
+      percentageR = 0;
 
   //Compteur pour vérifier combien de question on été répondu par l'élève
-  int compteurM, 
-      compteurE, 
-      compteurT, 
-      compteurI, 
-      compteurE1, 
-      compteurR;
-  
+  int compteurM, compteurE, compteurT, compteurI, compteurE1, compteurR;
+
   //Compteur pour vérifier combien de question sont destiné à l'élève
   int compteurMtot,
       compteurEtot,
@@ -44,16 +39,18 @@ class mainPageEleveState extends State<mainPageEleve> {
 
   //Pourcentage total
   int percTot;
- 
+
   //Listes et Map pour stocker les commentaire et questions
   Map questionData = {};
   List commentaires = [{}];
   List questions = [{}];
   List commentairesMe = [{}];
- 
+  
+
   bool isLoading = true;
   bool hasConnection;
   
+
   //Appel à l'api pour obtenir tout les commentaires
   _getCommentaires() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -67,13 +64,12 @@ class mainPageEleveState extends State<mainPageEleve> {
         }
       } catch (e) {
         if (e is SocketException) {
-          isLoading=false;
-
+          isLoading = false;
         }
       }
     }
   }
-  
+
   //Appel à l'api pour obtenir tout les questions destinées à l'élève
   _getQuestions() async {
     if (userData['connection']) {
@@ -89,12 +85,12 @@ class mainPageEleveState extends State<mainPageEleve> {
         }
       } catch (e) {
         if (e is SocketException) {
-          isLoading=false;
+          isLoading = false;
         }
       }
     }
   }
-  
+
   //Méthode pour filtrer les commentaires qui ont été envoyés par l'élève
   _getCommentaireMe() {
     for (int i = 0; i < commentaires.length; i++) {
@@ -106,11 +102,10 @@ class mainPageEleveState extends State<mainPageEleve> {
 
   //Grosse méthode qui gère tout le calcul des pourcentages de la progression
   _updateCompteur() {
-    
     _getCommentaireMe();
     bool skipQuestion = false;
     int i = 0;
-    
+
     //Initialiser les compteur à 0
     compteurM = 0;
     compteurE = 0;
@@ -124,8 +119,7 @@ class mainPageEleveState extends State<mainPageEleve> {
     compteurItot = 0;
     compteurE1tot = 0;
     compteurRtot = 0;
-    compteurTOT=0;
-    
+    compteurTOT = 0;
 
     //Boucle for pour compter le nombre de question total de chq catégorie
     for (int z = 0; z < questions.length; z++) {
@@ -143,7 +137,7 @@ class mainPageEleveState extends State<mainPageEleve> {
         compteurRtot++;
       }
     }
-    
+
     //Boucle while pour compter le nombre de question répondu de chq catégorie
     while (i < questions.length) {
       skipQuestion = false;
@@ -200,27 +194,27 @@ class mainPageEleveState extends State<mainPageEleve> {
 
     //Setstate pour update les pourcentages affichés
     setState(() {
-      
-      if(compteurMtot!=0)
-      percentageM = (((compteurM.toDouble() / compteurMtot) * 100).toInt());
-      if(compteurEtot!=0)
-      percentageE1 = (((compteurE.toDouble() / compteurEtot) * 100).toInt());
-      if(compteurTtot!=0)
-      percentageT = (((compteurT.toDouble() / compteurTtot) * 100).toInt());
-      if(compteurItot!=0)
-      percentageI = (((compteurI.toDouble() / compteurItot) * 100).toInt());
-      if(compteurE1tot!=0)
-      percentageE2 = (((compteurE1.toDouble() / compteurE1tot) * 100).toInt());
-      if(compteurRtot!=0)
-      percentageR = (((compteurR.toDouble() / compteurRtot) * 100).toInt());
+      if (compteurMtot != 0)
+        percentageM = (((compteurM.toDouble() / compteurMtot) * 100).toInt());
+      if (compteurEtot != 0)
+        percentageE1 = (((compteurE.toDouble() / compteurEtot) * 100).toInt());
+      if (compteurTtot != 0)
+        percentageT = (((compteurT.toDouble() / compteurTtot) * 100).toInt());
+      if (compteurItot != 0)
+        percentageI = (((compteurI.toDouble() / compteurItot) * 100).toInt());
+      if (compteurE1tot != 0)
+        percentageE2 =
+            (((compteurE1.toDouble() / compteurE1tot) * 100).toInt());
+      if (compteurRtot != 0)
+        percentageR = (((compteurR.toDouble() / compteurRtot) * 100).toInt());
 
-      compteurTOT=compteurMtot+
-                  compteurEtot+
-                  compteurTtot+
-                  compteurItot+
-                  compteurE1tot+
-                  compteurRtot;
-      
+      compteurTOT = compteurMtot +
+          compteurEtot +
+          compteurTtot +
+          compteurItot +
+          compteurE1tot +
+          compteurRtot;
+
       percTot = ((compteurM.toDouble() +
                   compteurE.toDouble() +
                   compteurT.toDouble() +
@@ -231,7 +225,26 @@ class mainPageEleveState extends State<mainPageEleve> {
               100)
           .round();
 
-      print("COMPTEUR TOT: $compteurTOT");    
+      if (percTot != 100) {
+        setState(() {
+          userData = {
+            'givenId': userData["givenId"],
+            'firstName': userData["firstName"],
+            'lastName': userData["lastName"],
+            'email': userData["email"],
+            'role': userData["role"],
+            'profId': userData["profId"],
+            'stageName': userData['stageName'],
+            'yearDebut': userData['schoolYearBegin'],
+            'yearFin': userData['schoolYearEnd'],
+            'questionEleve': false,
+            'connection': userData['connection'],
+            'nouvQuestion': true,
+          };
+        });
+      }
+
+      print("COMPTEUR TOT: $compteurTOT");
 
       isLoading = false;
     });
@@ -255,9 +268,8 @@ class mainPageEleveState extends State<mainPageEleve> {
     });
     return null;
   }
-  
 
-  //Méthode du stream que permet de vérifier si il y a une connexion internet et couvre toute 
+  //Méthode du stream que permet de vérifier si il y a une connexion internet et couvre toute
   //l'application
   void stream() async {
     Duration interval = Duration(milliseconds: 500);
@@ -267,7 +279,8 @@ class mainPageEleveState extends State<mainPageEleve> {
         try {
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            hasConnection = true;        
+            hasConnection = true;
+            
           } else {
             hasConnection = false;
           }

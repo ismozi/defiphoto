@@ -9,7 +9,6 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -17,7 +16,6 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool isLoading1 = true;
-
 
   bool _isLoading = false;
   TextEditingController givenId = new TextEditingController();
@@ -57,7 +55,8 @@ class _LoginState extends State<Login> {
                     'yearDebut': userData['schoolYearBegin'],
                     'yearFin': userData['schoolYearEnd'],
                     'questionEleve': false,
-                    'connection': _hasNetworkConnection
+                    'connection': _hasNetworkConnection,
+                    'nouvQuestion': false
                   });
             }
             if (userData["role"] == "A") {
@@ -224,7 +223,8 @@ class _LoginState extends State<Login> {
             'yearDebut': yearDebut,
             'yearFin': yearFin,
             'questionEleve': false,
-            'connection': false
+            'connection': false,
+            'nouvQuestion': false
           });
         });
       }

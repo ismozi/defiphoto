@@ -9,6 +9,8 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../models/database_helpers.dart';
+import 'mainPageEleve.dart';
+
 
 Widget appBarTitle = Text('Matières et produits',
     style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
@@ -18,6 +20,7 @@ class questionStage extends StatefulWidget {
 }
 
 class questionStageState extends State<questionStage> {
+  mainPageEleveState mainInstance = new mainPageEleveState();
   List questions = [{}];
   List users = [{}];
   Map userData = {};
@@ -51,7 +54,6 @@ class questionStageState extends State<questionStage> {
       question.sender = questions[i]['sender'];
 
       int id = await helper.insert(question);
-     
     }
     _readDB();
   }
@@ -219,7 +221,8 @@ class questionStageState extends State<questionStage> {
         questionSection = {
           "id": questions[i]["_id"],
           "sender": questions[i]["sender"],
-          "text": questions[i]["text"]
+          "text": questions[i]["text"],
+          "isAns": questions[i]["isAns"]
         };
         if (questions[i]["type"] == section && questions[i] != null) {
           questionSectionTab.add(questionSection);
@@ -259,15 +262,18 @@ class questionStageState extends State<questionStage> {
                                     color: Colors.white,
                                     fontFamily: 'Arboria'),
                               ),
-                              subtitle: !userData['connection']? null:Text(
-                                  !userData['questionEleve'] &&
-                                          userData['role'] == "P"
-                                      ? 'Moi'
-                                      : _getUsername(filteredQuestionTab[index]
-                                              ["sender"]) ??
-                                          "",
-                                  style: TextStyle(fontFamily: 'Arboria')),
-                              trailing: Row(
+                              subtitle: !userData['connection']
+                                  ? null
+                                  : Text(
+                                      !userData['questionEleve'] &&
+                                              userData['role'] == "P"
+                                          ? 'Moi'
+                                          : _getUsername(
+                                                  filteredQuestionTab[index]
+                                                      ["sender"]) ??
+                                              "",
+                                      style: TextStyle(fontFamily: 'Arboria')),
+                              trailing: userData['role']=='S'&&!filteredQuestionTab[index]['isAns']?Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     VerticalDivider(thickness: 1.5),
@@ -276,7 +282,22 @@ class questionStageState extends State<questionStage> {
                                         onPressed: () {
                                           _read(filteredQuestionTab[index]
                                               ["text"]);
-                                        })
+                                        }),
+                                    ClipOval(
+                                        child: Material(
+                                            color: Colors.cyan,
+                                            child: SizedBox(
+                                                width: 13, height: 13)))
+                                  ]):Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    VerticalDivider(thickness: 1.5),
+                                    IconButton(
+                                        icon: Icon(Icons.volume_up, size: 30),
+                                        onPressed: () {
+                                          _read(filteredQuestionTab[index]
+                                              ["text"]);
+                                        }),
                                   ]),
                               contentPadding: EdgeInsets.all(20),
                               onTap: () {
@@ -325,7 +346,6 @@ class questionStageState extends State<questionStage> {
               _getQuestionSection();
               setState(() {
                 filteredQuestionTab = questionSectionTab;
-                
               });
             });
           });
