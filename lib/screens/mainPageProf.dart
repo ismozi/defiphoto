@@ -233,11 +233,14 @@ class mainPageProfState extends State<mainPageProf> {
   }
 
   resetSelected() {
-    for (int i = 0; i < eleveTab.length; i++) {
+    setState(() {
+      for (int i = 0; i < eleveTab.length; i++) {
       eleveTab[i]['colorSelect'] = Color(0xFF222b3b);
     }
     selectedEleveTab = [];
     selectionState = false;
+    });
+    
   }
 
   @override
