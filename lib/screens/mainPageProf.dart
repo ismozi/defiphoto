@@ -240,7 +240,6 @@ class mainPageProfState extends State<mainPageProf> {
     selectedEleveTab = [];
     selectionState = false;
     });
-    
   }
 
   @override

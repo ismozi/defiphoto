@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 
 class mainPageEleve extends StatefulWidget {
+  
   mainPageEleveState createState() => new mainPageEleveState();
 }
 
@@ -49,6 +50,7 @@ class mainPageEleveState extends State<mainPageEleve> {
 
   bool isLoading = true;
   bool hasConnection;
+  
   
 
   //Appel à l'api pour obtenir tout les commentaires
@@ -269,10 +271,22 @@ class mainPageEleveState extends State<mainPageEleve> {
     return null;
   }
 
+  refresh2(){
+    if (ModalRoute.of(context).isCurrent) {
+        setState(() {
+          _getCommentaires().then((data) {
+            _getQuestions().then((data) {
+              _updateCompteur();
+            });
+          });
+        });
+      }
+  }
+
   //Méthode du stream que permet de vérifier si il y a une connexion internet et couvre toute
   //l'application
   void stream() async {
-    Duration interval = Duration(milliseconds: 500);
+    Duration interval = Duration(milliseconds: 1000);
     Stream<int> stream = Stream<int>.periodic(interval);
     await for (int i in stream) {
       if (this.mounted) {
@@ -280,7 +294,7 @@ class mainPageEleveState extends State<mainPageEleve> {
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             hasConnection = true;
-            
+            refresh2();
           } else {
             hasConnection = false;
           }
@@ -323,6 +337,7 @@ class mainPageEleveState extends State<mainPageEleve> {
       return Scaffold(
         drawer: customDrawer(
           userData: userData,
+         
         ),
         appBar: AppBar(
           flexibleSpace: Container(
