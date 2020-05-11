@@ -469,6 +469,11 @@ class pageCommentaireState extends State<pageCommentaire> {
               onPressed: () {
                 Navigator.of(context).pop();
               }),
+          actions: <Widget>[IconButton(
+              icon: Icon(Icons.arrow_downward),
+              onPressed: () {
+                _scrollController.animateTo(_scrollController.position.maxScrollExtent,duration: Duration(milliseconds: 1000),curve: Curves.ease);
+              })],
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,6 +484,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                   opacity: 0.65,
                 )
               ]),
+              
         ),
         body: Container(
             color: Color(0xff141a24),

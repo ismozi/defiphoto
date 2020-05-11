@@ -272,7 +272,7 @@ class mainPageEleveState extends State<mainPageEleve> {
   }
 
   refresh2(){
-    if (ModalRoute.of(context).isCurrent) {
+    if (ModalRoute.of(context).isCurrent&&this.mounted) {
         setState(() {
           _getCommentaires().then((data) {
             _getQuestions().then((data) {
