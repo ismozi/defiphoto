@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
@@ -37,7 +36,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   int currentMessageLenght;
   int previousMessageLenght = 0;
 
-   Recording _recording = new Recording();
+  Recording _recording = new Recording();
   bool _isRecording = false;
   Random random = new Random();
   AudioPlayer audioPlayer = AudioPlayer();
@@ -98,7 +97,6 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
   }
 
-
   _enleverCommentaire(dynamic message) async {
     String id = message['_id'];
     var response =
@@ -109,25 +107,15 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   _makePatchRequest() async {
-  // set up PATCH request arguments
-  String questionId = questionData["questionId"];
-  String url = 'https://defiphoto-api.herokuapp.com/question/$questionId';
-  Map<String, bool> headers = {"Content-type": true};
-  var data = {
-        "isAns": 'true'
-      };
-  // make PATCH request
-  var response = await http.patch(url, body: data);
-  if (response.statusCode == 200 && this.mounted) {
+    String questionId = questionData["questionId"];
+    String url = 'https://defiphoto-api.herokuapp.com/question/$questionId';
+    Map<String, bool> body = {"isAns": true};
+
+    var response = await http.patch(url, body: body);
+    if (response.statusCode == 200 && this.mounted) {
       print(response.body);
     }
-  // {
-  //   "userId": 1,
-  //   "id": 1
-  //   "title": "Hello",
-  //   "body": "quia et suscipit\nsuscipit recusandae... (old body text not changed)",
-  // }
-}
+  }
 
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
     String filePath;
@@ -382,7 +370,9 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          _makePatchRequest();
+          if (!questionData['isAns']) {
+            _makePatchRequest();
+          }
           Timer(
               Duration(milliseconds: 1),
               () => _scrollController
@@ -402,7 +392,6 @@ class pageCommentaireState extends State<pageCommentaire> {
       ..fields['role'] = questionData["role"].toString()
       ..files.add(await http.MultipartFile.fromPath('commentFile', filePath));
     var res = await reponse.send();
-   
   }
 
   Future<Null> _refresh() async {
@@ -430,7 +419,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                   Duration(milliseconds: 1),
                   () => _scrollController
                       .jumpTo(_scrollController.position.maxScrollExtent));
-                previousMessageLenght=commentaires.length;      
+              previousMessageLenght = commentaires.length;
             }
           }
           questionData = ModalRoute.of(context).settings.arguments;
