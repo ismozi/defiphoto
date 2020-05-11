@@ -71,6 +71,9 @@ class customDrawer extends StatelessWidget {
             leading: Icon(Icons.message),
             title: Text('Questions de stage',style:TextStyle(fontFamily:'Arboria')),
             onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/questionsStage', arguments: userData)},
+            trailing: userData['nouvQuestion']?ClipOval(child:Material(
+                        color: Colors.cyan,
+                        child: SizedBox(width: 13, height: 13))):null,
           ),
           
             ListTile(
