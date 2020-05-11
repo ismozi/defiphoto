@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:medcorder_audio/medcorder_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
@@ -37,7 +36,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   int currentMessageLenght;
   int previousMessageLenght = 0;
 
-   Recording _recording = new Recording();
+  Recording _recording = new Recording();
   bool _isRecording = false;
   Random random = new Random();
   AudioPlayer audioPlayer = AudioPlayer();
@@ -97,7 +96,6 @@ class pageCommentaireState extends State<pageCommentaire> {
       _envoyerImage(recording.path);
     });
   }
-
 
   _enleverCommentaire(dynamic message) async {
     String id = message['_id'];
@@ -378,7 +376,9 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          _makePatchRequest();
+          if (!questionData['isAns']) {
+            _makePatchRequest();
+          }
           Timer(
               Duration(milliseconds: 1),
               () => _scrollController
@@ -398,7 +398,6 @@ class pageCommentaireState extends State<pageCommentaire> {
       ..fields['role'] = questionData["role"].toString()
       ..files.add(await http.MultipartFile.fromPath('commentFile', filePath));
     var res = await reponse.send();
-   
   }
 
   Future<Null> _refresh() async {
@@ -426,7 +425,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                   Duration(milliseconds: 1),
                   () => _scrollController
                       .jumpTo(_scrollController.position.maxScrollExtent));
-                previousMessageLenght=commentaires.length;      
+              previousMessageLenght = commentaires.length;
             }
           }
           questionData = ModalRoute.of(context).settings.arguments;
@@ -476,6 +475,11 @@ class pageCommentaireState extends State<pageCommentaire> {
               onPressed: () {
                 Navigator.of(context).pop();
               }),
+          actions: <Widget>[IconButton(
+              icon: Icon(Icons.arrow_downward),
+              onPressed: () {
+                _scrollController.animateTo(_scrollController.position.maxScrollExtent,duration: Duration(milliseconds: 1000),curve: Curves.ease);
+              })],
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -486,6 +490,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                   opacity: 0.65,
                 )
               ]),
+              
         ),
         body: Container(
             color: Color(0xff141a24),

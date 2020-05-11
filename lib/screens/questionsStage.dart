@@ -273,7 +273,7 @@ class questionStageState extends State<questionStage> {
                                                       ["sender"]) ??
                                               "",
                                       style: TextStyle(fontFamily: 'Arboria')),
-                              trailing: userData['role']=='S'&&!filteredQuestionTab[index]['isAns']?Row(
+                              trailing: (userData['role']=='S'&&userData['connection'])&&!filteredQuestionTab[index]['isAns']?Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
                                     VerticalDivider(thickness: 1.5),
