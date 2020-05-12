@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -52,6 +51,7 @@ class _LoginState extends State<Login> {
                     'role': userData["role"],
                     'profId': userData["profId"],
                     'stageName': userData['stageName'],
+                    'stageDesc' : userData['stageDesc'],
                     'yearDebut': userData['schoolYearBegin'],
                     'yearFin': userData['schoolYearEnd'],
                     'questionEleve': false,
@@ -220,7 +220,7 @@ class _LoginState extends State<Login> {
             'email': email,
             'role': role,
             'stageName': stageName,
-            'yearDebut': yearDebut,
+            'schoolYearBegin': yearDebut,
             'yearFin': yearFin,
             'questionEleve': false,
             'connection': false,

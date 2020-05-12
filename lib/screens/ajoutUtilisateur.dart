@@ -54,7 +54,6 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
         Navigator.of(context).pop();
         _isLoading = false;
       });
-    
   }
 
   @override
