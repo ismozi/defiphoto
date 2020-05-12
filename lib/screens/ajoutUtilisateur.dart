@@ -14,9 +14,9 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
   bool _isLoading = false;
   TextEditingController givenIdController = new TextEditingController();
   TextEditingController passwdController = new TextEditingController();
-  TextEditingController prenomController = new TextEditingController();
-  TextEditingController nomController = new TextEditingController();
-  TextEditingController courrielController = new TextEditingController();
+  TextEditingController firstNameController = new TextEditingController();
+  TextEditingController lastNameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
   TextEditingController stageController = new TextEditingController();
   TextEditingController stageDescController = new TextEditingController();
 
@@ -244,7 +244,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                 ],
                               ),
                               child: TextField(
-                                controller: courrielController,
+                                controller: emailController,
                                 style: new TextStyle(
                                     fontSize: 20, color: Colors.black),
                                 decoration: InputDecoration(
@@ -334,11 +334,11 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                           givenIdController.text
                                               .toString()
                                               .trim(),
-                                          prenomController.text
+                                          firstNameController.text
                                               .toString()
                                               .trim(),
-                                          nomController.text.toString().trim(),
-                                          courrielController.text
+                                          lastNameController.text.toString().trim(),
+                                          emailController.text
                                               .toString()
                                               .trim(),
                                           stageController.text

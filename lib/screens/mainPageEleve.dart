@@ -19,7 +19,7 @@ class mainPageEleveState extends State<mainPageEleve> {
   Map userData = {};
 
   //Variable de pourcentage pour chaque catégories
-  static int percentageM = 0,
+  int percentageM = 0,
       percentageE1 = 0,
       percentageT = 0,
       percentageI = 0,
@@ -125,6 +125,8 @@ class mainPageEleveState extends State<mainPageEleve> {
 
     
 
+    
+
     //Boucle for pour compter le nombre de question total de chq catégorie
     for (int z = 0; z < questions.length; z++) {
       if (questions[z]['type'] == 'M') {
@@ -200,6 +202,7 @@ class mainPageEleveState extends State<mainPageEleve> {
     setState(() {
       if (compteurMtot != 0)
         percentageM = (((compteurM.toDouble() / compteurMtot) * 100).toInt());
+        print("OUIIII");
       if (compteurEtot != 0)
         percentageE1 = (((compteurE.toDouble() / compteurEtot) * 100).toInt());
       if (compteurTtot != 0)
@@ -252,6 +255,14 @@ class mainPageEleveState extends State<mainPageEleve> {
       }
 
       print("COMPTEUR TOT: $compteurTOT");
+      print("M:$compteurMtot");
+      print("E:$compteurEtot");
+      print("T:$compteurTtot");
+      print("I:$compteurItot");
+      print("E:$compteurE1tot");
+      print("R:$compteurRtot");
+
+
 
       isLoading = false;
     });
@@ -277,7 +288,8 @@ class mainPageEleveState extends State<mainPageEleve> {
   }
 
   refresh2(){
-    if (ModalRoute.of(context).isCurrent&&this.mounted) {
+    if (this.mounted) {
+      if(ModalRoute.of(context).isCurrent){
         setState(() {
           _getCommentaires().then((data) {
             _getQuestions().then((data) {
@@ -285,6 +297,7 @@ class mainPageEleveState extends State<mainPageEleve> {
             });
           });
         });
+      }
       }
   }
 
