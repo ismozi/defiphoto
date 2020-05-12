@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:test_flutter/screens/pageCommentaire.dart';
 
-
 class Questions extends StatefulWidget {
   String idProf;
   String id;
@@ -126,7 +125,7 @@ class _QuestionsState extends State<Questions> {
                                         : "Prof",
                                     style: TextStyle(fontFamily: 'Arboria')),
                                 leading: Icon(
-                                  Icons.question_answer,
+                                  Icons.chat_bubble_outline,
                                   size: 40,
                                 ),
                                 contentPadding: EdgeInsets.all(20),
@@ -391,24 +390,25 @@ class creationQuestionGroupe extends StatefulWidget {
 
 class _creationQuestionGroupeState extends State<creationQuestionGroupe> {
   _envoyerQuestion(String text, String type) async {
-    for(int index=0;index<widget.idReceivers.length;index++){
-    if (text.trim().isNotEmpty) {
-      var data = {
-        "text": text.trim().toString(),
-        "sender": widget.idSender.toString(),
-        "recievers": widget.idReceivers[index].toString(),
-        "type": type.trim().toString()
-      };
-      try {
-        var response = await http
-            .post("https://defiphoto-api.herokuapp.com/questions", body: data);
-        if (response.statusCode == 200) {
-          print("Done!");
+    for (int index = 0; index < widget.idReceivers.length; index++) {
+      if (text.trim().isNotEmpty) {
+        var data = {
+          "text": text.trim().toString(),
+          "sender": widget.idSender.toString(),
+          "recievers": widget.idReceivers[index].toString(),
+          "type": type.trim().toString()
+        };
+        try {
+          var response = await http.post(
+              "https://defiphoto-api.herokuapp.com/questions",
+              body: data);
+          if (response.statusCode == 200) {
+            print("Done!");
+          }
+        } catch (e) {
+          if (e is SocketException) {}
         }
-      } catch (e) {
-        if (e is SocketException) {}
       }
-    }
     }
   }
 

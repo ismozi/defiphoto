@@ -273,6 +273,14 @@ class questionStageState extends State<questionStage> {
                                                       ["sender"]) ??
                                               "",
                                       style: TextStyle(fontFamily: 'Arboria')),
+                              leading: userData['role']=='P'&&userData['questionEleve'] ? Icon(
+                                  Icons.chat_bubble_outline,
+                                  size: 40,
+                                ):Icon(
+                                  Icons.comment,
+                                  color:Colors.grey[400],
+                                  size: 35,
+                                ),
                               trailing: (userData['role']=='S'&&userData['connection'])&&!filteredQuestionTab[index]['isAns']?Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: <Widget>[
