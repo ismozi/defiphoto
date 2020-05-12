@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -132,17 +131,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       topLeft: Radius.circular(20)),
                 ),
                 child:
-                    // isFileFound ?
-                    // Container(
-                    //   child:
-                    //   Column(
-                    //     children: [
-                    //       Image.network(url, width: 100,height: 100,) ??"",
-                    //       Text( "Sender : " +_getUsername(array[index]["sender"]), style: TextStyle(fontSize: 20, fontFamily:'Arboria' ),),
-                    //     ],
-                    //   ),
-                    // )
-                    // :
+        
                     ListTile(
                   title: Text(
                     isUser
@@ -162,7 +151,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                   array[index]["role"] +
                                   "  " +
                                   "ID : " +
-                                  array[index]["givenId"] ??
+                                  array[index]["givenId"] 
+                                   ??
                               ""
                           : isComment
                               ? isFileFound
@@ -202,7 +192,6 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                     if (isComment && isFileFound) {}
                     if (isComment && !isFileFound) {}
                     if (isQuestion) {}
-
                     if (isUser) {}
                   },
                   onLongPress: () {
@@ -290,6 +279,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       },
                     );
                   },
+                  
                 ),
               ));
         });
@@ -342,7 +332,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
           users.length > 1
               ? _getBody(_selectedIndex)
               : Center(
-                  child: Text("Il n'y pas d'étudiants",
+                  child: Text("Il n'y pas d'utilisateurs",
                       style: TextStyle(
                           color: Colors.blueGrey,
                           fontSize: 20,
