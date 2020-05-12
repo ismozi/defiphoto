@@ -64,6 +64,7 @@ class mainPageEleveState extends State<mainPageEleve> {
           commentaires = json.decode(response.body);
           print(prefs.getString('givenId'));
         }
+           isLoading = false;
       } catch (e) {
         if (e is SocketException) {
           isLoading = false;
@@ -85,6 +86,7 @@ class mainPageEleveState extends State<mainPageEleve> {
         if (response.statusCode == 200) {
           questions = json.decode(response.body);
         }
+         isLoading = false;
       } catch (e) {
         if (e is SocketException) {
           isLoading = false;
@@ -387,8 +389,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                           textAlign: TextAlign.center)),
                   SizedBox(height: 100)
                 ]))
-            : new RefreshIndicator(
-                child: Container(
+            :  Container(
                   color: Color(0xff141a24),
                   child: CustomScrollView(
                     slivers: <Widget>[
@@ -647,8 +648,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                       ),
                     ],
                   ),
-                ),
-                onRefresh: _refresh),
+                ) ?? Center(child:Text('Les pourcentages ne sont pas calculés')),
       );
     } else {
       return Scaffold(
