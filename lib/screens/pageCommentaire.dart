@@ -107,26 +107,21 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   _makePatchRequest() async {
-  // set up PATCH request arguments
+    if(questionData["isAns"]=false){
   String questionId = questionData["questionId"];
   String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
-  Map<String, bool> headers = {"Content-type": true};
   var data = 
     {
       "propName" : "isAns", "value" : "true"
-    }
-  ;
-  
+    };
   var response = await http.patch(url, body: data);
-  if (response.statusCode == 200 && this.mounted) {
-      print(response.body);
+  print(response.body);
     }
 }
 
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
     String filePath;
     String url;
-    Image alo;
     if (fromData) {
       filePath = message['fileName'];
       url = "https://defiphoto-api.herokuapp.com/comments/file/$filePath";
