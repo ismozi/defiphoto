@@ -109,7 +109,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                             SizedBox(
                               height: 15.0,
                             ),
-                            Container(
+                                Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -122,7 +122,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                 ],
                               ),
                               child: TextField(
-                                controller: givenIdController,
+                                controller: passwdController,
                                 style: new TextStyle(
                                     fontSize: 20, color: Colors.black),
                                 decoration: InputDecoration(
@@ -139,6 +139,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                             SizedBox(
                               height: 15.0,
                             ),
+
                             Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -152,18 +153,49 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                 ],
                               ),
                               child: TextField(
-                                controller: prenomController,
+                                controller: firstNameController,
                                 style: new TextStyle(
                                     fontSize: 20, color: Colors.black),
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person_pin_circle,
+                                      Icons.lock_outline,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
                                     hintText: "Prénom"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: lastNameController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Nom de famille"),
                               ),
                             ),
                             SizedBox(
@@ -182,18 +214,18 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                 ],
                               ),
                               child: TextField(
-                                controller: nomController,
+                                controller: emailController,
                                 style: new TextStyle(
                                     fontSize: 20, color: Colors.black),
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.person_add,
+                                      Icons.lock_outline,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "Nom"),
+                                    hintText: "email"),
                               ),
                             ),
                             SizedBox(
