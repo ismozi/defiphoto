@@ -56,7 +56,7 @@ class mainPageProfState extends State<mainPageProf> {
         "yearFin": users[i]["schoolYearEnd"],
         "colorSelect": Color(0xFF222b3b)
       };
-      if (users[i]["role"] == "S") {
+      if (users[i]["role"] == "S" && users[i]["profId"] == userData["givenId"] ) {
         eleveTab.add(eleve);
       }
     }
