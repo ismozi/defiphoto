@@ -111,9 +111,11 @@ class pageCommentaireState extends State<pageCommentaire> {
   String questionId = questionData["questionId"];
   String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
   var data = 
+  [
     {
       "propName" : "isAns", "value" : "true"
-    };
+    }
+    ];
   var response = await http.patch(url, body: data);
   print(response.body);
     }

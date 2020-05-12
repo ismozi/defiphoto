@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'customDrawer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -15,19 +17,51 @@ class profilEleveState extends State<profilEleve> {
   static String yearDebut;
   static String yearFin;
   static String mail;
+  static String schoolYearBegin;
+  static String schoolYearEnd;
+  static String stageDesc;
+  static String role;
+  static String profId;
+  var users;
 
 _setInfo(){
   idStudent=userData["givenId"];
-  print(idStudent);
   name=userData["firstName"];
   lastName=userData["lastName"];
-  stage=userData["stageName"];
   mail=userData["email"];
-  yearDebut=userData["yearDebut"];
-  yearFin = userData["yearFin"];
-
-
+  schoolYearBegin=userData["schoolYearBegin"];
+  schoolYearEnd = userData["schoolYearEnd"];
+  stage=userData["stageName"];
+  stageDesc=userData["stageDesc"];
+  role=userData["role"];
+  profId=userData["profId"];
 }
+
+_getUsers() async {
+      var response =
+          await http.get("https://defiphoto-api.herokuapp.com/users");
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          users = json.decode(response.body);
+        });
+      }
+   
+  }
+
+  _getUserName(String id) {
+    try{
+    String nameProf;
+      for(int i=0; i<users.length; i++){
+        if(id == users[i]['givenId']){
+          nameProf = users[i]['firstName'] + " " +users[i]['lastName'];
+        }
+    }
+    return nameProf;
+    }
+    catch(e){
+      return "";
+    }
+  }
 
 @override
   void initState() {
@@ -36,8 +70,8 @@ _setInfo(){
      Future.delayed(Duration(milliseconds: 100)).then((_) {
        setState(() {
            userData = ModalRoute.of(context).settings.arguments;   
-                
-       _setInfo();
+           _getUsers();       
+           _setInfo();
        });   
     });
   }
@@ -97,9 +131,8 @@ _setInfo(){
                             SizedBox(height: 10),
                             Text('ID',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                             SizedBox(height: 10),
-                            Text('$idStudent',
+                            Text('$idStudent'+" / " + "Prof : "+_getUserName(profId)??"",
                                 style: TextStyle(
-                                    
                                     letterSpacing: 2.0,
                                     fontSize: 22,
                                     fontFamily: 'Arboria')),
@@ -133,9 +166,8 @@ _setInfo(){
                               ],
                             ),
                             SizedBox(height: 10),
-                            Text('$stage',
+                            Text('$stage' +'\n' +'$stageDesc',
                                 style: TextStyle(
-                                    
                                     letterSpacing: 2.0,
                                     fontSize: 22,
                                     fontFamily: 'Arboria')),
@@ -147,13 +179,12 @@ _setInfo(){
                                   color: Colors.grey[400],
                                 ),
                                 Text(
-                                  'Année',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
+                                  'Année / Année de Stage',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                               ],
                             ),
                             SizedBox(height: 10),
                             Text('$yearDebut - $yearFin',
                                 style: TextStyle(
-                                   
                                     letterSpacing: 2.0,
                                     fontSize: 22,
                                     fontFamily: 'Arboria')),
