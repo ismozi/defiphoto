@@ -8,8 +8,9 @@ import 'package:test_flutter/screens/pageQuestion.dart';
 
 class customDrawer extends StatelessWidget {
   Map userData= {};
+  int nouveauMessage;
   
-  customDrawer({this.userData});
+  customDrawer({this.userData,this.nouveauMessage});
 
   Future<Null> logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -72,9 +73,14 @@ class customDrawer extends StatelessWidget {
             leading: Icon(Icons.message),
             title: Text('Questions de stage',style:TextStyle(fontFamily:'Arboria')),
             onTap: () => {Navigator.of(context).pop(),Navigator.of(context).pushNamed('/questionsStage', arguments: userData)},
-            trailing: userData['nouvQuestion']?ClipOval(child:Material(
+            trailing: userData['nouvQuestion']&&nouveauMessage>0?ClipOval(child:Material(
                         color: Colors.cyan,
-                        child: SizedBox(width: 13, height: 13))):null,
+                        child: SizedBox(width: 20, height: 20,child: Center(
+                                        child: Text('$nouveauMessage',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                fontFamily: 'Arboria')),
+                                      )))):null,
           ),
           
             ListTile(

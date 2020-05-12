@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 
 class mainPageEleve extends StatefulWidget {
-  
   mainPageEleveState createState() => new mainPageEleveState();
 }
 
@@ -39,19 +38,18 @@ class mainPageEleveState extends State<mainPageEleve> {
       compteurTOT;
 
   //Pourcentage total
-  int percTot=0;
+  int percTot = 0;
 
   //Listes et Map pour stocker les commentaire et questions
   Map questionData = {};
   List commentaires = [{}];
   List questions = [{}];
   List commentairesMe = [{}];
-  
 
   bool isLoading = true;
   bool hasConnection;
-  
-  
+
+  int nouvMessages;
 
   //Appel à l'api pour obtenir tout les commentaires
   _getCommentaires() async {
@@ -122,10 +120,6 @@ class mainPageEleveState extends State<mainPageEleve> {
     compteurE1tot = 0;
     compteurRtot = 0;
     compteurTOT = 0;
-
-    
-
-    
 
     //Boucle for pour compter le nombre de question total de chq catégorie
     for (int z = 0; z < questions.length; z++) {
@@ -202,7 +196,7 @@ class mainPageEleveState extends State<mainPageEleve> {
     setState(() {
       if (compteurMtot != 0)
         percentageM = (((compteurM.toDouble() / compteurMtot) * 100).toInt());
-        print("OUIIII");
+      print("OUIIII");
       if (compteurEtot != 0)
         percentageE1 = (((compteurE.toDouble() / compteurEtot) * 100).toInt());
       if (compteurTtot != 0)
@@ -222,18 +216,25 @@ class mainPageEleveState extends State<mainPageEleve> {
           compteurE1tot +
           compteurRtot;
 
-      if(compteurTOT!=0){
-      percTot = ((compteurM.toDouble() +
-                  compteurE.toDouble() +
-                  compteurT.toDouble() +
-                  compteurI.toDouble() +
-                  compteurE1.toDouble() +
-                  compteurR.toDouble()) /
-              (compteurTOT) *
-              100)
-          .round();
-          }
-          
+      if (compteurTOT != 0) {
+        percTot = ((compteurM.toDouble() +
+                    compteurE.toDouble() +
+                    compteurT.toDouble() +
+                    compteurI.toDouble() +
+                    compteurE1.toDouble() +
+                    compteurR.toDouble()) /
+                (compteurTOT) *
+                100)
+            .round();
+      }
+
+      nouvMessages = compteurTOT -
+          (compteurM +
+              compteurE +
+              compteurT +
+              compteurI +
+              compteurE1 +
+              compteurR);
 
       if (percTot != 100) {
         setState(() {
@@ -262,8 +263,6 @@ class mainPageEleveState extends State<mainPageEleve> {
       print("E:$compteurE1tot");
       print("R:$compteurRtot");
 
-
-
       isLoading = false;
     });
   }
@@ -287,9 +286,9 @@ class mainPageEleveState extends State<mainPageEleve> {
     return null;
   }
 
-  refresh2(){
+  refresh2() {
     if (this.mounted) {
-      if(ModalRoute.of(context).isCurrent){
+      if (ModalRoute.of(context).isCurrent) {
         setState(() {
           _getCommentaires().then((data) {
             _getQuestions().then((data) {
@@ -298,7 +297,7 @@ class mainPageEleveState extends State<mainPageEleve> {
           });
         });
       }
-      }
+    }
   }
 
   //Méthode du stream que permet de vérifier si il y a une connexion internet et couvre toute
@@ -355,7 +354,7 @@ class mainPageEleveState extends State<mainPageEleve> {
       return Scaffold(
         drawer: customDrawer(
           userData: userData,
-         
+          nouveauMessage: nouvMessages,
         ),
         appBar: AppBar(
           flexibleSpace: Container(
@@ -447,13 +446,22 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
+                                        compteurMtot!=0?
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageM!=0?percentageM / 100:0,
+                                          percent: percentageM != 0
+                                              ? percentageM / 100
+                                              : 0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
-                                        ),
+                                        ): Text(
+                                                "Il n'y a pas de questions",
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 19.0,
+                                                    fontFamily: 'Arboria'),
+                                              ),
                                         Text(
                                           '$percentageM%',
                                           style: TextStyle(
@@ -480,13 +488,22 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
+                                        compteurEtot!=0?
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageE1!=0?percentageE1 / 100:0,
+                                          percent: percentageE1 != 0
+                                              ? percentageE1 / 100
+                                              : 0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
-                                        ),
+                                        ): Text(
+                                                "Il n'y a pas de questions",
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 19.0,
+                                                    fontFamily: 'Arboria'),
+                                              ),
                                         Text(
                                           '$percentageE1%',
                                           style: TextStyle(
@@ -511,13 +528,24 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
-                                        LinearPercentIndicator(
-                                          width: 230.0,
-                                          lineHeight: 14.0,
-                                          percent: percentageT!=0?percentageT / 100:0,
-                                          backgroundColor: Colors.grey[300],
-                                          progressColor: Colors.blueGrey,
-                                        ),
+                                        compteurTtot != 0
+                                            ? LinearPercentIndicator(
+                                                width: 230.0,
+                                                lineHeight: 14.0,
+                                                percent: percentageT != 0
+                                                    ? percentageT / 100
+                                                    : 0,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                progressColor: Colors.blueGrey,
+                                              )
+                                            : Text(
+                                                "Il n'y a pas de questions",
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 19.0,
+                                                    fontFamily: 'Arboria'),
+                                              ),
                                         Text(
                                           '$percentageT%',
                                           style: TextStyle(
@@ -542,13 +570,22 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
+                                        compteurItot!=0?
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageI!=0?percentageI / 100:0,
+                                          percent: percentageI != 0
+                                              ? percentageI / 100
+                                              : 0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
-                                        ),
+                                        ): Text(
+                                                "Il n'y a pas de questions",
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 19.0,
+                                                    fontFamily: 'Arboria'),
+                                              ),
                                         Text(
                                           '$percentageI%',
                                           style: TextStyle(
@@ -573,13 +610,22 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
+                                        compteurE1tot!=0?
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageE2!=0?percentageE2 / 100:0,
+                                          percent: percentageE2 != 0
+                                              ? percentageE2 / 100
+                                              : 0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
-                                        ),
+                                        ): Text(
+                                                "Il n'y a pas de questions",
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 19.0,
+                                                    fontFamily: 'Arboria'),
+                                              ),
                                         Text(
                                           '$percentageE2%',
                                           style: TextStyle(
@@ -604,13 +650,22 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
+                                        compteurRtot!=0?
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageR!=0?percentageR / 100:0,
+                                          percent: percentageR != 0
+                                              ? percentageR / 100
+                                              : 0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
-                                        ),
+                                        ): Text(
+                                                "Il n'y a pas de questions",
+                                                style: TextStyle(
+                                                    color: Colors.blueGrey,
+                                                    fontSize: 19.0,
+                                                    fontFamily: 'Arboria'),
+                                              ),
                                         Text(
                                           '$percentageR%',
                                           style: TextStyle(
@@ -643,7 +698,8 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         radius: 175.0,
                                         progressColor: Colors.blueGrey,
                                         backgroundColor: Colors.grey[300],
-                                        percent: percTot!=0?percTot / 100:0,
+                                        percent:
+                                            percTot != 0 ? percTot / 100 : 0,
                                         animation: true,
                                         lineWidth: 30.0,
                                         center: Text(
