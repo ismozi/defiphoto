@@ -14,44 +14,47 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
   bool _isLoading = false;
   TextEditingController givenIdController = new TextEditingController();
   TextEditingController passwdController = new TextEditingController();
-  TextEditingController prenomController = new TextEditingController();
-  TextEditingController nomController = new TextEditingController();
-  TextEditingController courrielController = new TextEditingController();
-  TextEditingController stageController = new TextEditingController();
+  TextEditingController firstNameController = new TextEditingController();
+  TextEditingController lastNameController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController stageNameController = new TextEditingController();
   TextEditingController stageDescController = new TextEditingController();
+  TextEditingController schoolYearBeginController = new TextEditingController();
+  TextEditingController schoolYearEndController = new TextEditingController();
+  TextEditingController stageBeginController = new TextEditingController();
+  TextEditingController stageEndController = new TextEditingController();
+  TextEditingController roleController = new TextEditingController();
+  TextEditingController profIdController = new TextEditingController();
+
 
   void signUp(String id, String prenom, String nom, String courriel,
-      String stage, String stageDesc) async {
-    String passwd = 'oui123';
-    String role = 'S';
-    String debut = '2019';
-    String fin = '2020';
-
-    print(id.trim().toString());
-    print(prenom.trim().toString());
-    print(nom.trim().toString());
-    print(courriel.trim().toString());
-    print(stage.trim().toString());
-    print(stageDesc.trim().toString());
+      String passwd, String role, String profId, String schoolYearBegin, String schoolYearEnd, String stageName, String stageDesc, 
+      String stageBegin, String stageEnd) async {
 
     var data = {
-      "givenId": id.trim().toString(),
-      "firstName": prenom.trim().toString(),
-      "lastName": nom.trim().toString(),
-      "email": courriel.trim().toString(),
-      "password": passwd.trim().toString(),
-      "role": role.trim().toString(),
+      "givenId": id,
+      "firstName": prenom,
+      "lastName": nom,
+      "email": courriel,
+      "password": passwd,
+      "role": role,
+      "profId" : profId,
+      "schoolYearBegin" : schoolYearBegin,
+      "schoolYearEnd" : schoolYearEnd,
+      "stageName" : stageName,
+       "stageDesc" : stageDesc,
+       "stageBegin" : stageBegin,
+       "stageEnd" : stageEnd
     };
 
-    var response = await http.post("https://defiphoto-api.herokuapp.com/users/signup",
-        body: data);
-    if (response.statusCode == 200) {
+    var response = await http.post("https://defiphoto-api.herokuapp.com/users/signup",body: data);
+   
       print("Done!");
       setState(() {
         Navigator.of(context).pop();
         _isLoading = false;
       });
-    }
+    
   }
 
   @override
@@ -109,37 +112,6 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                             SizedBox(
                               height: 15.0,
                             ),
-                                Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(0, 3),
-                                      blurRadius: 5,
-                                      color: Colors.black)
-                                ],
-                              ),
-                              child: TextField(
-                                controller: passwdController,
-                                style: new TextStyle(
-                                    fontSize: 20, color: Colors.black),
-                                decoration: InputDecoration(
-                                    hintStyle: TextStyle(
-                                        fontSize: 20.0, color: Colors.grey),
-                                    prefixIcon: Icon(
-                                      Icons.lock_outline,
-                                      color: Colors.grey,
-                                    ),
-                                    border: InputBorder.none,
-                                    hintText: "Mot-de-passe"),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 15.0,
-                            ),
-
                             Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -225,12 +197,13 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "email"),
+                                    hintText: "E-mail"),
                               ),
                             ),
                             SizedBox(
                               height: 15.0,
                             ),
+                            
                             Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -244,18 +217,18 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                 ],
                               ),
                               child: TextField(
-                                controller: courrielController,
+                                controller: passwdController,
                                 style: new TextStyle(
                                     fontSize: 20, color: Colors.black),
                                 decoration: InputDecoration(
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.mail_outline,
+                                      Icons.lock_outline,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "Adresse courriel"),
+                                    hintText: "Mot-de-Passe"),
                               ),
                             ),
                             SizedBox(
@@ -274,7 +247,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                 ],
                               ),
                               child: TextField(
-                                controller: stageController,
+                                controller: roleController,
                                 style: new TextStyle(
                                     fontSize: 20, color: Colors.black),
                                 decoration: InputDecoration(
@@ -285,13 +258,135 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "Nom de stage"),
+                                    hintText: "Role : S (élève) ou P (prof) ou A (admin)"),
                               ),
                             ),
                             SizedBox(
                               height: 15.0,
                             ),
                             Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: profIdController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.description,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Le ID du prof responsable"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: schoolYearBeginController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Date du début de l'année : j/m/a"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            
+                            Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: schoolYearEndController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Date du fin de l'année"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                             Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: stageNameController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Nom du stage"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                             Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -311,44 +406,122 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     hintStyle: TextStyle(
                                         fontSize: 20.0, color: Colors.grey),
                                     prefixIcon: Icon(
-                                      Icons.description,
+                                      Icons.lock_outline,
                                       color: Colors.grey,
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "Description de stage"),
+                                    hintText: "Description du stage"),
                               ),
                             ),
                             SizedBox(
                               height: 15.0,
                             ),
+                             Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: stageBeginController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Date du début du stage"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                             Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                      offset: Offset(0, 3),
+                                      blurRadius: 5,
+                                      color: Colors.black)
+                                ],
+                              ),
+                              child: TextField(
+                                controller: stageEndController,
+                                style: new TextStyle(
+                                    fontSize: 20, color: Colors.black),
+                                decoration: InputDecoration(
+                                    hintStyle: TextStyle(
+                                        fontSize: 20.0, color: Colors.grey),
+                                    prefixIcon: Icon(
+                                      Icons.lock_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Date du fin du stage"),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15.0,
+                            ),
+                            
                             Container(
                               padding: EdgeInsets.symmetric(vertical: 25.0),
                               width: double.infinity,
                               child: RaisedButton(
                                 elevation: 5.0,
                                 onPressed: () {
-                                  _isLoading = true;
-                                  setState(() {
                                     setState(() {
+                                      _isLoading = true;
                                       signUp(
                                           givenIdController.text
                                               .toString()
                                               .trim(),
-                                          prenomController.text
+                                          firstNameController.text
                                               .toString()
                                               .trim(),
-                                          nomController.text.toString().trim(),
-                                          courrielController.text
+                                          lastNameController.text.toString().trim(),
+                                          emailController.text
                                               .toString()
                                               .trim(),
-                                          stageController.text
+                                          passwdController.text
+                                              .toString()
+                                              .trim(),
+                                          roleController.text
+                                              .toString()
+                                              .trim(),
+                                              profIdController.text
+                                              .toString()
+                                              .trim(),
+                                          schoolYearBeginController.text
+                                              .toString()
+                                              .trim(),
+                                          schoolYearEndController.text.toString().trim(),
+                                          stageNameController.text
                                               .toString()
                                               .trim(),
                                           stageDescController.text
                                               .toString()
+                                              .trim(),
+                                          stageBeginController.text
+                                              .toString()
+                                              .trim(),
+                                              stageEndController.text
+                                              .toString()
                                               .trim());
                                     });
-                                  });
                                 },
                                 padding: EdgeInsets.all(12.0),
                                 shape: RoundedRectangleBorder(
