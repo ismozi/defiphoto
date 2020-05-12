@@ -39,7 +39,7 @@ class mainPageEleveState extends State<mainPageEleve> {
       compteurTOT;
 
   //Pourcentage total
-  int percTot;
+  int percTot=0;
 
   //Listes et Map pour stocker les commentaire et questions
   Map questionData = {};
@@ -64,7 +64,6 @@ class mainPageEleveState extends State<mainPageEleve> {
           commentaires = json.decode(response.body);
           print(prefs.getString('givenId'));
         }
-           isLoading = false;
       } catch (e) {
         if (e is SocketException) {
           isLoading = false;
@@ -86,7 +85,6 @@ class mainPageEleveState extends State<mainPageEleve> {
         if (response.statusCode == 200) {
           questions = json.decode(response.body);
         }
-         isLoading = false;
       } catch (e) {
         if (e is SocketException) {
           isLoading = false;
@@ -124,6 +122,8 @@ class mainPageEleveState extends State<mainPageEleve> {
     compteurE1tot = 0;
     compteurRtot = 0;
     compteurTOT = 0;
+
+    
 
     //Boucle for pour compter le nombre de question total de chq catégorie
     for (int z = 0; z < questions.length; z++) {
@@ -219,6 +219,7 @@ class mainPageEleveState extends State<mainPageEleve> {
           compteurE1tot +
           compteurRtot;
 
+      if(compteurTOT!=0){
       percTot = ((compteurM.toDouble() +
                   compteurE.toDouble() +
                   compteurT.toDouble() +
@@ -228,6 +229,8 @@ class mainPageEleveState extends State<mainPageEleve> {
               (compteurTOT) *
               100)
           .round();
+          }
+          
 
       if (percTot != 100) {
         setState(() {
@@ -389,7 +392,8 @@ class mainPageEleveState extends State<mainPageEleve> {
                           textAlign: TextAlign.center)),
                   SizedBox(height: 100)
                 ]))
-            :  Container(
+            : new RefreshIndicator(
+                child: Container(
                   color: Color(0xff141a24),
                   child: CustomScrollView(
                     slivers: <Widget>[
@@ -433,7 +437,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageM / 100,
+                                          percent: percentageM!=0?percentageM / 100:0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
                                         ),
@@ -466,7 +470,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageE1 / 100,
+                                          percent: percentageE1!=0?percentageE1 / 100:0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
                                         ),
@@ -497,7 +501,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageT / 100,
+                                          percent: percentageT!=0?percentageT / 100:0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
                                         ),
@@ -528,7 +532,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageI / 100,
+                                          percent: percentageI!=0?percentageI / 100:0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
                                         ),
@@ -559,7 +563,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageE2 / 100,
+                                          percent: percentageE2!=0?percentageE2 / 100:0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
                                         ),
@@ -590,7 +594,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         LinearPercentIndicator(
                                           width: 230.0,
                                           lineHeight: 14.0,
-                                          percent: percentageR / 100,
+                                          percent: percentageR!=0?percentageR / 100:0,
                                           backgroundColor: Colors.grey[300],
                                           progressColor: Colors.blueGrey,
                                         ),
@@ -626,7 +630,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                         radius: 175.0,
                                         progressColor: Colors.blueGrey,
                                         backgroundColor: Colors.grey[300],
-                                        percent: percTot / 100,
+                                        percent: percTot!=0?percTot / 100:0,
                                         animation: true,
                                         lineWidth: 30.0,
                                         center: Text(
@@ -648,7 +652,8 @@ class mainPageEleveState extends State<mainPageEleve> {
                       ),
                     ],
                   ),
-                ) ?? Center(child:Text('Les pourcentages ne sont pas calculés')),
+                ),
+                onRefresh: _refresh),
       );
     } else {
       return Scaffold(
