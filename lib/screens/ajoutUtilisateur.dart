@@ -91,7 +91,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                 : ListView(
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.fromLTRB(15, 8, 15, 15),
+                          padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -101,8 +101,9 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                   child: Text(
                                     "Quel est le type dutilisateur ?",
                                     style: TextStyle(
+                                      color: Colors.grey[400],
                                       fontFamily: 'Arboria',
-                                      fontSize: 20,
+                                      fontSize: 22,
                                     ),
                                   ),
                                 ),
@@ -120,13 +121,13 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                       ],
                                     ),
                                     child: Column(children: [
-                                      Text(
-                                          " Étudiant        Professeur        Admin  ",
-                                          style: TextStyle(
-                                              fontFamily: 'Arboria',
-                                              fontSize: 16)),
-                                      Row(children: [
-                                        SizedBox(width: 28),
+                        
+                                      Row(mainAxisAlignment:MainAxisAlignment.spaceEvenly ,children: [
+                                        Column(children: <Widget>[
+                                          Text("Étudiant",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 17)),
                                         Radio(
                                           value: 0,
                                           groupValue: _indexType,
@@ -138,8 +139,12 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
 
                                             });
                                           },
-                                        ),
-                                        SizedBox(width: 62),
+                                        )],),
+                                        Column(children: <Widget>[
+                                          Text("Enseignant",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 17)),
                                         Radio(
                                           value: 1,
                                           groupValue: _indexType,
@@ -149,8 +154,12 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                               print(types[_indexType].toString().trim());
                                             });
                                           },
-                                        ),
-                                        SizedBox(width: 53),
+                                        ),],),
+                                        Column(children: <Widget>[
+                                          Text("Admin",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 17)),
                                         Radio(
                                           value: 2,
                                           groupValue: _indexType,
@@ -161,9 +170,20 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                             });
                                           },
                                         ),
-                                      ])
+                                      ])],)
                                     ])),
                                 SizedBox(
+                                  height: 20,
+                                ),
+                                Text(
+                                    "Information sur l'utilisateur :",
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontFamily: 'Arboria',
+                                      fontSize: 22,
+                                    ),
+                                  ),
+                                  SizedBox(
                                   height: 20,
                                 ),
                                 Container(

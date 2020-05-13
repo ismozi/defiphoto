@@ -10,27 +10,28 @@ class profilEleve extends StatefulWidget {
 
 class profilEleveState extends State<profilEleve> {
   Map userData  = {};
-  static String idStudent;
-  static String name;
-  static String lastName;
-  static String stage;
-  static String yearDebut;
-  static String yearFin;
-  static String mail;
-  static String schoolYearBegin;
-  static String schoolYearEnd;
-  static String stageDesc;
-  static String role;
-  static String profId;
-  var users;
+   String idStudent;
+   String name;
+   String lastName;
+   String stage;
+   String yearDebut;
+   String yearFin;
+   String mail;
+   String schoolYearBegin;
+   String schoolYearEnd;
+   String stageDesc;
+   String role;
+   String profId;
+  
+   var users;
 
 _setInfo(){
   idStudent=userData["givenId"];
   name=userData["firstName"];
   lastName=userData["lastName"];
   mail=userData["email"];
-  schoolYearBegin=userData["schoolYearBegin"];
-  schoolYearEnd = userData["schoolYearEnd"];
+  schoolYearBegin=userData["yearDebut"];
+  schoolYearEnd = userData["yearFin"];
   stage=userData["stageName"];
   stageDesc=userData["stageDesc"];
   role=userData["role"];
@@ -131,6 +132,7 @@ _getUsers() async {
                             SizedBox(height: 10),
                             Text('ID',style:TextStyle(letterSpacing: 2.0,fontFamily:'Arboria',color:Colors.grey)),
                             SizedBox(height: 10),
+                            
                             Text('$idStudent'+" / " + "Prof : "+_getUserName(profId)??"",
                                 style: TextStyle(
                                     letterSpacing: 2.0,
@@ -183,7 +185,7 @@ _getUsers() async {
                               ],
                             ),
                             SizedBox(height: 10),
-                            Text('$yearDebut - $yearFin',
+                            Text('$schoolYearBegin - $schoolYearEnd',
                                 style: TextStyle(
                                     letterSpacing: 2.0,
                                     fontSize: 22,

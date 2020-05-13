@@ -271,67 +271,115 @@ class _creationQuestionState extends State<creationQuestion> {
                           ],
                         ),
                         child: Column(children: [
-                          Text(" M     É     T     I     E    R  ",
-                              style: TextStyle(
-                                  fontFamily: 'Arboria', fontSize: 25)),
-                          Row(children: [
-                            SizedBox(width: 5),
-                            Radio(
-                              value: 0,
-                              groupValue: _indexType,
-                              onChanged: (T) {
-                                setState(() {
-                                  _indexType = T;
-                                });
-                              },
-                            ),
-                            Radio(
-                              value: 1,
-                              groupValue: _indexType,
-                              onChanged: (T) {
-                                setState(() {
-                                  _indexType = T;
-                                });
-                              },
-                            ),
-                            Radio(
-                              value: 2,
-                              groupValue: _indexType,
-                              onChanged: (T) {
-                                setState(() {
-                                  _indexType = T;
-                                });
-                              },
-                            ),
-                            Radio(
-                              value: 3,
-                              groupValue: _indexType,
-                              onChanged: (T) {
-                                setState(() {
-                                  print(T);
-                                  _indexType = T;
-                                });
-                              },
-                            ),
-                            Radio(
-                              value: 4,
-                              groupValue: _indexType,
-                              onChanged: (T) {
-                                setState(() {
-                                  _indexType = T;
-                                });
-                              },
-                            ),
-                            Radio(
-                              value: 5,
-                              groupValue: _indexType,
-                              onChanged: (T) {
-                                setState(() {
-                                  _indexType = T;
-                                });
-                              },
-                            ),
-                          ])
+                          Padding(
+                              padding: EdgeInsets.all(7.0),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Column(
+                                      children: <Widget>[
+                                        Text("M",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 25)),
+                                        Radio(
+                                          value: 0,
+                                          groupValue: _indexType,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              _indexType = T;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Text("É",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 25)),
+                                        Radio(
+                                          value: 1,
+                                          groupValue: _indexType,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              _indexType = T;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Text("T",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 25)),
+                                        Radio(
+                                          value: 2,
+                                          groupValue: _indexType,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              _indexType = T;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Text("I",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 25)),
+                                        Radio(
+                                          value: 3,
+                                          groupValue: _indexType,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              _indexType = T;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Text("E",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 25)),
+                                        Radio(
+                                          value: 4,
+                                          groupValue: _indexType,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              _indexType = T;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: <Widget>[
+                                        Text("R",
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria',
+                                                fontSize: 25)),
+                                        Radio(
+                                          value: 5,
+                                          groupValue: _indexType,
+                                          onChanged: (T) {
+                                            setState(() {
+                                              _indexType = T;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  ]))
                         ])),
                     SizedBox(
                       height: 10.0,

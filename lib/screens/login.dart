@@ -8,20 +8,25 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//Classe de la page de connexion
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+  //Variables booléenne responsable des loading
   bool isLoading1 = true;
-
   bool _isLoading = false;
+
+  //Controllers pour les TextFields
   TextEditingController givenId = new TextEditingController();
   TextEditingController passwd = new TextEditingController();
 
+  //Variable booléenne qui défini si l'appareil a accès à internet
   bool _hasNetworkConnection;
 
+  //Fonction de base qui connecte l'utilisateur 
   void signIn(String id, String password) async {
     var response;
     var data = {
@@ -56,7 +61,8 @@ class _LoginState extends State<Login> {
                     'yearFin': userData['schoolYearEnd'],
                     'questionEleve': false,
                     'connection': _hasNetworkConnection,
-                    'nouvQuestion': false
+                    'nouvQuestion': false,
+                    'isTeacher':false
                   });
             }
             if (userData["role"] == "A") {
@@ -89,7 +95,8 @@ class _LoginState extends State<Login> {
             print(userData['profId']);
           });
         }
-      } else {
+      }//Message d'erreur s'il les informations sont mauvaises
+      else {
         return showDialog<void>(
           context: context,
           barrierDismissible: false,
@@ -122,6 +129,7 @@ class _LoginState extends State<Login> {
           },
         );
       }
+      //Message d'erreur s'il n'y a pas de connexion 
     } catch (e, stackTrace) {
       if (e is SocketException) {
         return showDialog<void>(
@@ -160,6 +168,7 @@ class _LoginState extends State<Login> {
     }
   }
 
+  //Fonction init pour qui est appelé en premier de tout
   @override
   void initState() {
     super.initState();
@@ -169,7 +178,8 @@ class _LoginState extends State<Login> {
     _updateConnectivity();
     print("allo");
   }
-
+  
+  //Fonction qui vérifie s'il y a une connexion internet
   void _updateConnectivity() async {
     if (this.mounted) {
       try {
@@ -193,7 +203,8 @@ class _LoginState extends State<Login> {
       }
     }
   }
-
+  
+  //Fonction qui permet de connecter automatiquement
   void autoLogIn() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String userId = prefs.getString('givenId');
@@ -224,7 +235,8 @@ class _LoginState extends State<Login> {
             'yearFin': yearFin,
             'questionEleve': false,
             'connection': false,
-            'nouvQuestion': false
+            'nouvQuestion': false,
+            'isTeacher':false
           });
         });
       }
@@ -263,7 +275,8 @@ class _LoginState extends State<Login> {
       }
     }
   }
-
+  
+  //Fonction qui enregistre les informations dans le téléphone lors de la connexion
   Future<Null> loginUser(var userData, String password) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('givenId', userData["givenId"]);
@@ -277,6 +290,7 @@ class _LoginState extends State<Login> {
     prefs.setString('yearFin', userData["schoolYearEnd"]);
   }
 
+  //Fonction qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(
