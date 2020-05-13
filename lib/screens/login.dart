@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //Classe de la page de connexion
 class Login extends StatefulWidget {
@@ -18,6 +19,8 @@ class _LoginState extends State<Login> {
   //Variables booléenne responsable des loading
   bool isLoading1 = true;
   bool _isLoading = false;
+
+  Map<PermissionGroup, PermissionStatus> permissions;
 
   //Controllers pour les TextFields
   TextEditingController givenId = new TextEditingController();
@@ -168,10 +171,18 @@ class _LoginState extends State<Login> {
     }
   }
 
+  void getPermission() async {
+    permissions = await PermissionHandler().requestPermissions([
+      PermissionGroup.storage,
+      PermissionGroup.microphone,
+    ]);
+  }
+
   //Fonction init pour qui est appelé en premier de tout
   @override
   void initState() {
     super.initState();
+    getPermission();
 
     _hasNetworkConnection = false;
 
