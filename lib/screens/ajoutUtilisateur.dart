@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -30,6 +31,8 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
   List<String> types = ["S", "P", "A"];
 
   DateTime selectedDate = DateTime.now();
+
+  bool isValid=false;
 
   void signUp(
       String id,
@@ -618,6 +621,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                   child: RaisedButton(
                                     elevation: 5.0,
                                     onPressed: () {
+                                      isValid = EmailValidator.validate(emailController.text.toString());
                                       if (givenIdController.text.isEmpty ||
                                           firstNameController.text.isEmpty ||
                                           lastNameController.text.isEmpty ||
@@ -670,7 +674,47 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                             );
                                           },
                                         );
-                                      } else {
+                                      } else if (!isValid) {
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Avertissement',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria')),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        'Vous devez entrer une adresse courriel valide',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Arboria')),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Arboria')),
+                                                  onPressed: () {
+                                                    if (this.mounted) {
+                                                      setState(() {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                      else if (isValid){
                                         setState(() {
                                           _isLoading = true;
                                           signUp(
@@ -982,6 +1026,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                   child: RaisedButton(
                                     elevation: 5.0,
                                     onPressed: () {
+                                      isValid = EmailValidator.validate(emailController.text.toString());
                                       if (givenIdController.text.isEmpty ||
                                           firstNameController.text.isEmpty ||
                                           lastNameController.text.isEmpty ||
@@ -1029,7 +1074,47 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                             );
                                           },
                                         );
-                                      } else {
+                                      } else if (!isValid) {
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Avertissement',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria')),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        'Vous devez entrer une adresse courriel valide',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Arboria')),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Arboria')),
+                                                  onPressed: () {
+                                                    if (this.mounted) {
+                                                      setState(() {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                      else if (isValid){
                                         setState(() {
                                           _isLoading = true;
                                           signUp(
