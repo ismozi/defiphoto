@@ -979,7 +979,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                           ),
                                           border: InputBorder.none,
                                           hintText:
-                                              "Date du début de l'année : j/m/a"),
+                                              "Date du début de l'année"),
                                       onTap: () => {
                                             _selectDate(context,
                                                 schoolYearBeginController)
@@ -1013,7 +1013,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
-                                        hintText: "Date du fin de l'année"),
+                                        hintText: "Date de la fin de l'année"),
                                     onTap: () => {
                                       _selectDate(
                                           context, schoolYearEndController)

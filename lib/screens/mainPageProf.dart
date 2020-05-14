@@ -119,7 +119,7 @@ class mainPageProfState extends State<mainPageProf> {
     setState(() {
       print(value);
       filteredEleveTab = eleveTab
-          .where((questionSection) => questionSection["firstName"]
+          .where((eleveTab) => eleveTab["firstName"]
               .toLowerCase()
               .contains(value.toLowerCase()))
           .toList();
