@@ -116,7 +116,7 @@ class questionStageState extends State<questionStage> {
       if (response.statusCode == 200 && this.mounted) {
         setState(() {
           questions = json.decode(response.body);
-          _save();
+          if(userData['role']=='S')_save();
           isLoading = false;
         });
       }

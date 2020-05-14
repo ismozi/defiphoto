@@ -62,10 +62,13 @@ class _LoginState extends State<Login> {
                     'stageDesc' : userData['stageDesc'],
                     'yearDebut': userData['schoolYearBegin'],
                     'yearFin': userData['schoolYearEnd'],
+                    'stageDebut': userData['stageBegin'],
+                    'stageFin' : userData['stageEnd'],
                     'questionEleve': false,
                     'connection': _hasNetworkConnection,
                     'nouvQuestion': false,
-                    'isTeacher':false
+                    'isTeacher':false,
+                    'nomProf':null
                   });
             }
             if (userData["role"] == "A") {

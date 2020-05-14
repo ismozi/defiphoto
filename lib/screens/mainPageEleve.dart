@@ -46,6 +46,9 @@ class mainPageEleveState extends State<mainPageEleve> {
   List questions = [{}];
   List commentairesMe = [{}];
 
+  var users;
+  
+
   bool isLoading = true;
   bool hasConnection;
 
@@ -236,23 +239,9 @@ class mainPageEleveState extends State<mainPageEleve> {
               compteurE1 +
               compteurR);
 
-      if (percTot != 100 && !userData['isTeacher']) {
+      if (percTot != 100 && !userData['isTeacher'] && userData['connection']) {
         setState(() {
-          userData = {
-            'givenId': userData["givenId"],
-            'firstName': userData["firstName"],
-            'lastName': userData["lastName"],
-            'email': userData["email"],
-            'role': userData["role"],
-            'profId': userData["profId"],
-            'stageName': userData['stageName'],
-            'yearDebut': userData['schoolYearBegin'],
-            'yearFin': userData['schoolYearEnd'],
-            'questionEleve': false,
-            'connection': userData['connection'],
-            'nouvQuestion': true,
-            'isTeacher': false
-          };
+          userData['nouvQuestion']=true; 
         });
       }
 
@@ -266,6 +255,25 @@ class mainPageEleveState extends State<mainPageEleve> {
 
       isLoading = false;
     });
+  }
+
+  _getUsers() async {
+    var response = await http.get("https://defiphoto-api.herokuapp.com/users");
+    if (response.statusCode == 200 && this.mounted) {
+      setState(() {
+        users = json.decode(response.body);
+      });
+    }
+  }
+  
+  _getUserName() {
+    String nameProf;
+    for (int i = 0; i < users.length; i++) {
+      if (userData['profId'] == users[i]['givenId']) {
+        nameProf = users[i]['firstName'] + " " + users[i]['lastName'];
+      }
+    }
+    return nameProf;
   }
 
   //Méthode Future<null> pour refresh les commentaires lorsqu'on swipe
@@ -340,10 +348,19 @@ class mainPageEleveState extends State<mainPageEleve> {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
         hasConnection = userData['connection'];
-        if (userData['connection']) _refresh();
+        if (userData['connection']) {
+          if (!userData['isTeacher']) {
+            _getUsers().then((data) {
+              
+                userData['nomProf']=_getUserName();
+             
+            });
+          }
+          _refresh();
+        }
         if (!userData['connection']) isLoading = false;
 
-        if(!userData['isTeacher']) stream();
+        if (!userData['isTeacher']) stream();
       });
     });
   }
@@ -379,7 +396,10 @@ class mainPageEleveState extends State<mainPageEleve> {
                             )),
                         Opacity(
                             opacity: 0.5,
-                            child: Text(userData['firstName']+" "+userData['lastName'],
+                            child: Text(
+                                userData['firstName'] +
+                                    " " +
+                                    userData['lastName'],
                                 style: TextStyle(
                                     fontFamily: 'Arboria', fontSize: 16)))
                       ]),

@@ -126,7 +126,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                  padding: EdgeInsets.fromLTRB(12, 16, 12, 0),
                                   child: Text(
                                     "Quel est le type dutilisateur ?",
                                     style: TextStyle(
@@ -134,6 +134,13 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                       fontFamily: 'Arboria',
                                       fontSize: 22,
                                     ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  child: Divider(
+                                    height: 20,
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                                 Container(
@@ -232,8 +239,15 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     fontSize: 22,
                                   ),
                                 ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  child: Divider(
+                                    height: 20,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
                                 SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 Container(
                                   alignment: Alignment.center,
@@ -799,8 +813,15 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     fontSize: 22,
                                   ),
                                 ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  child: Divider(
+                                    height: 20,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
                                 SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                                 Container(
                                   alignment: Alignment.center,

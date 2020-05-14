@@ -73,10 +73,13 @@ class mainPageProfState extends State<mainPageProf> {
         "yearFin": users[i]["schoolYearEnd"],
         "stageDesc": users[i]["stageDesc"],
         "profId": users[i]["profId"],
+        "stageDebut":users[i]["stageBegin"],
+        "stageFin":users[i]["stageEnd"],
         "connection": true,
         "colorSelect": Color(0xFF222b3b),
         'isTeacher':true,
-        'nouvQuestion': false
+        'nouvQuestion': false,
+        'nomProf': userData['firstName']+" "+userData['lastName']
       };
       if (users[i]["role"] == "S" &&
           users[i]["profId"] == userData["givenId"]) {
