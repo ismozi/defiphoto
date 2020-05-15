@@ -265,7 +265,7 @@ class mainPageEleveState extends State<mainPageEleve> {
       });
     }
   }
-  
+
   _getUserName() {
     String nameProf;
     for (int i = 0; i < users.length; i++) {
@@ -499,7 +499,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                                 progressColor: Colors.blueGrey,
                                               )
                                             : Text(
-                                                "Il n'y a pas de questions",
+                                                "Il n'y a pas de question",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
                                                     fontSize: 19.0,
@@ -543,7 +543,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                                 progressColor: Colors.blueGrey,
                                               )
                                             : Text(
-                                                "Il n'y a pas de questions",
+                                                "Il n'y a pas de question",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
                                                     fontSize: 19.0,
@@ -585,7 +585,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                                 progressColor: Colors.blueGrey,
                                               )
                                             : Text(
-                                                "Il n'y a pas de questions",
+                                                "Il n'y a pas de question",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
                                                     fontSize: 19.0,
@@ -627,7 +627,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                                 progressColor: Colors.blueGrey,
                                               )
                                             : Text(
-                                                "Il n'y a pas de questions",
+                                                "Il n'y a pas de question",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
                                                     fontSize: 19.0,
@@ -669,7 +669,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                                 progressColor: Colors.blueGrey,
                                               )
                                             : Text(
-                                                "Il n'y a pas de questions",
+                                                "Il n'y a pas de question",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
                                                     fontSize: 19.0,
@@ -711,7 +711,7 @@ class mainPageEleveState extends State<mainPageEleve> {
                                                 progressColor: Colors.blueGrey,
                                               )
                                             : Text(
-                                                "Il n'y a pas de questions",
+                                                "Il n'y a pas de question",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
                                                     fontSize: 19.0,

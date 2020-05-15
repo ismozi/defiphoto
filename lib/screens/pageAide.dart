@@ -65,7 +65,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "Prends en photo les produits avec lesquels tu travailles. Si tu travailles avec des produits de différente taille, de différent poids, n'hésites pas à les photographier pour montrer les différences entre ces produits (produits grands ou petits, produits lourds ou légers)")
+                                    "Dans cette section, tu devras répondre à des questions posées par ton enseignant par rapport aux produits que tu utilises durant ton stage.")
                           ],
                         ),
                       ),
@@ -97,7 +97,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "Prends en photo les équipements que tu utilises en lieu De Stage (les outils, les machines,...)")
+                                    "Dans cette section, tu devras répondre à des questions posées par ton enseignant par rapport à l'équipement que tu utilises durant ton stage.")
                           ],
                         ),
                       ),
@@ -129,7 +129,102 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "Demande à l'un de tes collègues de te photographier pendant que tu réalises la tâche que tu as choisie de nous montrer. Raconte-nous ce que tu dois faire quand tu réalises cette tâche (dans l'ordre chronologique)")
+                                    "Dans cette section, tu devras répondre à des questions posées par ton enseignant par rapport aux tâches que tu exécutes durant ton stage. Tu peux demander à un collègue de te prendre en photo au besoin.")
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),Padding(
+                    padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    child: Text(
+                      "Individu",
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          fontSize: 23,
+                          fontFamily: 'Arboria'),
+                    ),
+                  ),
+                  Card(
+                    color: Color(0xFF222b3b),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                              color: Colors.grey[300],
+                              fontSize: 18,
+                              fontFamily: 'Arboria'),
+                          children: [
+                            TextSpan(
+                                text:
+                                    "Dans cette section, tu devras répondre à des questions posées par ton enseignant par rapport a toi.")
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    child: Text(
+                      "Environnement",
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          fontSize: 23,
+                          fontFamily: 'Arboria'),
+                    ),
+                  ),
+                  Card(
+                    color: Color(0xFF222b3b),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                              color: Colors.grey[300],
+                              fontSize: 18,
+                              fontFamily: 'Arboria'),
+                          children: [
+                            TextSpan(
+                                text:
+                                    "Dans cette section, tu devras répondre à des questions posées par ton enseignant par rapport à ton environnement de travail en milieu de stage.")
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                    child: Text(
+                      "Ressources humaines",
+                      style: TextStyle(
+                          color: Colors.cyan,
+                          fontSize: 23,
+                          fontFamily: 'Arboria'),
+                    ),
+                  ),
+                  Card(
+                    color: Color(0xFF222b3b),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(12, 12, 12, 12),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                              color: Colors.grey[300],
+                              fontSize: 18,
+                              fontFamily: 'Arboria'),
+                          children: [
+                            TextSpan(
+                                text:
+                                    "Dans cette section, tu devras répondre à des questions de ressources humaines posées par ton enseignant.")
                           ],
                         ),
                       ),
@@ -179,7 +274,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "Sur ta page d'acceuil, tu peux voir ta progression pour chaque catégorie (M-É-T-I-E-R) ainsi que ta progression totale. La progression représente le pourcentage de question auxquelles tu as répondu.")
+                                    "Sur ta page d'accueil, tu peux voir ta progression pour chaque catégorie (MÉTIER) ainsi que ta progression totale. La progression représente le pourcentage de question auxquelles tu as répondu.")
                           ],
                         ),
                       ),
@@ -211,7 +306,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "Pour naviguer dans l'application, tu dois utiliser le menu hamburger qui est disponible en haut gauche de ta page d'acceuil. Dans ce menu, tu vera toute les sections de l'application auxquelles tu a accès.")
+                                    "Pour naviguer dans l'application, tu dois utiliser le menu hamburger qui est disponible en haut à gauche de ta page d'accueil. Dans ce menu, tu verras toutes les sections de l'application auxquelles tu as accès.")
                           ],
                         ),
                       ),
@@ -243,7 +338,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "En appuyant sur l'option «Question de stage» dans ton menu, tu arrivera sur une page avec les catégories de l'acronyme MÉTIER. En cliquant sur une catégorie, la page t'affichera les questions que ton enseignant t'a posé pour cette catégorie.  Si tu clique sur l'icone de volume d'une question, tu pourra entendre celle-ci. Pour répondre à la question tu dois appuyer sur celle-ci. ")
+                                    "En appuyant sur l'option «Question de stage» dans ton menu, tu arriveras sur une page avec les catégories de l'acronyme MÉTIER. En cliquant sur une catégorie, la page t'affichera les questions que ton enseignant t'a posé pour cette catégorie.  Si tu appuies sur l'icone de volume d'une question, tu pourras entendre celle-ci. Pour répondre à la question tu dois appuyer sur celle-ci. ")
                           ],
                         ),
                       ),
@@ -275,7 +370,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "En appuyant sur une question, tu seras amener sur la page des commentaires. Sur cette page, tu pourras répondre à la question de ton enseignant. S'il te demande d'envoyer des photos, tu peux le faire en choisisant des photos de ta gallerie ou en prenant la photo directement dans l'application. Pour envoyer un message vocal, tu dois appuyer sur l'icone du microphone. En appuyant une fois, tu activeras le microphone et en cliquant une deuxième fois, tu désactivera le microphone et ton message s'enverra automatiquement au professeur")
+                                    "En appuyant sur une question, tu seras amené sur la page des commentaires. Sur cette page, tu pourras répondre à la question de ton enseignant. S'il te demande d'envoyer des photos, tu peux le faire en choisissant des photos de ta galerie ou en prenant la photo directement dans l'application. Pour envoyer un message vocal, tu dois appuyer sur l'icône du microphone. En appuyant une fois, tu activeras le microphone et en cliquant une deuxième fois, tu désactiveras le microphone et ton message s'enverra automatiquement au professeur.")
                           ],
                         ),
                       ),
@@ -307,7 +402,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "En appuyant sur l'option «Poser des questions» dans ton menu, tu arriveras sur une page ou tes questions posé seront affichés. Si tu n'en a pas encore posé, la page sera vide. Pour poser une question à ton enseigant, tu dois appuyer sur le bouton «+» en bas à droite de ton écran, ceci t'amènera sur une nouvelle page. Dans cette nouvelle page, tu peux écrire la question que tu as à poser et indiquer dans quelle catégorie elle se situe. ")
+                                    "En appuyant sur l'option «Poser des questions» dans ton menu, tu arriveras sur une page ou tes questions posées seront affichées. Si tu n'en as pas encore posé, la page sera vide. Pour poser une question à ton enseignant, tu dois appuyer sur le bouton «+» en bas à droite de ton écran, ceci t'amènera sur une nouvelle page. Dans cette nouvelle page, tu peux écrire la question que tu as à poser et indiquer dans quelle catégorie elle se situe. ")
                           ],
                         ),
                       ),
@@ -338,7 +433,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "En appuyant sur l'option «Profil» dans ton menu, tu accèderas à toutes tes informations")
+                                    "En appuyant sur l'option «Profil» dans ton menu, tu accèderas à toutes tes informations.")
                           ],
                         ),
                       ),
@@ -369,7 +464,7 @@ class pageAide extends StatelessWidget {
                           children: [
                             TextSpan(
                                 text:
-                                    "En appuyant sur l'option «Se déconnecter» dans ton menu, tu sera déconnecter de l'application")
+                                    "En appuyant sur l'option «Se déconnecter» dans ton menu, tu seras déconnecté de l'application.")
                           ],
                         ),
                       ),

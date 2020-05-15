@@ -12,14 +12,15 @@ import '../models/database_helpers.dart';
 import 'mainPageEleve.dart';
 
 
-Widget appBarTitle = Text('Matières et produits',
-    style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
+
 
 class questionStage extends StatefulWidget {
   questionStageState createState() => new questionStageState();
 }
 
 class questionStageState extends State<questionStage> {
+  Widget appBarTitle = Text('Matières et produits',
+    style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
   mainPageEleveState mainInstance = new mainPageEleveState();
   List questions = [{}];
   List users = [{}];
@@ -38,6 +39,8 @@ class questionStageState extends State<questionStage> {
   List filteredQuestionTab = [];
   List questionSectionTab = [];
   var questionSection;
+
+  
 
   FlutterTts flutterTts;
 
@@ -324,8 +327,27 @@ class questionStageState extends State<questionStage> {
                             ),
                           ));
                     })
-                : Center(
-                    child: Text("Il n'y a pas de questions",
+                : filteredQuestionTab.length==0&&userData['connection'] ?
+                Column(mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[ Center(
+                    child: Text("Il n'y a pas de question",
+                        style: TextStyle(
+                            color: Colors.blueGrey,
+                            fontSize: 20,
+                            letterSpacing: 1.2,
+                            fontFamily: 'Arboria'))),
+                            SizedBox(height:20),
+                            
+                           ClipOval(
+                              child: Material(
+                                  color: Colors.blueGrey,
+                                  child: SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Center(
+                                        child: IconButton(icon: Icon(Icons.refresh),color: Colors.black, onPressed: () => _refresh()),
+                                      ))))
+                            ]):Center(child:Text("Il n'y a pas de question",
                         style: TextStyle(
                             color: Colors.blueGrey,
                             fontSize: 20,

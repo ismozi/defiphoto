@@ -39,6 +39,8 @@ class mainPageProfState extends State<mainPageProf> {
   //Variable qui détermine si on est en mode recherche
   bool isSearching = false;
 
+  bool isLoading = true;
+
   var eleve;
 
   //Appel à l'api pour get les users
@@ -52,7 +54,9 @@ class mainPageProfState extends State<mainPageProf> {
         });
       }
     } catch (e) {
-      if (e is SocketException) {}
+      if (e is SocketException) {
+        isLoading = false;
+      }
     }
   }
 
@@ -73,13 +77,13 @@ class mainPageProfState extends State<mainPageProf> {
         "yearFin": users[i]["schoolYearEnd"],
         "stageDesc": users[i]["stageDesc"],
         "profId": users[i]["profId"],
-        "stageDebut":users[i]["stageBegin"],
-        "stageFin":users[i]["stageEnd"],
+        "stageDebut": users[i]["stageBegin"],
+        "stageFin": users[i]["stageEnd"],
         "connection": true,
         "colorSelect": Color(0xFF222b3b),
-        'isTeacher':true,
+        'isTeacher': true,
         'nouvQuestion': false,
-        'nomProf': userData['firstName']+" "+userData['lastName']
+        'nomProf': userData['firstName'] + " " + userData['lastName']
       };
       if (users[i]["role"] == "S" &&
           users[i]["profId"] == userData["givenId"]) {
@@ -122,9 +126,8 @@ class mainPageProfState extends State<mainPageProf> {
     setState(() {
       print(value);
       filteredEleveTab = eleveTab
-          .where((eleveTab) => eleveTab["firstName"]
-              .toLowerCase()
-              .contains(value.toLowerCase()))
+          .where((eleveTab) =>
+              eleveTab["firstName"].toLowerCase().contains(value.toLowerCase()))
           .toList();
     });
   }
@@ -169,10 +172,8 @@ class mainPageProfState extends State<mainPageProf> {
                     IconButton(
                         icon: Icon(Icons.timeline, size: 30),
                         onPressed: () => {
-                              Navigator.of(context)
-                                  .pushNamed('/mainPageEleve', arguments: 
-                                array[index]
-                              )
+                              Navigator.of(context).pushNamed('/mainPageEleve',
+                                  arguments: array[index])
                             }),
                     SizedBox(width: 1),
                     VerticalDivider(thickness: 1.5),
@@ -245,9 +246,33 @@ class mainPageProfState extends State<mainPageProf> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     setState(() {
+      
       stream();
-      _getUsers().then((data) {
+    _refresh();
+    
+    });
+  }
+
+  //Fonction qui reset les élève qui sont selectionné (pour les déselectionner)
+  resetSelected() {
+    setState(() {
+      for (int i = 0; i < eleveTab.length; i++) {
+        eleveTab[i]['colorSelect'] = Color(0xFF222b3b);
+      }
+      selectedEleveTab = [];
+      selectionState = false;
+    });
+  }
+
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(milliseconds: 500)).then((_) {
+      setState(() {
+        userData = ModalRoute.of(context).settings.arguments;
+        if (userData['connection']) {
+          setState(() {
+            _getUsers().then((data) {
         _getEleve();
         filteredEleveTab = eleveTab;
         userDataDrawer = {
@@ -262,19 +287,13 @@ class mainPageProfState extends State<mainPageProf> {
           'questionEleve': true,
           'connection': userData['connection']
         };
+        isLoading = false;
+      });
+          });
+        }
       });
     });
-  }
-
-  //Fonction qui reset les élève qui sont selectionné (pour les déselectionner)
-  resetSelected() {
-    setState(() {
-      for (int i = 0; i < eleveTab.length; i++) {
-        eleveTab[i]['colorSelect'] = Color(0xFF222b3b);
-      }
-      selectedEleveTab = [];
-      selectionState = false;
-    });
+    return null;
   }
 
   //Fonction qui construit l'aspect visuel de la page
@@ -367,32 +386,56 @@ class mainPageProfState extends State<mainPageProf> {
                 ]
               : null),
       backgroundColor: Color(0xff141a24),
-      body: filteredEleveTab.length > 0 && userData['connection']
-          ? _getBody()
-          : filteredEleveTab.length == 0 && userData['connection']
-              ? Center(
-                  child: Text("Vous n'avez pas d'étudiants",
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 20,
-                          letterSpacing: 1.2,
-                          fontFamily: 'Arboria')))
-              : Container(
-                  color: Color(0xff141a24),
-                  child: ListView(children: <Widget>[
-                    SizedBox(height: 200),
-                    Center(
-                        child: RichText(
-                            text: TextSpan(
-                                text:
-                                    "Vous êtes en mode hors-ligne. \nVous devez vous connecter à\ninternet pour effectuer des actions.",
-                                style: TextStyle(
-                                    color: Colors.blueGrey,
-                                    fontSize: 20,
-                                    fontFamily: 'Arboria')),
-                            textAlign: TextAlign.center)),
-                    SizedBox(height: 100)
-                  ])),
+      body: userData['connection'] && isLoading
+          ? Container(
+              color: Color(0xff141a24),
+              child: Center(
+                  child: SpinKitDoubleBounce(size: 40, color: Colors.white)))
+          : filteredEleveTab.length > 0 && userData['connection'] && !isLoading
+              ? new RefreshIndicator(child: _getBody(), onRefresh: _refresh)
+              : filteredEleveTab.length == 0 &&
+                      userData['connection'] &&
+                      !isLoading
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                          Center(
+                              child: Text("Il n'y a pas d'élève",
+                                  style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontSize: 20,
+                                      letterSpacing: 1.2,
+                                      fontFamily: 'Arboria'))),
+                          SizedBox(height: 20),
+                          ClipOval(
+                              child: Material(
+                                  color: Colors.blueGrey,
+                                  child: SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Center(
+                                        child: IconButton(
+                                            icon: Icon(Icons.refresh),
+                                            color: Colors.black,
+                                            onPressed: () => _refresh()),
+                                      ))))
+                        ])
+                  : Container(
+                      color: Color(0xff141a24),
+                      child: ListView(children: <Widget>[
+                        SizedBox(height: 200),
+                        Center(
+                            child: RichText(
+                                text: TextSpan(
+                                    text:
+                                        "Vous êtes en mode hors-ligne. \nVous devez vous connecter à\ninternet pour effectuer des actions.",
+                                    style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontSize: 20,
+                                        fontFamily: 'Arboria')),
+                                textAlign: TextAlign.center)),
+                        SizedBox(height: 100)
+                      ])),
     );
   }
 }

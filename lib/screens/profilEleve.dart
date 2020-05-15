@@ -40,28 +40,7 @@ class profilEleveState extends State<profilEleve> {
     profId = userData["profId"];
   }
 
-  _getUsers() async {
-    var response = await http.get("https://defiphoto-api.herokuapp.com/users");
-    if (response.statusCode == 200 && this.mounted) {
-      setState(() {
-        users = json.decode(response.body);
-      });
-    }
-  }
-
-  _getUserName(String id) {
-    try {
-      String nameProf;
-      for (int i = 0; i < users.length; i++) {
-        if (id == users[i]['givenId']) {
-          nameProf = users[i]['firstName'] + " " + users[i]['lastName'];
-        }
-      }
-      return nameProf;
-    } catch (e) {
-      return "";
-    }
-  }
+  
 
   @override
   void initState() {
@@ -70,7 +49,7 @@ class profilEleveState extends State<profilEleve> {
     Future.delayed(Duration(milliseconds: 100)).then((_) {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
-        _getUsers();
+        
         _setInfo();
       });
     });
