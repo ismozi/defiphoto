@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -26,8 +27,12 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
   TextEditingController roleController = new TextEditingController();
   TextEditingController profIdController = new TextEditingController();
 
-  int _indexType;
+  int _indexType = 0;
   List<String> types = ["S", "P", "A"];
+
+  DateTime selectedDate = DateTime.now();
+
+  bool isValid=false;
 
   void signUp(
       String id,
@@ -69,6 +74,30 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
     });
   }
 
+  Future<Null> _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        controller.text =
+            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+      });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      _indexType = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,19 +120,27 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                 : ListView(
                     children: <Widget>[
                       Padding(
-                          padding: EdgeInsets.fromLTRB(15, 8, 15, 15),
+                          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(12, 16, 12, 16),
+                                  padding: EdgeInsets.fromLTRB(12, 16, 12, 0),
                                   child: Text(
                                     "Quel est le type dutilisateur ?",
                                     style: TextStyle(
+                                      color: Colors.grey[400],
                                       fontFamily: 'Arboria',
-                                      fontSize: 20,
+                                      fontSize: 22,
                                     ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  child: Divider(
+                                    height: 20,
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                                 Container(
@@ -120,51 +157,97 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                       ],
                                     ),
                                     child: Column(children: [
-                                      Text(
-                                          " Étudiant        Professeur        Admin  ",
-                                          style: TextStyle(
-                                              fontFamily: 'Arboria',
-                                              fontSize: 16)),
-                                      Row(children: [
-                                        SizedBox(width: 28),
-                                        Radio(
-                                          value: 0,
-                                          groupValue: _indexType,
-                                          onChanged: (S) {
-                                            setState(() {
-                                              _indexType = S;
-                                              print(types[_indexType].toString().trim());
-
-
-                                            });
-                                          },
-                                        ),
-                                        SizedBox(width: 62),
-                                        Radio(
-                                          value: 1,
-                                          groupValue: _indexType,
-                                          onChanged: (P) {
-                                            setState(() {
-                                              _indexType = P;
-                                              print(types[_indexType].toString().trim());
-                                            });
-                                          },
-                                        ),
-                                        SizedBox(width: 53),
-                                        Radio(
-                                          value: 2,
-                                          groupValue: _indexType,
-                                          onChanged: (A) {
-                                            setState(() {
-                                              _indexType = A;
-                                              print(types[_indexType].toString().trim());
-                                            });
-                                          },
-                                        ),
-                                      ])
-                                    ])),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Column(
+                                            children: <Widget>[
+                                              Text("Étudiant",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria',
+                                                      fontSize: 17)),
+                                              Radio(
+                                                value: 0,
+                                                groupValue: _indexType,
+                                                onChanged: (S) {
+                                                  setState(() {
+                                                    _indexType = S;
+                                                    print(types[_indexType]
+                                                        .toString()
+                                                        .trim());
+                                                  });
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          Column(
+                                            children: <Widget>[
+                                              Text("Enseignant",
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria',
+                                                      fontSize: 17)),
+                                              Radio(
+                                                value: 1,
+                                                groupValue: _indexType,
+                                                onChanged: (P) {
+                                                  setState(() {
+                                                    _indexType = P;
+                                                    print(types[_indexType]
+                                                        .toString()
+                                                        .trim());
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                          Column(children: <Widget>[
+                                            Text("Admin",
+                                                style: TextStyle(
+                                                    fontFamily: 'Arboria',
+                                                    fontSize: 17)),
+                                            Radio(
+                                              value: 2,
+                                              groupValue: _indexType,
+                                              onChanged: (A) {
+                                                setState(() {
+                                                  _indexType = A;
+                                                  print(types[_indexType]
+                                                      .toString()
+                                                      .trim());
+                                                });
+                                              },
+                                            ),
+                                          ])
+                                        ],
+                                      )
+                                    ]))
+                              ])),
+                      types[_indexType].toString() == 'S'
+                          ? Padding(
+                              padding: EdgeInsets.fromLTRB(12, 0, 12, 16),
+                              child: Column(children: <Widget>[
                                 SizedBox(
                                   height: 20,
+                                ),
+
+                                Text(
+                                  "Information sur l'étudiant:",
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontFamily: 'Arboria',
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  child: Divider(
+                                    height: 20,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
                                 ),
                                 Container(
                                   alignment: Alignment.center,
@@ -186,7 +269,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.person,
+                                          Icons.account_circle,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
@@ -216,7 +299,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.person,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
@@ -246,7 +329,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.person,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
@@ -276,7 +359,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.mail_outline,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
@@ -359,20 +442,25 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     ],
                                   ),
                                   child: TextField(
-                                    controller: schoolYearBeginController,
-                                    style: new TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                    decoration: InputDecoration(
-                                        hintStyle: TextStyle(
-                                            fontSize: 20.0, color: Colors.grey),
-                                        prefixIcon: Icon(
-                                          Icons.lock_outline,
-                                          color: Colors.grey,
-                                        ),
-                                        border: InputBorder.none,
-                                        hintText:
-                                            "Date du début de l'année : j/m/a"),
-                                  ),
+                                      readOnly: true,
+                                      controller: schoolYearBeginController,
+                                      style: new TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                      decoration: InputDecoration(
+                                          hintStyle: TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.grey),
+                                          prefixIcon: Icon(
+                                            Icons.date_range,
+                                            color: Colors.grey,
+                                          ),
+                                          border: InputBorder.none,
+                                          hintText:
+                                              "Date du début de l'année"),
+                                      onTap: () => {
+                                            _selectDate(context,
+                                                schoolYearBeginController)
+                                          }),
                                 ),
                                 SizedBox(
                                   height: 20.0,
@@ -390,6 +478,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     ],
                                   ),
                                   child: TextField(
+                                    readOnly: true,
                                     controller: schoolYearEndController,
                                     style: new TextStyle(
                                         fontSize: 20, color: Colors.black),
@@ -397,11 +486,15 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.date_range,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
-                                        hintText: "Date du fin de l'année"),
+                                        hintText: "Date de la fin de l'année"),
+                                    onTap: () => {
+                                      _selectDate(
+                                          context, schoolYearEndController)
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -427,7 +520,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.work,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
@@ -457,7 +550,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.description,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
@@ -480,6 +573,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     ],
                                   ),
                                   child: TextField(
+                                    readOnly: true,
                                     controller: stageBeginController,
                                     style: new TextStyle(
                                         fontSize: 20, color: Colors.black),
@@ -487,11 +581,14 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                         hintStyle: TextStyle(
                                             fontSize: 20.0, color: Colors.grey),
                                         prefixIcon: Icon(
-                                          Icons.lock_outline,
+                                          Icons.date_range,
                                           color: Colors.grey,
                                         ),
                                         border: InputBorder.none,
                                         hintText: "Date du début du stage"),
+                                    onTap: () => {
+                                      _selectDate(context, stageBeginController)
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -510,19 +607,24 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                     ],
                                   ),
                                   child: TextField(
-                                    controller: stageEndController,
-                                    style: new TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                    decoration: InputDecoration(
-                                        hintStyle: TextStyle(
-                                            fontSize: 20.0, color: Colors.grey),
-                                        prefixIcon: Icon(
-                                          Icons.lock_outline,
-                                          color: Colors.grey,
-                                        ),
-                                        border: InputBorder.none,
-                                        hintText: "Date du fin du stage"),
-                                  ),
+                                      readOnly: true,
+                                      controller: stageEndController,
+                                      style: new TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                      decoration: InputDecoration(
+                                          hintStyle: TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.grey),
+                                          prefixIcon: Icon(
+                                            Icons.date_range,
+                                            color: Colors.grey,
+                                          ),
+                                          border: InputBorder.none,
+                                          hintText: "Date de la fin du stage"),
+                                      onTap: () => {
+                                            _selectDate(
+                                                context, stageEndController)
+                                          }),
                                 ),
                                 SizedBox(
                                   height: 10.0,
@@ -533,12 +635,12 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                   child: RaisedButton(
                                     elevation: 5.0,
                                     onPressed: () {
+                                      isValid = EmailValidator.validate(emailController.text.toString());
                                       if (givenIdController.text.isEmpty ||
                                           firstNameController.text.isEmpty ||
                                           lastNameController.text.isEmpty ||
                                           emailController.text.isEmpty ||
                                           passwdController.text.isEmpty ||
-                                         
                                           profIdController.text.isEmpty ||
                                           schoolYearBeginController
                                               .text.isEmpty ||
@@ -586,7 +688,47 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                             );
                                           },
                                         );
-                                      } else {
+                                      } else if (!isValid) {
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Avertissement',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria')),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        'Vous devez entrer une adresse courriel valide',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Arboria')),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Arboria')),
+                                                  onPressed: () {
+                                                    if (this.mounted) {
+                                                      setState(() {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                      else if (isValid){
                                         setState(() {
                                           _isLoading = true;
                                           signUp(
@@ -605,7 +747,416 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                               passwdController.text
                                                   .toString()
                                                   .trim(),
-                                              types[_indexType].toString().trim(),
+                                              types[_indexType]
+                                                  .toString()
+                                                  .trim(),
+                                              profIdController.text
+                                                  .toString()
+                                                  .trim(),
+                                              schoolYearBeginController.text
+                                                  .toString()
+                                                  .trim(),
+                                              schoolYearEndController.text
+                                                  .toString()
+                                                  .trim(),
+                                              stageNameController.text
+                                                  .toString()
+                                                  .trim(),
+                                              stageDescController.text
+                                                  .toString()
+                                                  .trim(),
+                                              stageBeginController.text
+                                                  .toString()
+                                                  .trim(),
+                                              stageEndController.text
+                                                  .toString()
+                                                  .trim());
+                                        });
+                                      }
+                                    },
+                                    padding: EdgeInsets.all(16.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    color: Color(0xff444d5d),
+                                    child: Text(
+                                      'CRÉER LE COMPTE',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        letterSpacing: 1.5,
+                                        fontSize: 18.0,
+                                        fontFamily: 'Arboria',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ]))
+                          : Padding(
+                              padding: EdgeInsets.fromLTRB(12, 0, 12, 16),
+                              child: Column(children: <Widget>[
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                types[_indexType].toString() == 'P'?
+                                Text(
+                                  "Information sur l'enseignant :",
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontFamily: 'Arboria',
+                                    fontSize: 22,
+                                  ),
+                                ):Text(
+                                  "Information sur l'administrateur:",
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontFamily: 'Arboria',
+                                    fontSize: 22,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  child: Divider(
+                                    height: 20,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: givenIdController,
+                                    style: new TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 20.0, color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.account_circle,
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: "ID d'utilisateur"),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: firstNameController,
+                                    style: new TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 20.0, color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.person,
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: "Prénom"),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: lastNameController,
+                                    style: new TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 20.0, color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.person,
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: "Nom de famille"),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: emailController,
+                                    style: new TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 20.0, color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.mail_outline,
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: "E-mail"),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    controller: passwdController,
+                                    style: new TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 20.0, color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.lock_outline,
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: "Mot-de-Passe"),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                      readOnly: true,
+                                      controller: schoolYearBeginController,
+                                      style: new TextStyle(
+                                          fontSize: 20, color: Colors.black),
+                                      decoration: InputDecoration(
+                                          hintStyle: TextStyle(
+                                              fontSize: 20.0,
+                                              color: Colors.grey),
+                                          prefixIcon: Icon(
+                                            Icons.date_range,
+                                            color: Colors.grey,
+                                          ),
+                                          border: InputBorder.none,
+                                          hintText:
+                                              "Date du début de l'année"),
+                                      onTap: () => {
+                                            _selectDate(context,
+                                                schoolYearBeginController)
+                                          }),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          offset: Offset(0, 3),
+                                          blurRadius: 5,
+                                          color: Colors.black)
+                                    ],
+                                  ),
+                                  child: TextField(
+                                    readOnly: true,
+                                    controller: schoolYearEndController,
+                                    style: new TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 20.0, color: Colors.grey),
+                                        prefixIcon: Icon(
+                                          Icons.date_range,
+                                          color: Colors.grey,
+                                        ),
+                                        border: InputBorder.none,
+                                        hintText: "Date de la fin de l'année"),
+                                    onTap: () => {
+                                      _selectDate(
+                                          context, schoolYearEndController)
+                                    },
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(vertical: 25.0),
+                                  width: double.infinity,
+                                  child: RaisedButton(
+                                    elevation: 5.0,
+                                    onPressed: () {
+                                      isValid = EmailValidator.validate(emailController.text.toString());
+                                      if (givenIdController.text.isEmpty ||
+                                          firstNameController.text.isEmpty ||
+                                          lastNameController.text.isEmpty ||
+                                          emailController.text.isEmpty ||
+                                          passwdController.text.isEmpty ||
+                                          schoolYearBeginController
+                                              .text.isEmpty ||
+                                          schoolYearEndController
+                                              .text.isEmpty) {
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Avertissement',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria')),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        'Vous devez remplir tout les champs.',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Arboria')),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Arboria')),
+                                                  onPressed: () {
+                                                    if (this.mounted) {
+                                                      setState(() {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else if (!isValid) {
+                                        showDialog<void>(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Avertissement',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria')),
+                                              content: SingleChildScrollView(
+                                                child: ListBody(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        'Vous devez entrer une adresse courriel valide',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                'Arboria')),
+                                                  ],
+                                                ),
+                                              ),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text('OK',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Arboria')),
+                                                  onPressed: () {
+                                                    if (this.mounted) {
+                                                      setState(() {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      });
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                      else if (isValid){
+                                        setState(() {
+                                          _isLoading = true;
+                                          signUp(
+                                              givenIdController.text
+                                                  .toString()
+                                                  .trim(),
+                                              firstNameController.text
+                                                  .toString()
+                                                  .trim(),
+                                              lastNameController.text
+                                                  .toString()
+                                                  .trim(),
+                                              emailController.text
+                                                  .toString()
+                                                  .trim(),
+                                              passwdController.text
+                                                  .toString()
+                                                  .trim(),
+                                              types[_indexType]
+                                                  .toString()
+                                                  .trim(),
                                               profIdController.text
                                                   .toString()
                                                   .trim(),

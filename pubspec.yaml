@@ -35,6 +35,9 @@ dependencies:
   audio_recorder:
   audioplayers: ^0.15.1
   sqflite:
+  email_validator: '^1.0.0'
+  permission_handler: ^3.0.1
+  
 
 dev_dependencies:
   flutter_test:

@@ -10,23 +10,38 @@ import 'package:test_flutter/screens/pageQuestion.dart';
 import '../main.dart';
 import 'customDrawer.dart';
 
+//Classe de la page principale des enseignats
 class mainPageProf extends StatefulWidget {
   @override
   mainPageProfState createState() => mainPageProfState();
 }
 
 class mainPageProfState extends State<mainPageProf> {
-  List users = [{}];
-  Map userData = {};
-  List eleveTab = [];
+  //Listes qui contient les élèves filtrés
   List filteredEleveTab = [];
-  bool isSearching = false;
-  var eleve;
-  Map userDataDrawer = {};
-  bool hasConnection;
-  bool selectionState = false;
+  //Liste qui contient les utilisateurs
+  List users = [{}];
+  //Liste qui contient les élèves temporairement
+  List eleveTab = [];
+  //Liste des élèves selectionnés
   List<String> selectedEleveTab = [];
 
+  //Map qui contient les informations des utilisateurs
+  Map userDataDrawer = {};
+  Map userData = {};
+
+  //Variable qui détermine la connexion
+  bool hasConnection;
+
+  //Variable qui détermine si on est en état de selection
+  bool selectionState = false;
+
+  //Variable qui détermine si on est en mode recherche
+  bool isSearching = false;
+
+  var eleve;
+
+  //Appel à l'api pour get les users
   _getUsers() async {
     try {
       var response =
@@ -41,6 +56,7 @@ class mainPageProfState extends State<mainPageProf> {
     }
   }
 
+  //Fonction qui filtre les élèves de l'enseignants
   _getEleve() {
     eleveTab = new List();
     _getUsers();
@@ -52,16 +68,27 @@ class mainPageProfState extends State<mainPageProf> {
         "lastName": users[i]["lastName"],
         "stageName": users[i]["stageName"],
         "email": users[i]["email"],
+        "role": users[i]['role'],
         "yearDebut": users[i]["schoolYearBegin"],
         "yearFin": users[i]["schoolYearEnd"],
-        "colorSelect": Color(0xFF222b3b)
+        "stageDesc": users[i]["stageDesc"],
+        "profId": users[i]["profId"],
+        "stageDebut":users[i]["stageBegin"],
+        "stageFin":users[i]["stageEnd"],
+        "connection": true,
+        "colorSelect": Color(0xFF222b3b),
+        'isTeacher':true,
+        'nouvQuestion': false,
+        'nomProf': userData['firstName']+" "+userData['lastName']
       };
-      if (users[i]["role"] == "S" && users[i]["profId"] == userData["givenId"] ) {
+      if (users[i]["role"] == "S" &&
+          users[i]["profId"] == userData["givenId"]) {
         eleveTab.add(eleve);
       }
     }
   }
 
+  //Stream qui vérifie la connexion internet
   void stream() async {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
@@ -90,11 +117,12 @@ class mainPageProfState extends State<mainPageProf> {
     }
   }
 
+  //Filtrer les élèves avec la barre de recherche
   void _filterEleves(value) {
     setState(() {
       print(value);
       filteredEleveTab = eleveTab
-          .where((questionSection) => questionSection["firstName"]
+          .where((eleveTab) => eleveTab["firstName"]
               .toLowerCase()
               .contains(value.toLowerCase()))
           .toList();
@@ -105,7 +133,7 @@ class mainPageProfState extends State<mainPageProf> {
     return _createList(filteredEleveTab);
   }
 
-
+  //Fonction qui créé la liste d'élèves
   _createList(dynamic array) {
     String url;
     return ListView.builder(
@@ -139,28 +167,17 @@ class mainPageProfState extends State<mainPageProf> {
                   trailing:
                       Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.message, size: 30),
+                        icon: Icon(Icons.timeline, size: 30),
                         onPressed: () => {
                               Navigator.of(context)
-                                  .pushNamed('/questionsStage', arguments: {
-                                'givenId': userData["givenId"],
-                                'firstName': userData["firstName"],
-                                'lastName': userData["lastName"],
-                                'email': userData["email"],
-                                'role': userData["role"],
-                                'stageName': userData['stageName'],
-                                'yearDebut': userData['schoolYearBegin'],
-                                'yearFin': userData['schoolYearEnd'],
-                                'idStudent': array[index]["givenId"],
-                                'nomEleve': array[index]["firstName"],
-                                'questionEleve': false,
-                                'connection': userData['connection']
-                              })
+                                  .pushNamed('/mainPageEleve', arguments: 
+                                array[index]
+                              )
                             }),
                     SizedBox(width: 1),
                     VerticalDivider(thickness: 1.5),
                     IconButton(
-                        icon: Icon(Icons.person, size: 30),
+                        icon: Icon(Icons.perm_identity, size: 30),
                         onPressed: () => {
                               Navigator.of(context).pushNamed('/profilEleve',
                                   arguments: array[index])
@@ -190,6 +207,22 @@ class mainPageProfState extends State<mainPageProf> {
                           });
                         }
                       });
+                    } else {
+                      Navigator.of(context)
+                          .pushNamed('/questionsStage', arguments: {
+                        'givenId': userData["givenId"],
+                        'firstName': userData["firstName"],
+                        'lastName': userData["lastName"],
+                        'email': userData["email"],
+                        'role': userData["role"],
+                        'stageName': userData['stageName'],
+                        'yearDebut': userData['schoolYearBegin'],
+                        'yearFin': userData['schoolYearEnd'],
+                        'idStudent': array[index]["givenId"],
+                        'nomEleve': array[index]["firstName"],
+                        'questionEleve': false,
+                        'connection': userData['connection']
+                      });
                     }
                   },
                   onLongPress: () {
@@ -207,6 +240,7 @@ class mainPageProfState extends State<mainPageProf> {
         });
   }
 
+  //Fonction qui est initialiser une seule fois avant tout autre fonction
   @override
   void initState() {
     // TODO: implement initState
@@ -232,21 +266,23 @@ class mainPageProfState extends State<mainPageProf> {
     });
   }
 
+  //Fonction qui reset les élève qui sont selectionné (pour les déselectionner)
   resetSelected() {
     setState(() {
       for (int i = 0; i < eleveTab.length; i++) {
-      eleveTab[i]['colorSelect'] = Color(0xFF222b3b);
-    }
-    selectedEleveTab = [];
-    selectionState = false;
+        eleveTab[i]['colorSelect'] = Color(0xFF222b3b);
+      }
+      selectedEleveTab = [];
+      selectionState = false;
     });
   }
 
+  //Fonction qui construit l'aspect visuel de la page
   @override
   Widget build(BuildContext context) {
     userData = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      drawer: !isSearching && userData['connection'] 
+      drawer: !isSearching && userData['connection']
           ? Container(
               color: Colors.grey[900],
               child: customDrawer(
@@ -261,8 +297,7 @@ class mainPageProfState extends State<mainPageProf> {
                     end: Alignment.bottomRight,
                     colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
           ),
-          
-          title: !isSearching
+          title: !isSearching && !selectionState
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -287,13 +322,20 @@ class mainPageProfState extends State<mainPageProf> {
                                       fontFamily: 'Arboria', fontSize: 16)),
                             )
                     ])
-              : TextField(
-                  onChanged: (value) {
-                    _filterEleves(value);
-                  },
-                  decoration: InputDecoration(
-                      icon: Icon(Icons.search),
-                      hintText: "Rechercher la question")),
+              : isSearching
+                  ? TextField(
+                      onChanged: (value) {
+                        _filterEleves(value);
+                      },
+                      decoration: InputDecoration(
+                          icon: Icon(Icons.search),
+                          hintText: "Rechercher la question"))
+                  : Center(
+                      child: Text("Mode sélection",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Arboria',
+                          ))),
           actions: userData['connection']
               ? <Widget>[
                   selectionState

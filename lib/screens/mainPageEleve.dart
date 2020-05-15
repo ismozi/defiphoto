@@ -46,6 +46,9 @@ class mainPageEleveState extends State<mainPageEleve> {
   List questions = [{}];
   List commentairesMe = [{}];
 
+  var users;
+  
+
   bool isLoading = true;
   bool hasConnection;
 
@@ -236,22 +239,9 @@ class mainPageEleveState extends State<mainPageEleve> {
               compteurE1 +
               compteurR);
 
-      if (percTot != 100) {
+      if (percTot != 100 && !userData['isTeacher'] && userData['connection']) {
         setState(() {
-          userData = {
-            'givenId': userData["givenId"],
-            'firstName': userData["firstName"],
-            'lastName': userData["lastName"],
-            'email': userData["email"],
-            'role': userData["role"],
-            'profId': userData["profId"],
-            'stageName': userData['stageName'],
-            'yearDebut': userData['schoolYearBegin'],
-            'yearFin': userData['schoolYearEnd'],
-            'questionEleve': false,
-            'connection': userData['connection'],
-            'nouvQuestion': true,
-          };
+          userData['nouvQuestion']=true; 
         });
       }
 
@@ -265,6 +255,25 @@ class mainPageEleveState extends State<mainPageEleve> {
 
       isLoading = false;
     });
+  }
+
+  _getUsers() async {
+    var response = await http.get("https://defiphoto-api.herokuapp.com/users");
+    if (response.statusCode == 200 && this.mounted) {
+      setState(() {
+        users = json.decode(response.body);
+      });
+    }
+  }
+  
+  _getUserName() {
+    String nameProf;
+    for (int i = 0; i < users.length; i++) {
+      if (userData['profId'] == users[i]['givenId']) {
+        nameProf = users[i]['firstName'] + " " + users[i]['lastName'];
+      }
+    }
+    return nameProf;
   }
 
   //Méthode Future<null> pour refresh les commentaires lorsqu'on swipe
@@ -339,10 +348,19 @@ class mainPageEleveState extends State<mainPageEleve> {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
         hasConnection = userData['connection'];
-        if (userData['connection']) _refresh();
+        if (userData['connection']) {
+          if (!userData['isTeacher']) {
+            _getUsers().then((data) {
+              
+                userData['nomProf']=_getUserName();
+             
+            });
+          }
+          _refresh();
+        }
         if (!userData['connection']) isLoading = false;
 
-        stream();
+        if (!userData['isTeacher']) stream();
       });
     });
   }
@@ -352,10 +370,12 @@ class mainPageEleveState extends State<mainPageEleve> {
   Widget build(BuildContext context) {
     if (userData['connection'] != null && !isLoading) {
       return Scaffold(
-        drawer: customDrawer(
-          userData: userData,
-          nouveauMessage: nouvMessages,
-        ),
+        drawer: userData['isTeacher']
+            ? null
+            : customDrawer(
+                userData: userData,
+                nouveauMessage: nouvMessages,
+              ),
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: BoxDecoration(
@@ -364,28 +384,49 @@ class mainPageEleveState extends State<mainPageEleve> {
                     end: Alignment.bottomRight,
                     colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
           ),
-          title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(children: [
-                  Text("Défi photo",
-                      style: TextStyle(
-                        fontFamily: 'Arboria',
-                      )),
-                  Opacity(
-                    opacity: 0.5,
-                    child: !userData['connection']
-                        ? Text("Mode hors-ligne",
-                            style:
-                                TextStyle(fontFamily: 'Arboria', fontSize: 16))
-                        : Text("Ma progression",
-                            style:
-                                TextStyle(fontFamily: 'Arboria', fontSize: 16)),
-                  )
-                ]),
-                SizedBox(width: 43),
-              ]),
+          title: userData['isTeacher']
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      Column(children: [
+                        Text("Progression",
+                            style: TextStyle(
+                              fontFamily: 'Arboria',
+                            )),
+                        Opacity(
+                            opacity: 0.5,
+                            child: Text(
+                                userData['firstName'] +
+                                    " " +
+                                    userData['lastName'],
+                                style: TextStyle(
+                                    fontFamily: 'Arboria', fontSize: 16)))
+                      ]),
+                      SizedBox(width: 43),
+                    ])
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                      Column(children: [
+                        Text("Défi photo",
+                            style: TextStyle(
+                              fontFamily: 'Arboria',
+                            )),
+                        Opacity(
+                          opacity: 0.5,
+                          child: !userData['connection']
+                              ? Text("Mode hors-ligne",
+                                  style: TextStyle(
+                                      fontFamily: 'Arboria', fontSize: 16))
+                              : Text("Ma progression",
+                                  style: TextStyle(
+                                      fontFamily: 'Arboria', fontSize: 16)),
+                        )
+                      ]),
+                      SizedBox(width: 43),
+                    ]),
         ),
         body: !userData['connection']
             ? Container(
@@ -446,16 +487,18 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
-                                        compteurMtot!=0?
-                                        LinearPercentIndicator(
-                                          width: 230.0,
-                                          lineHeight: 14.0,
-                                          percent: percentageM != 0
-                                              ? percentageM / 100
-                                              : 0,
-                                          backgroundColor: Colors.grey[300],
-                                          progressColor: Colors.blueGrey,
-                                        ): Text(
+                                        compteurMtot != 0
+                                            ? LinearPercentIndicator(
+                                                width: 230.0,
+                                                lineHeight: 14.0,
+                                                percent: percentageM != 0
+                                                    ? percentageM / 100
+                                                    : 0,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                progressColor: Colors.blueGrey,
+                                              )
+                                            : Text(
                                                 "Il n'y a pas de questions",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
@@ -488,16 +531,18 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
-                                        compteurEtot!=0?
-                                        LinearPercentIndicator(
-                                          width: 230.0,
-                                          lineHeight: 14.0,
-                                          percent: percentageE1 != 0
-                                              ? percentageE1 / 100
-                                              : 0,
-                                          backgroundColor: Colors.grey[300],
-                                          progressColor: Colors.blueGrey,
-                                        ): Text(
+                                        compteurEtot != 0
+                                            ? LinearPercentIndicator(
+                                                width: 230.0,
+                                                lineHeight: 14.0,
+                                                percent: percentageE1 != 0
+                                                    ? percentageE1 / 100
+                                                    : 0,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                progressColor: Colors.blueGrey,
+                                              )
+                                            : Text(
                                                 "Il n'y a pas de questions",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
@@ -570,16 +615,18 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
-                                        compteurItot!=0?
-                                        LinearPercentIndicator(
-                                          width: 230.0,
-                                          lineHeight: 14.0,
-                                          percent: percentageI != 0
-                                              ? percentageI / 100
-                                              : 0,
-                                          backgroundColor: Colors.grey[300],
-                                          progressColor: Colors.blueGrey,
-                                        ): Text(
+                                        compteurItot != 0
+                                            ? LinearPercentIndicator(
+                                                width: 230.0,
+                                                lineHeight: 14.0,
+                                                percent: percentageI != 0
+                                                    ? percentageI / 100
+                                                    : 0,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                progressColor: Colors.blueGrey,
+                                              )
+                                            : Text(
                                                 "Il n'y a pas de questions",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
@@ -610,16 +657,18 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
-                                        compteurE1tot!=0?
-                                        LinearPercentIndicator(
-                                          width: 230.0,
-                                          lineHeight: 14.0,
-                                          percent: percentageE2 != 0
-                                              ? percentageE2 / 100
-                                              : 0,
-                                          backgroundColor: Colors.grey[300],
-                                          progressColor: Colors.blueGrey,
-                                        ): Text(
+                                        compteurE1tot != 0
+                                            ? LinearPercentIndicator(
+                                                width: 230.0,
+                                                lineHeight: 14.0,
+                                                percent: percentageE2 != 0
+                                                    ? percentageE2 / 100
+                                                    : 0,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                progressColor: Colors.blueGrey,
+                                              )
+                                            : Text(
                                                 "Il n'y a pas de questions",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,
@@ -650,16 +699,18 @@ class mainPageEleveState extends State<mainPageEleve> {
                                               fontSize: 28.0,
                                               fontFamily: 'Arboria'),
                                         ),
-                                        compteurRtot!=0?
-                                        LinearPercentIndicator(
-                                          width: 230.0,
-                                          lineHeight: 14.0,
-                                          percent: percentageR != 0
-                                              ? percentageR / 100
-                                              : 0,
-                                          backgroundColor: Colors.grey[300],
-                                          progressColor: Colors.blueGrey,
-                                        ): Text(
+                                        compteurRtot != 0
+                                            ? LinearPercentIndicator(
+                                                width: 230.0,
+                                                lineHeight: 14.0,
+                                                percent: percentageR != 0
+                                                    ? percentageR / 100
+                                                    : 0,
+                                                backgroundColor:
+                                                    Colors.grey[300],
+                                                progressColor: Colors.blueGrey,
+                                              )
+                                            : Text(
                                                 "Il n'y a pas de questions",
                                                 style: TextStyle(
                                                     color: Colors.blueGrey,

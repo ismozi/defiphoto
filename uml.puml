@@ -1,0 +1,468 @@
+@startuml
+set namespaceSeparator ::
+
+class "test_flutter::main.dart::App" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "test_flutter::main.dart::App"
+
+class "test_flutter::main.dart::RestartWidget" {
+  +Widget child
+  {static} +void restartApp()
+  +_RestartWidgetState createState()
+}
+
+"test_flutter::main.dart::RestartWidget" o-- "flutter::src::widgets::framework.dart::Widget"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::main.dart::RestartWidget"
+
+class "test_flutter::main.dart::_RestartWidgetState" {
+  +Key key
+  +void restartApp()
+  +Widget build()
+}
+
+"test_flutter::main.dart::_RestartWidgetState" o-- "flutter::src::foundation::key.dart::Key"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::main.dart::_RestartWidgetState"
+
+class "test_flutter::models::database_helpers.dart::Question" {
+  +String id
+  +String text
+  +String type
+  +String sender
+  +Map toMap()
+}
+
+class "test_flutter::models::database_helpers.dart::DatabaseHelper" {
+  {static} -String _databaseName
+  {static} -int _databaseVersion
+  {static} +DatabaseHelper instance
+  {static} -Database _database
+  +Future<Database> database
+  -dynamic _initDatabase()
+  -Future _onCreate()
+  +dynamic deleteAll()
+  +Future insert()
+  +Future queryQuestion()
+  +Future queryAllRows()
+}
+
+"test_flutter::models::database_helpers.dart::DatabaseHelper" o-- "test_flutter::models::database_helpers.dart::DatabaseHelper"
+"test_flutter::models::database_helpers.dart::DatabaseHelper" o-- "sqflite_common::sqlite_api.dart::Database"
+
+class "test_flutter::screens::ajoutUtilisateur.dart::ajoutUtilisateur" {
+  +_AjoutUtilisateurState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::ajoutUtilisateur.dart::ajoutUtilisateur"
+
+class "test_flutter::screens::ajoutUtilisateur.dart::_AjoutUtilisateurState" {
+  -bool _isLoading
+  +TextEditingController givenIdController
+  +TextEditingController passwdController
+  +TextEditingController firstNameController
+  +TextEditingController lastNameController
+  +TextEditingController emailController
+  +TextEditingController stageNameController
+  +TextEditingController stageDescController
+  +TextEditingController schoolYearBeginController
+  +TextEditingController schoolYearEndController
+  +TextEditingController stageBeginController
+  +TextEditingController stageEndController
+  +TextEditingController roleController
+  +TextEditingController profIdController
+  -int _indexType
+  +List<String> types
+  +DateTime selectedDate
+  +bool isValid
+  +void signUp()
+  -Future _selectDate()
+  +void initState()
+  +Widget build()
+}
+
+"test_flutter::screens::ajoutUtilisateur.dart::_AjoutUtilisateurState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::ajoutUtilisateur.dart::_AjoutUtilisateurState"
+
+class "test_flutter::screens::customDrawer.dart::customDrawer" {
+  +Map userData
+  +int nouveauMessage
+  +Future logout()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "test_flutter::screens::customDrawer.dart::customDrawer"
+
+class "test_flutter::screens::login.dart::Login" {
+  +_LoginState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::login.dart::Login"
+
+class "test_flutter::screens::login.dart::_LoginState" {
+  +bool isLoading1
+  -bool _isLoading
+  +Map<PermissionGroup, PermissionStatus> permissions
+  +TextEditingController givenId
+  +TextEditingController passwd
+  -bool _hasNetworkConnection
+  +void signIn()
+  +void getPermission()
+  +void initState()
+  -void _updateConnectivity()
+  +void autoLogIn()
+  +Future loginUser()
+  +Widget build()
+}
+
+"test_flutter::screens::login.dart::_LoginState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::login.dart::_LoginState"
+
+class "test_flutter::screens::mainPageAdmin.dart::mainPageAdmin" {
+  +_mainPageAdminState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::mainPageAdmin.dart::mainPageAdmin"
+
+class "test_flutter::screens::mainPageAdmin.dart::_mainPageAdminState" {
+  -int _selectedIndex
+  +List users
+  +List questions
+  +List comments
+  +Map userData
+  +Future logout()
+  -dynamic _getUsers()
+  -dynamic _getQuestions()
+  -dynamic _getComments()
+  -dynamic _getData()
+  -String _getUsername()
+  -String _getQuestionname()
+  -Widget _getBody()
+  -dynamic _createList()
+  -dynamic _stream()
+  +void initState()
+  +Widget build()
+  -void _onItemTapped()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::mainPageAdmin.dart::_mainPageAdminState"
+
+class "test_flutter::screens::mainPageEleve.dart::mainPageEleve" {
+  +mainPageEleveState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::mainPageEleve.dart::mainPageEleve"
+
+class "test_flutter::screens::mainPageEleve.dart::mainPageEleveState" {
+  +Map userData
+  +int percentageM
+  +int percentageE1
+  +int percentageT
+  +int percentageI
+  +int percentageE2
+  +int percentageR
+  +int compteurM
+  +int compteurE
+  +int compteurT
+  +int compteurI
+  +int compteurE1
+  +int compteurR
+  +int compteurMtot
+  +int compteurEtot
+  +int compteurTtot
+  +int compteurItot
+  +int compteurE1tot
+  +int compteurRtot
+  +int compteurTOT
+  +int percTot
+  +Map questionData
+  +List commentaires
+  +List questions
+  +List commentairesMe
+  +bool isLoading
+  +bool hasConnection
+  +int nouvMessages
+  -dynamic _getCommentaires()
+  -dynamic _getQuestions()
+  -dynamic _getCommentaireMe()
+  -dynamic _updateCompteur()
+  -Future _refresh()
+  +dynamic refresh2()
+  +void stream()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::mainPageEleve.dart::mainPageEleveState"
+
+class "test_flutter::screens::mainPageProf.dart::mainPageProf" {
+  +mainPageProfState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::mainPageProf.dart::mainPageProf"
+
+class "test_flutter::screens::mainPageProf.dart::mainPageProfState" {
+  +List filteredEleveTab
+  +List users
+  +List eleveTab
+  +List<String> selectedEleveTab
+  +Map userDataDrawer
+  +Map userData
+  +bool hasConnection
+  +bool selectionState
+  +bool isSearching
+  +dynamic eleve
+  -dynamic _getUsers()
+  -dynamic _getEleve()
+  +void stream()
+  -void _filterEleves()
+  -Widget _getBody()
+  -dynamic _createList()
+  +void initState()
+  +dynamic resetSelected()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::mainPageProf.dart::mainPageProfState"
+
+class "test_flutter::screens::pageAide.dart::pageAide" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "test_flutter::screens::pageAide.dart::pageAide"
+
+class "test_flutter::screens::pageCommentaire.dart::pageCommentaire" {
+  +LocalFileSystem localFileSystem
+  +State createState()
+}
+
+"test_flutter::screens::pageCommentaire.dart::pageCommentaire" o-- "file::src::backends::local::local_file_system.dart::LocalFileSystem"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::pageCommentaire.dart::pageCommentaire"
+
+class "test_flutter::screens::pageCommentaire.dart::pageCommentaireState" {
+  +dynamic imageFile
+  +TextEditingController messageSend
+  +Map questionData
+  +List commentaires
+  -bool _isLoading
+  -ScrollController _scrollController
+  +bool canScroll
+  +bool messageBuilt
+  +int currentMessageLenght
+  +int previousMessageLenght
+  -Recording _recording
+  -bool _isRecording
+  +Random random
+  +AudioPlayer audioPlayer
+  +bool isPlaying
+  +Color couleurPlay
+  +dynamic play()
+  -dynamic _getCommentaires()
+  -dynamic _start()
+  -dynamic _stop()
+  -dynamic _enleverCommentaire()
+  -dynamic _makePatchRequest()
+  -dynamic _buildCommentaire()
+  -dynamic _ouvrirGallery()
+  -dynamic _ouvrirCamera()
+  -dynamic _envoyerCommentaire()
+  -dynamic _envoyerImage()
+  -Future _refresh()
+  +void stream()
+  +Future autoScrollStart()
+  +void initState()
+  +Widget build()
+}
+
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "flutter::src::widgets::scroll_controller.dart::ScrollController"
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "audio_recorder::audio_recorder.dart::Recording"
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "dart::math::Random"
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "audioplayers::audioplayers.dart::AudioPlayer"
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "dart::ui::Color"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::pageCommentaire.dart::pageCommentaireState"
+
+class "test_flutter::screens::pageCommentaire.dart::imagePage" {
+  +String url
+  +_imagePageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::pageCommentaire.dart::imagePage"
+
+class "test_flutter::screens::pageCommentaire.dart::_imagePageState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::pageCommentaire.dart::_imagePageState"
+
+class "test_flutter::screens::pageQuestion.dart::Questions" {
+  +String idProf
+  +String id
+  +String role
+  +_QuestionsState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::pageQuestion.dart::Questions"
+
+class "test_flutter::screens::pageQuestion.dart::_QuestionsState" {
+  +bool isLoading
+  +bool isEmpty
+  +List questions
+  -dynamic _getQuestions()
+  -dynamic _stream()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::pageQuestion.dart::_QuestionsState"
+
+class "test_flutter::screens::pageQuestion.dart::creationQuestion" {
+  +String idSender
+  +String idReceiver
+  +_creationQuestionState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::pageQuestion.dart::creationQuestion"
+
+class "test_flutter::screens::pageQuestion.dart::_creationQuestionState" {
+  +TextEditingController questionText
+  -int _indexType
+  +List<String> types
+  -dynamic _envoyerQuestion()
+  +Widget build()
+}
+
+"test_flutter::screens::pageQuestion.dart::_creationQuestionState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::pageQuestion.dart::_creationQuestionState"
+
+class "test_flutter::screens::pageQuestion.dart::creationQuestionGroupe" {
+  +String idSender
+  +List idReceivers
+  +_creationQuestionGroupeState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::pageQuestion.dart::creationQuestionGroupe"
+
+class "test_flutter::screens::pageQuestion.dart::_creationQuestionGroupeState" {
+  +TextEditingController questionText
+  -int _indexType
+  +List<String> types
+  -dynamic _envoyerQuestion()
+  +Widget build()
+}
+
+"test_flutter::screens::pageQuestion.dart::_creationQuestionGroupeState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::pageQuestion.dart::_creationQuestionGroupeState"
+
+class "test_flutter::screens::profilEleve.dart::profilEleve" {
+  +profilEleveState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::profilEleve.dart::profilEleve"
+
+class "test_flutter::screens::profilEleve.dart::profilEleveState" {
+  +Map userData
+  +String idStudent
+  +String name
+  +String lastName
+  +String stage
+  +String yearDebut
+  +String yearFin
+  +String mail
+  +String schoolYearBegin
+  +String schoolYearEnd
+  +String stageDesc
+  +String role
+  +String profId
+  +dynamic users
+  -dynamic _setInfo()
+  -dynamic _getUsers()
+  -dynamic _getUserName()
+  +void initState()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::profilEleve.dart::profilEleveState"
+
+class "test_flutter::screens::questionsStage.dart::questionStage" {
+  +questionStageState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::questionsStage.dart::questionStage"
+
+class "test_flutter::screens::questionsStage.dart::questionStageState" {
+  +mainPageEleveState mainInstance
+  +List questions
+  +List users
+  +Map userData
+  -int _currentIndex
+  +String type
+  +String section
+  +bool isSearching
+  +bool isLoading
+  +String nomEleve
+  +Text titreEnseignant
+  +List filteredQuestionTab
+  +List questionSectionTab
+  +dynamic questionSection
+  +FlutterTts flutterTts
+  +String language
+  -dynamic _save()
+  -dynamic _readDB()
+  +dynamic initTts()
+  +void dispose()
+  -Future _read()
+  -dynamic _getDataOffline()
+  -dynamic _getDataOnline()
+  -dynamic _getUser()
+  -String _getUsername()
+  -void _selectedTab()
+  -dynamic _getQuestionSection()
+  -dynamic _getBody()
+  -Future _refresh()
+  -void _filterQuestions()
+  +void initState()
+  +Widget build()
+}
+
+"test_flutter::screens::questionsStage.dart::questionStageState" o-- "test_flutter::screens::mainPageEleve.dart::mainPageEleveState"
+"test_flutter::screens::questionsStage.dart::questionStageState" o-- "flutter::src::widgets::text.dart::Text"
+"test_flutter::screens::questionsStage.dart::questionStageState" o-- "flutter_tts::flutter_tts.dart::FlutterTts"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::questionsStage.dart::questionStageState"
+
+class "test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBarItem" {
+  +String text
+}
+
+class "test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBar" {
+  +List<FABBottomAppBarItem> items
+  +String centerItemText
+  +double height
+  +double iconSize
+  +Color backgroundColor
+  +Color color
+  +Color selectedColor
+  +NotchedShape notchedShape
+  +void Function(int) onTabSelected
+  +String role
+  +bool questionEleve
+  +State createState()
+}
+
+"test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBar" o-- "dart::ui::Color"
+"test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBar" o-- "flutter::src::painting::notched_shapes.dart::NotchedShape"
+"test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBar" o-- "flutter::src::foundation::basic_types.dart::void Function(int)"
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBar"
+
+class "test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBarState" {
+  -int _selectedIndex
+  -dynamic _updateIndex()
+  +Widget build()
+  -Widget _buildMiddleTabItem()
+  -Widget _buildTabItem()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::widgets::fabbottomappbar.dart::FABBottomAppBarState"
+
+
+@enduml

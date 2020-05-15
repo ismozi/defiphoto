@@ -19,6 +19,10 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   List comments = [{}];
   Map userData = {};
 
+  bool isSearching = false;
+
+  bool isLoading = true;
+
   Future<Null> logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('givenId', null);
@@ -94,16 +98,23 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   }
 
   Widget _getBody(int index) {
-    switch (index) {
-      case 0:
-        return _createList(users, true, false, false);
-        break;
-      case 1:
-        return _createList(questions, false, true, false);
-        break;
-      case 2:
-        return _createList(comments, false, false, true);
-        break;
+    if (!isLoading) {
+      switch (index) {
+        case 0:
+          return _createList(users, true, false, false);
+          break;
+        case 1:
+          return _createList(questions, false, true, false);
+          break;
+        case 2:
+          return _createList(comments, false, false, true);
+          break;
+      }
+    } else if (isLoading) {
+      return Container(
+          color: Color(0xff141a24),
+          child: Center(
+              child: SpinKitDoubleBounce(size: 40, color: Colors.white)));
     }
   }
 
@@ -130,9 +141,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       bottomLeft: Radius.circular(20),
                       topLeft: Radius.circular(20)),
                 ),
-                child:
-        
-                    ListTile(
+                child: ListTile(
                   title: Text(
                     isUser
                         ? array[index]['firstName'] +
@@ -151,8 +160,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                   array[index]["role"] +
                                   "  " +
                                   "ID : " +
-                                  array[index]["givenId"] 
-                                   ??
+                                  array[index]["givenId"] ??
                               ""
                           : isComment
                               ? isFileFound
@@ -231,18 +239,18 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                 }
                                 if (isComment && !isFileFound) {
                                   String id = array[index]['_id'];
-                                  try{
-                                  var response = await http.delete(
-                                      "https://defiphoto-api.herokuapp.com/comments/$id");
-                                      } catch (e) {
+                                  try {
+                                    var response = await http.delete(
+                                        "https://defiphoto-api.herokuapp.com/comments/$id");
+                                  } catch (e) {
                                     if (e is SocketException) {}
                                   }
                                 }
                                 if (isQuestion) {
                                   String id = array[index]['_id'];
-                                  try{
-                                  var response = await http.delete(
-                                      "https://defiphoto-api.herokuapp.com/questions/$id");
+                                  try {
+                                    var response = await http.delete(
+                                        "https://defiphoto-api.herokuapp.com/questions/$id");
                                   } catch (e) {
                                     if (e is SocketException) {}
                                   }
@@ -250,10 +258,10 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
                                 if (isUser) {
                                   String id = array[index]['givenId'];
-                                  try{
-                                  var response = await http.delete(
-                                      "https://defiphoto-api.herokuapp.com/users/$id");
-                                  print('Done!');
+                                  try {
+                                    var response = await http.delete(
+                                        "https://defiphoto-api.herokuapp.com/users/$id");
+                                    print('Done!');
                                   } catch (e) {
                                     if (e is SocketException) {}
                                   }
@@ -279,7 +287,6 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       },
                     );
                   },
-                  
                 ),
               ));
         });
@@ -297,6 +304,15 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _getUsers().then((data) {
+      isLoading = false;
+    });
+    _getQuestions().then((data) {
+      isLoading = false;
+    });
+    _getComments().then((data) {
+      isLoading = false;
+    });
     _stream();
   }
 
@@ -311,9 +327,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                 logout();
                 Navigator.of(context).pushReplacementNamed('/login');
               }),
-          actions: <Widget>[
-            IconButton(icon: Icon(Icons.search), onPressed: null)
-          ],
+          actions: <Widget>[],
           flexibleSpace: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -321,23 +335,23 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                     end: Alignment.bottomRight,
                     colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
           ),
-          title: Center(
-            child: Text("Défi photo (Admin)",
+          title: Padding(
+            padding: EdgeInsets.fromLTRB(25, 0, 12, 0),
+            child: Text("Défi photo - Admin",
                 style: TextStyle(
                   fontFamily: 'Arboria',
                 )),
           )),
       backgroundColor: Color(0xff141a24),
-      body: //REGARDER PK MARCHE PAS LORSQUE USERS.LENGTH>0
-          users.length > 1
-              ? _getBody(_selectedIndex)
-              : Center(
-                  child: Text("Il n'y pas d'utilisateurs",
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 20,
-                          letterSpacing: 1.2,
-                          fontFamily: 'Arboria'))),
+      body: users.length > 0
+          ? _getBody(_selectedIndex)
+          : Center(
+              child: Text("Il n'y pas d'utilisateurs",
+                  style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 20,
+                      letterSpacing: 1.2,
+                      fontFamily: 'Arboria'))),
       floatingActionButton: _selectedIndex != 0
           ? null
           : FloatingActionButton(
