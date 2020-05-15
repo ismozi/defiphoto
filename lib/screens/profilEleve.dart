@@ -91,7 +91,6 @@ _getUsers() async {
             ])          
          ),        
      ),      
-          
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
