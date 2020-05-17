@@ -107,20 +107,17 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   _makePatchRequest() async {
+  
+      String questionId = questionData["questionId"];
+      String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
+      var data = [
+        {"propName": "isAns", "value": "true"}
+      ];
+      var response = await http.patch(url, body: data);
+      print(response.body);
+      print('Done');
     
-  String questionId = questionData["questionId"];
-  String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
-  var data = 
-  [
-    {
-      "propName" : "isAns", "value" : "true"
-    }
-    ];
-  var response = await http.patch(url, body: data);
-  print(response.body);
-  print('Done');
-    }
-}
+  }
 
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
     String filePath;
@@ -325,7 +322,7 @@ class pageCommentaireState extends State<pageCommentaire> {
         ],
       ),
     );
-    setState(() {});
+   
   }
 
   _ouvrirGallery() async {
@@ -374,10 +371,8 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          if (questionData['isAns']=="false") {
-            print(questionData['isAns']);
+          if (questionData['isAns'] == 'false') {
             _makePatchRequest();
-             print(questionData['isAns']);
           }
           Timer(
               Duration(milliseconds: 1),
@@ -405,7 +400,6 @@ class pageCommentaireState extends State<pageCommentaire> {
       if (this.mounted) {
         setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
-          
           _getCommentaires();
         });
       }
@@ -417,7 +411,6 @@ class pageCommentaireState extends State<pageCommentaire> {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
     await for (int i in stream) {
-         questionData = ModalRoute.of(context).settings.arguments;
       if (this.mounted) {
         setState(() {
           if (!_isLoading) {
@@ -430,7 +423,7 @@ class pageCommentaireState extends State<pageCommentaire> {
               previousMessageLenght = commentaires.length;
             }
           }
-       
+          questionData = ModalRoute.of(context).settings.arguments;
           _getCommentaires();
         });
       }
@@ -477,11 +470,16 @@ class pageCommentaireState extends State<pageCommentaire> {
               onPressed: () {
                 Navigator.of(context).pop();
               }),
-          actions: <Widget>[IconButton(
-              icon: Icon(Icons.arrow_downward),
-              onPressed: () {
-                _scrollController.animateTo(_scrollController.position.maxScrollExtent,duration: Duration(milliseconds: 1000),curve: Curves.ease);
-              })],
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.arrow_downward),
+                onPressed: () {
+                  _scrollController.animateTo(
+                      _scrollController.position.maxScrollExtent,
+                      duration: Duration(milliseconds: 1000),
+                      curve: Curves.ease);
+                })
+          ],
           title: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,7 +490,6 @@ class pageCommentaireState extends State<pageCommentaire> {
                   opacity: 0.65,
                 )
               ]),
-              
         ),
         body: Container(
             color: Color(0xff141a24),
@@ -504,24 +501,23 @@ class pageCommentaireState extends State<pageCommentaire> {
                     child: Stack(children: <Widget>[
                       Positioned.fill(
                           child: Column(children: <Widget>[
-                             Container(
-                  padding: EdgeInsets.fromLTRB(10,10,10,0),
-                  height: 100,
-                  width: double.maxFinite,
-                  child: Card(
-                    color: Color(0xFF2b3444),
-
-                    child: Center(
-                      child: Text(
-                                                  questionData['text']??"",
-                                                  style: TextStyle(
-                                                      color: Color(0xff141a24),
-                                                      fontSize: 19.0,
-                                                      fontFamily: 'Arboria'),
-                                                ),
-                    ),
-                    elevation: 5,
-                  )),
+                        Container(
+                            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                            height: 100,
+                            width: double.maxFinite,
+                            child: Card(
+                              color: Color(0xFF2b3444),
+                              child: Center(
+                                child: Text(
+                                  questionData['text'] ?? "",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19.0,
+                                      fontFamily: 'Arboria'),
+                                ),
+                              ),
+                              elevation: 5,
+                            )),
                         Expanded(
                           child: _isLoading
                               ? Center(
