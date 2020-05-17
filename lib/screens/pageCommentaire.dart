@@ -374,8 +374,10 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          if (!questionData['isAns']) {
+          if (questionData['isAns']=="false") {
+            print(questionData['isAns']);
             _makePatchRequest();
+             print(questionData['isAns']);
           }
           Timer(
               Duration(milliseconds: 1),
@@ -414,6 +416,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
     await for (int i in stream) {
+         questionData = ModalRoute.of(context).settings.arguments;
       if (this.mounted) {
         setState(() {
           if (!_isLoading) {
@@ -426,7 +429,7 @@ class pageCommentaireState extends State<pageCommentaire> {
               previousMessageLenght = commentaires.length;
             }
           }
-          questionData = ModalRoute.of(context).settings.arguments;
+       
           _getCommentaires();
         });
       }
@@ -500,6 +503,24 @@ class pageCommentaireState extends State<pageCommentaire> {
                     child: Stack(children: <Widget>[
                       Positioned.fill(
                           child: Column(children: <Widget>[
+                             Container(
+                  padding: EdgeInsets.fromLTRB(10,10,10,0),
+                  height: 100,
+                  width: double.maxFinite,
+                  child: Card(
+                    color: Color(0xFF2b3444),
+
+                    child: Center(
+                      child: Text(
+                                                  questionData['text']??"",
+                                                  style: TextStyle(
+                                                      color: Color(0xff141a24),
+                                                      fontSize: 19.0,
+                                                      fontFamily: 'Arboria'),
+                                                ),
+                    ),
+                    elevation: 5,
+                  )),
                         Expanded(
                           child: _isLoading
                               ? Center(

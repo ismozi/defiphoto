@@ -321,7 +321,9 @@ class questionStageState extends State<questionStage> {
                                                 filteredQuestionTab[index]
                                                     ["id"],
                                             'givenId': userData['givenId'],
-                                            'role': userData['role']
+                                            'role': userData['role'],
+                                            'text':filteredQuestionTab[index]
+                                              ["text"]
                                           });
                               },
                             ),
