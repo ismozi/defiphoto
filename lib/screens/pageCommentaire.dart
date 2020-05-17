@@ -371,9 +371,12 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          if (questionData['isAns'] == 'false') {
+          print(questionData['isAns']);
+          if (questionData['isAns'] == false) {
+            print(questionData['isAns']);
            setState(() {
              _makePatchRequest();
+             print(questionData['isAns']);
            });
           }
           Timer(
