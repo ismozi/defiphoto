@@ -372,7 +372,9 @@ class pageCommentaireState extends State<pageCommentaire> {
             body: data);
         if (response.statusCode == 200) {
           if (questionData['isAns'] == 'false') {
-            _makePatchRequest();
+           setState(() {
+             _makePatchRequest();
+           });
           }
           Timer(
               Duration(milliseconds: 1),
@@ -501,7 +503,9 @@ class pageCommentaireState extends State<pageCommentaire> {
                     child: Stack(children: <Widget>[
                       Positioned.fill(
                           child: Column(children: <Widget>[
-                        Container(
+                        Visibility(
+                          visible: _isLoading?false:true,
+                        child:Container(
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                             height: 100,
                             width: double.maxFinite,
@@ -517,7 +521,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 ),
                               ),
                               elevation: 5,
-                            )),
+                            ))),
                         Expanded(
                           child: _isLoading
                               ? Center(
