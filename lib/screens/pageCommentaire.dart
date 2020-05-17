@@ -107,7 +107,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   _makePatchRequest() async {
-    if(questionData["isAns"]=false){
+    
   String questionId = questionData["questionId"];
   String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
   var data = 
@@ -118,7 +118,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     ];
   var response = await http.patch(url, body: data);
   print(response.body);
-    }
+    print('Done');
 }
 
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
@@ -373,8 +373,10 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          if (!questionData['isAns']) {
+         if (questionData['isAns']==false) {
+            print(questionData['isAns']);
             _makePatchRequest();
+             print(questionData['isAns']);
           }
           Timer(
               Duration(milliseconds: 1),
@@ -402,6 +404,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       if (this.mounted) {
         setState(() {
           questionData = ModalRoute.of(context).settings.arguments;
+          
           _getCommentaires();
         });
       }
@@ -426,6 +429,7 @@ class pageCommentaireState extends State<pageCommentaire> {
             }
           }
           questionData = ModalRoute.of(context).settings.arguments;
+          
           _getCommentaires();
         });
       }
