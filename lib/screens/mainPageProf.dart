@@ -104,11 +104,11 @@ class mainPageProfState extends State<mainPageProf> {
             hasConnection = true;
           } else {
             hasConnection = false;
-            print('FUK');
+            
           }
         } on SocketException catch (_) {
           hasConnection = false;
-          print('FUKMAN');
+         
         }
         if (userData['connection'] == !hasConnection) {
           if (this.mounted) {

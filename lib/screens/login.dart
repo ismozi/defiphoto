@@ -82,6 +82,7 @@ class _LoginState extends State<Login> {
                     'stageName': userData['stageName'],
                     'yearDebut': userData['schoolYearBegin'],
                     'yearFin': userData['schoolYearEnd'],
+                    'connection': _hasNetworkConnection
                   });
             }
             if (userData["role"] == "P") {
@@ -270,6 +271,25 @@ class _LoginState extends State<Login> {
             'yearDebut': yearDebut,
             'yearFin': yearFin,
             'questionEleve': false,
+            'connection': false
+          });
+        });
+      }
+    } else if (userId != null &&
+        password != null &&
+        !_hasNetworkConnection &&
+        role == 'A') {
+      if (this.mounted) {
+        setState(() {
+          Navigator.pushReplacementNamed(context, '/mainPageAdmin', arguments: {
+            'givenId': userId,
+            'firstName': firstName,
+            'lastName': lastName,
+            'email': email,
+            'role': role,
+            'stageName': stageName,
+            'yearDebut': yearDebut,
+            'yearFin': yearFin,
             'connection': false
           });
         });

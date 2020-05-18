@@ -57,7 +57,7 @@ class customDrawer extends StatelessWidget {
                                           userData['lastName'],
                                       style: TextStyle(
                                           fontFamily: 'Arboria',
-                                          fontSize: 25)))),
+                                          fontSize: 23)))),
                           Positioned(
                               top: 50,
                               left: 1,
@@ -166,7 +166,7 @@ class customDrawer extends StatelessWidget {
                                               userData['lastName'],
                                           style: TextStyle(
                                               fontFamily: 'Arboria',
-                                              fontSize: 25)))),
+                                              fontSize: 23)))),
                               Positioned(
                                   top: 50,
                                   left: 1,
@@ -236,7 +236,7 @@ class customDrawer extends StatelessWidget {
                                               userData['lastName'],
                                           style: TextStyle(
                                               fontFamily: 'Arboria',
-                                              fontSize: 25)))),
+                                              fontSize: 23)))),
                               Positioned(
                                   top: 50,
                                   left: 1,

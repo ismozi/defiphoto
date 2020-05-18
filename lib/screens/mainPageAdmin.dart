@@ -7,6 +7,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../main.dart';
+
 class mainPageAdmin extends StatefulWidget {
   @override
   _mainPageAdminState createState() => _mainPageAdminState();
@@ -18,6 +20,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   List questions = [{}];
   List comments = [{}];
   Map userData = {};
+
+  bool hasConnection;
 
   bool isSearching = false;
 
@@ -125,7 +129,6 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   }
 
   _createList(dynamic array, bool isUser, bool isQuestion, bool isComment) {
-    
     String url;
 
     return array.length > 0
@@ -308,8 +311,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
             })
         : Center(
             child: isUser
-                ? Text(
-                    "Il n'y a pas d'utilisateur",
+                ? Text("Il n'y a pas d'utilisateur",
                     style: TextStyle(
                         color: Colors.blueGrey,
                         fontSize: 20,
@@ -334,7 +336,28 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
     await for (int i in stream) {
-      _getData();
+      if (this.mounted) {
+        _getData();
+        try {
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            hasConnection = true;
+          } else {
+            hasConnection = false;
+            print('FUK');
+          }
+        } on SocketException catch (_) {
+          hasConnection = false;
+          print('FUKMAN');
+        }
+        if (userData['connection'] == !hasConnection) {
+          if (this.mounted) {
+            setState(() {
+              RestartWidget.restartApp(context);
+            });
+          }
+        }
+      }
     }
   }
 
@@ -374,21 +397,55 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                   end: Alignment.bottomRight,
                   colors: <Color>[Color(0xff141a24), Color(0xFF2b3444)])),
         ),
-        title: Text("Défi photo - Admin",
-            style: TextStyle(
-              fontFamily: 'Arboria',
-            )),
+        title: userData['connection']
+            ? Text("Défi photo - Admin",
+                style: TextStyle(
+                  fontFamily: 'Arboria',
+                ))
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                    
+                         Text("Défi photo - Admin",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Arboria',
+                            )),
+                    Opacity(
+                      opacity: 0.5,
+                      child: Text("Mode hors-ligne",
+                          style:
+                              TextStyle(fontFamily: 'Arboria', fontSize: 16)),
+                    )
+                  ]),
       ),
       backgroundColor: Color(0xff141a24),
-      body: _getBody(_selectedIndex),
-      floatingActionButton: _selectedIndex != 0
+      body: userData['connection']?_getBody(_selectedIndex):
+      Container(
+                      color: Color(0xff141a24),
+                      child: ListView(children: <Widget>[
+                        SizedBox(height: 200),
+                        Center(
+                            child: RichText(
+                                text: TextSpan(
+                                    text:
+                                        "Vous êtes en mode hors-ligne. \nVous devez vous connecter à\ninternet pour effectuer des actions.",
+                                    style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontSize: 20,
+                                        fontFamily: 'Arboria')),
+                                textAlign: TextAlign.center)),
+                        SizedBox(height: 100)
+                      ])),
+      floatingActionButton: _selectedIndex != 0||!userData['connection']
           ? null
           : FloatingActionButton(
               onPressed: () =>
                   {Navigator.of(context).pushNamed('/ajoutUtilisateur')},
               backgroundColor: Color(0xff444d5d),
               child: Icon(Icons.add, color: Colors.white)),
-      bottomNavigationBar: GradientBottomNavigationBar(
+      bottomNavigationBar: !userData['connection']?null:GradientBottomNavigationBar(
         backgroundColorStart: Color(0xff141a24),
         backgroundColorEnd: Color(0xFF2b3444),
         items: <BottomNavigationBarItem>[

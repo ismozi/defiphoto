@@ -368,6 +368,7 @@ class questionStageState extends State<questionStage> {
             nomEleve = userData['nomEleve'];
             titreEnseignant = Text("Mes questions | " + "$nomEleve",
                 style: TextStyle(
+                  fontSize: 18,
                   fontFamily: 'Arboria',
                 ));
             _getQuestionSection();
