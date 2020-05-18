@@ -137,7 +137,8 @@ class _QuestionsState extends State<Questions> {
                                             .toString()
                                             .trim(),
                                         'givenId': widget.id.toString().trim(),
-                                        'role': widget.role.toString().trim()
+                                        'role': widget.role.toString().trim(),
+                                        'text': questions[index]['text']
                                       });
                                 },
                               ),

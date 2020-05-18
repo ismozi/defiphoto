@@ -125,13 +125,14 @@ class _mainPageAdminState extends State<mainPageAdmin> {
   }
 
   _createList(dynamic array, bool isUser, bool isQuestion, bool isComment) {
-    bool isFileFound = false;
+    
     String url;
 
     return array.length > 0
         ? ListView.builder(
             itemCount: array.length,
             itemBuilder: (context, index) {
+              bool isFileFound = false;
               if (isComment && array[index]['fileName'] != null) {
                 isFileFound = true;
                 url = "https://defiphoto-api.herokuapp.com/comments/file/" +
@@ -166,7 +167,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                       ),
                       subtitle: Text(
                           isUser
-                              ? "Role : " +
+                              ? "Rôle : " +
                                       array[index]["role"] +
                                       "  " +
                                       "ID : " +
@@ -174,7 +175,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                   ""
                               : isComment
                                   ? isFileFound
-                                      ? "Sender : " +
+                                      ? "Expéditeur : " +
                                               _getUsername(
                                                   array[index]["sender"]) +
                                               "\n" +
@@ -182,11 +183,11 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                               _getQuestionname(
                                                   array[index]["questionId"]) +
                                               "\n" +
-                                              "File name : " +
+                                              "Nom de fichier : " +
                                               array[index]["fileName"]
                                                   .toString() ??
                                           ""
-                                      : "Sender : " +
+                                      : "Expéditeur : " +
                                               _getUsername(
                                                   array[index]["sender"]) +
                                               "\n" +
@@ -194,10 +195,10 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                               _getQuestionname(
                                                   array[index]["questionId"]) ??
                                           ""
-                                  : "Sender : " +
+                                  : "Expéditeur : " +
                                           _getUsername(array[index]["sender"]) +
                                           "\n" +
-                                          "Recievers by Id : " +
+                                          "Destinataires pr ID: " +
                                           array[index]["recievers"].toString() +
                                           "\n" +
                                           "Type : " +

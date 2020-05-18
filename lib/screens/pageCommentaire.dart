@@ -107,16 +107,14 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 
   _makePatchRequest() async {
-  
-      String questionId = questionData["questionId"];
-      String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
-      var data = [
-        {"propName": "isAns", "value": "true"}
-      ];
-      var response = await http.patch(url, body: data);
-      print(response.body);
-      print('Done');
-    
+    String questionId = questionData["questionId"];
+    String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
+    var data = [
+      {"propName": "isAns", "value": "true"}
+    ];
+    var response = await http.patch(url, body: data);
+    print(response.body);
+    print('Done');
   }
 
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
@@ -322,7 +320,6 @@ class pageCommentaireState extends State<pageCommentaire> {
         ],
       ),
     );
-   
   }
 
   _ouvrirGallery() async {
@@ -374,10 +371,10 @@ class pageCommentaireState extends State<pageCommentaire> {
           print(questionData['isAns']);
           if (questionData['isAns'] == false) {
             print(questionData['isAns']);
-           setState(() {
-             _makePatchRequest();
-             print(questionData['isAns']);
-           });
+            setState(() {
+              _makePatchRequest();
+              print(questionData['isAns']);
+            });
           }
           Timer(
               Duration(milliseconds: 1),
@@ -507,24 +504,27 @@ class pageCommentaireState extends State<pageCommentaire> {
                       Positioned.fill(
                           child: Column(children: <Widget>[
                         Visibility(
-                          visible: _isLoading?false:true,
-                        child:Container(
-                            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                            height: 100,
-                            width: double.maxFinite,
-                            child: Card(
-                              color: Color(0xFF2b3444),
-                              child: Center(
-                                child: Text(
-                                  questionData['text'] ?? "",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 19.0,
-                                      fontFamily: 'Arboria'),
-                                ),
-                              ),
-                              elevation: 5,
-                            ))),
+                            visible: _isLoading ? false : true,
+                            child: Container(
+                                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                child: Card(
+                                  color: Color(0xFF2b3444),
+                                  child: Padding(padding:EdgeInsets.fromLTRB(10, 10, 10, 10),child:Center(
+                                
+                                      child: RichText(
+                                        textAlign: TextAlign.center,
+                                          text: TextSpan(
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 19,
+                                        fontFamily: 'Arboria')
+                                        ,
+                                    children: [
+                                      TextSpan(text: questionData['text'])
+                                    ],
+                                  )))),
+                                  elevation: 5,
+                                ))),
                         Expanded(
                           child: _isLoading
                               ? Center(
