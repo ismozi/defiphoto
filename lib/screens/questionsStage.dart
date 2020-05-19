@@ -11,16 +11,13 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../models/database_helpers.dart';
 import 'mainPageEleve.dart';
 
-
-
-
 class questionStage extends StatefulWidget {
   questionStageState createState() => new questionStageState();
 }
 
 class questionStageState extends State<questionStage> {
   Widget appBarTitle = Text('Matières et produits',
-    style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
+      style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
   mainPageEleveState mainInstance = new mainPageEleveState();
   List questions = [{}];
   List users = [{}];
@@ -38,13 +35,37 @@ class questionStageState extends State<questionStage> {
 
   List filteredQuestionTab = [];
   List questionSectionTab = [];
+  List commentaires = [{}];
+  List commentairesMe = [{}];
   var questionSection;
-
-  
 
   FlutterTts flutterTts;
 
   String language = 'fr-FR';
+
+  _getCommentaires() async {
+    if (userData['connection']) {
+      try {
+        var response =
+            await http.get("https://defiphoto-api.herokuapp.com/comments");
+        if (response.statusCode == 200) {
+          commentaires = json.decode(response.body);
+        }
+      } catch (e) {
+        if (e is SocketException) {
+          isLoading = false;
+        }
+      }
+    }
+  }
+
+  _getCommentaireMe() {
+    for (int i = 0; i < commentaires.length; i++) {
+      if (commentaires[i]['sender'] == userData['givenId']) {
+        commentairesMe.add(commentaires[i]);
+      }
+    }
+  }
 
   _save() async {
     DatabaseHelper helper = DatabaseHelper.instance;
@@ -75,6 +96,16 @@ class questionStageState extends State<questionStage> {
     flutterTts.setSpeechRate(1.0);
     flutterTts.setVolume(1.0);
     flutterTts.setPitch(1.0);
+  }
+
+  bool checkIfReplied(var question) {
+    bool isAns = false;
+    for (int i = 0; i < commentairesMe.length; i++) {
+      if (question['id'] == commentairesMe[i]['questionId']) {
+        isAns = true;
+      }
+    }
+    return isAns;
   }
 
   @override
@@ -119,8 +150,7 @@ class questionStageState extends State<questionStage> {
       if (response.statusCode == 200 && this.mounted) {
         setState(() {
           questions = json.decode(response.body);
-          if(userData['role']=='S')_save();
-          isLoading = false;
+          if (userData['role'] == 'S') _save();
         });
       }
     } catch (e) {
@@ -225,7 +255,9 @@ class questionStageState extends State<questionStage> {
           "id": questions[i]["_id"],
           "sender": questions[i]["sender"],
           "text": questions[i]["text"],
-          "isAns": questions[i]["isAns"]
+          "isAns": questions[i]["isAns"],
+          "type": questions[i]["type"],
+          "recievers": questions[i]["recievers"],
         };
         if (questions[i]["type"] == section && questions[i] != null) {
           questionSectionTab.add(questionSection);
@@ -276,40 +308,50 @@ class questionStageState extends State<questionStage> {
                                                       ["sender"]) ??
                                               "",
                                       style: TextStyle(fontFamily: 'Arboria')),
-                              leading: userData['role']=='P'&&userData['questionEleve'] ? Icon(
-                                  Icons.chat_bubble_outline,
-                                  size: 40,
-                                ):Icon(
-                                  Icons.comment,
-                                  color:Colors.grey[400],
-                                  size: 35,
-                                ),
-                              trailing: (userData['role']=='S'&&userData['connection'])&&!filteredQuestionTab[index]['isAns']?Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    VerticalDivider(thickness: 1.5),
-                                    IconButton(
-                                        icon: Icon(Icons.volume_up, size: 30),
-                                        onPressed: () {
-                                          _read(filteredQuestionTab[index]
-                                              ["text"]);
-                                        }),
-                                    ClipOval(
-                                        child: Material(
-                                            color: Colors.cyan,
-                                            child: SizedBox(
-                                                width: 13, height: 13)))
-                                  ]):Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: <Widget>[
-                                    VerticalDivider(thickness: 1.5),
-                                    IconButton(
-                                        icon: Icon(Icons.volume_up, size: 30),
-                                        onPressed: () {
-                                          _read(filteredQuestionTab[index]
-                                              ["text"]);
-                                        }),
-                                  ]),
+                              leading: userData['role'] == 'P' &&
+                                      userData['questionEleve']
+                                  ? Icon(
+                                      Icons.chat_bubble_outline,
+                                      size: 40,
+                                    )
+                                  : Icon(
+                                      Icons.comment,
+                                      color: Colors.grey[400],
+                                      size: 35,
+                                    ),
+                              trailing: (userData['role'] == 'S' &&
+                                          userData['connection']) &&
+                                      !checkIfReplied(
+                                          filteredQuestionTab[index])
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                          VerticalDivider(thickness: 1.5),
+                                          IconButton(
+                                              icon: Icon(Icons.volume_up,
+                                                  size: 30),
+                                              onPressed: () {
+                                                _read(filteredQuestionTab[index]
+                                                    ["text"]);
+                                              }),
+                                          ClipOval(
+                                              child: Material(
+                                                  color: Colors.cyan,
+                                                  child: SizedBox(
+                                                      width: 13, height: 13)))
+                                        ])
+                                  : Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                          VerticalDivider(thickness: 1.5),
+                                          IconButton(
+                                              icon: Icon(Icons.volume_up,
+                                                  size: 30),
+                                              onPressed: () {
+                                                _read(filteredQuestionTab[index]
+                                                    ["text"]);
+                                              }),
+                                        ]),
                               contentPadding: EdgeInsets.all(20),
                               onTap: () {
                                 !userData['connection']
@@ -322,41 +364,54 @@ class questionStageState extends State<questionStage> {
                                                     ["id"],
                                             'givenId': userData['givenId'],
                                             'role': userData['role'],
-                                            'text':filteredQuestionTab[index]
-                                              ["text"],
-                                            'isAns':filteredQuestionTab[index]['isAns']  
-
+                                            'text': filteredQuestionTab[index]
+                                                ["text"],
+                                            'isAns': filteredQuestionTab[index]
+                                                ['isAns'],
+                                            'sender': filteredQuestionTab[index]
+                                                ['sender'],
+                                            'recievers':
+                                                filteredQuestionTab[index]
+                                                    ['recievers'],
+                                            'type': filteredQuestionTab[index]
+                                                ['type'],
                                           });
                               },
                             ),
                           ));
                     })
-                : filteredQuestionTab.length==0&&userData['connection'] ?
-                Column(mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[ Center(
-                    child: Text("Il n'y a pas de question",
-                        style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontSize: 20,
-                            letterSpacing: 1.2,
-                            fontFamily: 'Arboria'))),
-                            SizedBox(height:20),
-                            
-                           ClipOval(
-                              child: Material(
-                                  color: Colors.blueGrey,
-                                  child: SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: Center(
-                                        child: IconButton(icon: Icon(Icons.refresh),color: Colors.black, onPressed: () => _refresh()),
-                                      ))))
-                            ]):Center(child:Text("Il n'y a pas de question",
-                        style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontSize: 20,
-                            letterSpacing: 1.2,
-                            fontFamily: 'Arboria'))));
+                : filteredQuestionTab.length == 0 && userData['connection']
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                            Center(
+                                child: Text("Il n'y a pas de question",
+                                    style: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontSize: 20,
+                                        letterSpacing: 1.2,
+                                        fontFamily: 'Arboria'))),
+                            SizedBox(height: 20),
+                            ClipOval(
+                                child: Material(
+                                    color: Colors.blueGrey,
+                                    child: SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: Center(
+                                          child: IconButton(
+                                              icon: Icon(Icons.refresh),
+                                              color: Colors.black,
+                                              onPressed: () => _refresh()),
+                                        ))))
+                          ])
+                    : Center(
+                        child: Text("Il n'y a pas de question",
+                            style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 20,
+                                letterSpacing: 1.2,
+                                fontFamily: 'Arboria'))));
   }
 
   Future<Null> _refresh() async {
@@ -373,7 +428,17 @@ class questionStageState extends State<questionStage> {
                 ));
             _getQuestionSection();
             filteredQuestionTab = questionSectionTab;
+            if (userData['role'] == 'P') {
+              isLoading = false;
+            } 
           });
+          if (userData['role'] == 'S') {
+              _getCommentaires().then((data) {
+                _getCommentaireMe();
+                isLoading = false;
+              });
+            }
+
           _getUser();
         } else if (!userData['connection']) {
           setState(() {

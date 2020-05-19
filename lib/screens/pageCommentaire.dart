@@ -49,6 +49,8 @@ class pageCommentaireState extends State<pageCommentaire> {
       isPlaying = true;
     }
   }
+  
+  
 
   _getCommentaires() async {
     String id = questionData["questionId"];
@@ -106,17 +108,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     }
   }
 
-  _makePatchRequest() async {
-    String questionId = questionData["questionId"];
-    String url = 'https://defiphoto-api.herokuapp.com/questions/$questionId';
-    var data = [
-      {"propName": "isAns", "value": "true"}
-    ];
-    var response = await http.patch(url, body: data);
-    print(response.body);
-    print('Done');
-  }
-
+  
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
     String filePath;
     String url;
@@ -368,14 +360,8 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-          print(questionData['isAns']);
-          if (questionData['isAns'] == false) {
-            print(questionData['isAns']);
-            setState(() {
-              _makePatchRequest();
-              print(questionData['isAns']);
-            });
-          }
+         
+      
           Timer(
               Duration(milliseconds: 1),
               () => _scrollController
@@ -427,6 +413,8 @@ class pageCommentaireState extends State<pageCommentaire> {
           }
           questionData = ModalRoute.of(context).settings.arguments;
           _getCommentaires();
+          
+          
         });
       }
     }
