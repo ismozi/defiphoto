@@ -266,6 +266,19 @@ class questionStageState extends State<questionStage> {
     }
   }
 
+  goToPageCommentaire(var filteredQuestionTab) async {
+    await Navigator.pushNamed(context, '/pageCommentaire', arguments: {
+      'questionId': filteredQuestionTab["id"],
+      'givenId': userData['givenId'],
+      'role': userData['role'],
+      'text': filteredQuestionTab["text"],
+      'isAns': filteredQuestionTab['isAns'],
+      'sender': filteredQuestionTab['sender'],
+      'recievers': filteredQuestionTab['recievers'],
+      'type': filteredQuestionTab['type'],
+    }).then((value) => _refresh());
+  }
+
   _getBody(int currentIndex) {
     return isLoading
         ? Container(
@@ -356,26 +369,7 @@ class questionStageState extends State<questionStage> {
                               onTap: () {
                                 !userData['connection']
                                     ? null
-                                    : Navigator.pushNamed(
-                                        context, '/pageCommentaire',
-                                        arguments: {
-                                            'questionId':
-                                                filteredQuestionTab[index]
-                                                    ["id"],
-                                            'givenId': userData['givenId'],
-                                            'role': userData['role'],
-                                            'text': filteredQuestionTab[index]
-                                                ["text"],
-                                            'isAns': filteredQuestionTab[index]
-                                                ['isAns'],
-                                            'sender': filteredQuestionTab[index]
-                                                ['sender'],
-                                            'recievers':
-                                                filteredQuestionTab[index]
-                                                    ['recievers'],
-                                            'type': filteredQuestionTab[index]
-                                                ['type'],
-                                          });
+                                    : goToPageCommentaire(filteredQuestionTab[index]);
                               },
                             ),
                           ));
@@ -430,14 +424,14 @@ class questionStageState extends State<questionStage> {
             filteredQuestionTab = questionSectionTab;
             if (userData['role'] == 'P') {
               isLoading = false;
-            } 
+            }
           });
           if (userData['role'] == 'S') {
-              _getCommentaires().then((data) {
-                _getCommentaireMe();
-                isLoading = false;
-              });
-            }
+            _getCommentaires().then((data) {
+              _getCommentaireMe();
+              isLoading = false;
+            });
+          }
 
           _getUser();
         } else if (!userData['connection']) {
