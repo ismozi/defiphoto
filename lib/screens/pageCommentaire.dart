@@ -24,34 +24,42 @@ class pageCommentaire extends StatefulWidget {
 }
 
 class pageCommentaireState extends State<pageCommentaire> {
-  File imageFile;
-  TextEditingController messageSend = new TextEditingController();
+  //Map et liste pour stocker l'information sur question et les commentaires
   Map questionData = {};
   List commentaires = [{}];
-  bool _isLoading = true;
-  ScrollController _scrollController = new ScrollController();
-  bool canScroll = true;
-  bool messageBuilt = false;
 
+  //Variables booléenne pour les différents états de l'application
+  bool canScroll = true;
+  bool isPlaying = false;
+  bool _isRecording = false;
+  bool _isLoading = true;
+
+  //Controllers
+  ScrollController _scrollController = new ScrollController();
+  TextEditingController messageSend = new TextEditingController();
+
+  //Fichier pour stocker l'image
+  File imageFile;
+
+  //Variables pour vérifier si le listView devrait scroll
   int currentMessageLenght;
   int previousMessageLenght = 0;
 
+  //Instance du audioRecoder
   Recording _recording = new Recording();
-  bool _isRecording = false;
-  Random random = new Random();
-  AudioPlayer audioPlayer = AudioPlayer();
-  bool isPlaying = false;
-  Color couleurPlay = Colors.white;
 
+  //Instance de AudioPlayer
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  //Méthode qui permet de faire jouer un fichier audio
   play(String url) async {
     int result = await audioPlayer.play(url);
     if (result == 1) {
       isPlaying = true;
     }
   }
-  
-  
 
+  //Méthode qui fait un appel à l'API pour obtenir les commentaire reliés à la question
   _getCommentaires() async {
     String id = questionData["questionId"];
     try {
@@ -68,7 +76,8 @@ class pageCommentaireState extends State<pageCommentaire> {
     }
   }
 
-  _start() async {
+  //Méthode qui permet de commencer l'enregistrement audio
+  _startRecording() async {
     try {
       if (await AudioRecorder.hasPermissions) {
         await AudioRecorder.start();
@@ -86,7 +95,8 @@ class pageCommentaireState extends State<pageCommentaire> {
     }
   }
 
-  _stop() async {
+  //Méthode qui permet d'arrêter l'enregistrement audio
+  _stopRecording() async {
     var recording = await AudioRecorder.stop();
     print("Stop recording: ${recording.path}");
     bool isRecording = await AudioRecorder.isRecording;
@@ -99,6 +109,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
   }
 
+  //Méthode qui permet de supprimer un commentaire
   _enleverCommentaire(dynamic message) async {
     String id = message['_id'];
     var response =
@@ -108,7 +119,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     }
   }
 
-  
+  //Méthode qui permet de construie l'aspect visuel d'un commentaire (bulle)
   _buildCommentaire(dynamic message, bool isMe, bool isStudent, bool fromData) {
     String filePath;
     String url;
@@ -314,39 +325,21 @@ class pageCommentaireState extends State<pageCommentaire> {
     );
   }
 
+  //Méthode qui permet d'ouvrir la gallerie pour envoyer une photo
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    // var compImage = await _compresserImage(image,'/storage');
 
     _envoyerImage(image.path);
-    // compImage.delete();
   }
 
+  //Méthode qui permet d'ouvrir la caméra pour envoyer une photo
   _ouvrirCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    // var compImage = await _compresserImage(image, '/storage');
 
     _envoyerImage(image.path);
-    // compImage.delete();
   }
 
-//  Future<File> _compresserImage(File file, String targetPath) async {
-//     try{
-//         var result = await FlutterImageCompress.compressAndGetFile(
-//         file.absolute.path, targetPath,
-//         quality: 88,
-//         rotate: 180,
-//       );
-//     print(file.lengthSync());
-//     print(result.lengthSync());
-//     return result;
-//     }
-//     catch(err){
-//       print(err);
-//       return file;
-//     }
-//   }
-
+  //Méthode qui permet d'envoyer un commentaire
   _envoyerCommentaire(String text) async {
     if (text.trim().isNotEmpty) {
       var data = {
@@ -360,8 +353,6 @@ class pageCommentaireState extends State<pageCommentaire> {
             "https://defiphoto-api.herokuapp.com/comments/noFile",
             body: data);
         if (response.statusCode == 200) {
-         
-      
           Timer(
               Duration(milliseconds: 1),
               () => _scrollController
@@ -372,7 +363,7 @@ class pageCommentaireState extends State<pageCommentaire> {
       }
     }
   }
-
+  //Méthode qui permet d'envoyer un image
   _envoyerImage(dynamic filePath) async {
     var reponse = await http.MultipartRequest(
         'POST', Uri.parse("https://defiphoto-api.herokuapp.com/comments/"))
@@ -394,7 +385,8 @@ class pageCommentaireState extends State<pageCommentaire> {
     });
     return null;
   }
-
+  //Méthode du "stream" qui permet de faire une mise à jour des messages en continu et de scroll la conversation
+  //s'il y a un nouveau message
   void stream() async {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
@@ -413,13 +405,12 @@ class pageCommentaireState extends State<pageCommentaire> {
           }
           questionData = ModalRoute.of(context).settings.arguments;
           _getCommentaires();
-          
-          
         });
       }
     }
   }
-
+  
+  //Méthode qui permet de scroll à la fin de la conversation lorsqu'on entre sur celle-ci
   Future<void> autoScrollStart() async {
     if (_scrollController.hasClients) {
       if (canScroll) {
@@ -429,6 +420,7 @@ class pageCommentaireState extends State<pageCommentaire> {
     }
   }
 
+  //Méthode qui est appelé en premier, elle initialise le stream
   @override
   void initState() {
     // TODO: implement initState
@@ -436,10 +428,10 @@ class pageCommentaireState extends State<pageCommentaire> {
 
     stream();
   }
-
+  
+  //Méthode qui permet de construire l'aspect visuel
   @override
   Widget build(BuildContext context) {
-    // List<Message> commentaires = _gestionTab();
     bool isMe;
     bool isStudent;
     bool fromData;
@@ -497,20 +489,23 @@ class pageCommentaireState extends State<pageCommentaire> {
                                 padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                                 child: Card(
                                   color: Color(0xFF2b3444),
-                                  child: Padding(padding:EdgeInsets.fromLTRB(10, 10, 10, 10),child:Center(
-                                
-                                      child: RichText(
-                                        textAlign: TextAlign.center,
-                                          text: TextSpan(
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 19,
-                                        fontFamily: 'Arboria')
-                                        ,
-                                    children: [
-                                      TextSpan(text: questionData['text'])
-                                    ],
-                                  )))),
+                                  child: Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                      child: Center(
+                                          child: RichText(
+                                              textAlign: TextAlign.center,
+                                              text: TextSpan(
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 19,
+                                                    fontFamily: 'Arboria'),
+                                                children: [
+                                                  TextSpan(
+                                                      text:
+                                                          questionData['text'])
+                                                ],
+                                              )))),
                                   elevation: 5,
                                 ))),
                         Expanded(
@@ -685,9 +680,9 @@ class pageCommentaireState extends State<pageCommentaire> {
                                     onTap: () {
                                       setState(() {
                                         if (!_isRecording) {
-                                          _start();
+                                          _startRecording();
                                         } else if (_isRecording) {
-                                          _stop();
+                                          _stopRecording();
                                         }
                                       });
                                     },
@@ -701,6 +696,7 @@ class pageCommentaireState extends State<pageCommentaire> {
   }
 }
 
+//Classe et méthode qui permet d'appuyer sur une image pour la visualiser en plein écran
 class imagePage extends StatefulWidget {
   String url;
   imagePage(String url) {

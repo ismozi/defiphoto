@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../main.dart';
 
 class mainPageAdmin extends StatefulWidget {
@@ -15,24 +14,29 @@ class mainPageAdmin extends StatefulWidget {
 }
 
 class _mainPageAdminState extends State<mainPageAdmin> {
-  int _selectedIndex = 0;
+ 
+  //Listes et Map pour stocker les informations 
   List users = [{}];
   List questions = [{}];
   List comments = [{}];
   Map userData = {};
 
+  //Variable qui détermine quelle onglet est actif
+  int _selectedIndex = 0;
+
+  //Variable booléenne qui détermine différent état de l'application
   bool hasConnection;
-
   bool isSearching = false;
-
   bool isLoading = true;
 
+  //Méthode qui déconnecte tout en effacant les données enregistrées
   Future<Null> logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('givenId', null);
     prefs.setString('password', null);
   }
-
+  
+  //Méthode qui fait un appel à l'API pour obtenir les utilisateurs
   _getUsers() async {
     try {
       var response =
@@ -48,7 +52,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
       }
     }
   }
-
+  
+  //Méthode qui fait un appel à l'API pour obtenir les questions
   _getQuestions() async {
     try {
       var response =
@@ -64,7 +69,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
       }
     }
   }
-
+  
+  //Méthode qui fait un appel à l'API pour obtenir les commentaires
   _getComments() async {
     try {
       var response =
@@ -81,12 +87,14 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     }
   }
 
+  //Méthode qui permet d'obtenir toutes les données nécessaires
   _getData() {
     _getUsers();
     _getQuestions();
     _getComments();
   }
-
+  
+  //Méthode qui permet d'obtenir le nom d'un utilisateur
   String _getUsername(String id) {
     String name = "";
     for (int i = 0; i < users.length; i++) {
@@ -97,6 +105,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     return name;
   }
 
+  //Méthode qui permet d'obtenir le texte d'une question
   String _getQuestionname(String id) {
     String name = "";
     for (int i = 0; i < questions.length; i++) {
@@ -107,6 +116,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     return name;
   }
 
+  //Méthode qui permet d'obtenir le contenu du body de la vue
   Widget _getBody(int index) {
     if (!isLoading) {
       switch (index) {
@@ -127,7 +137,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
               child: SpinKitDoubleBounce(size: 40, color: Colors.white)));
     }
   }
-
+  
+  //Méthode qui créé la liste qui sera affiché dans le body
   _createList(dynamic array, bool isUser, bool isQuestion, bool isComment) {
     String url;
 
@@ -332,6 +343,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                             fontFamily: 'Arboria')));
   }
 
+  //Méthode "stream" qui permet d'obtenir continuellement les données et de vérifier la connexion à internet
   _stream() async {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
@@ -361,6 +373,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     }
   }
 
+  //Première fonction qui est appelée, fait les appels nécessaires pour obtenir les données
+  //et initialise le stream
   @override
   void initState() {
     // TODO: implement initState
@@ -376,7 +390,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
     _stream();
   }
-
+  //Méthode qui construit l'affichage
   @override
   Widget build(BuildContext context) {
     userData = ModalRoute.of(context).settings.arguments;
