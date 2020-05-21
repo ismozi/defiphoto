@@ -48,6 +48,7 @@ class mainPageEleveState extends State<mainPageEleve> {
   List commentairesMe = [{}];
 
   var users;
+  var imageProfil;
   
   Uint8List imageBytes;
 
@@ -105,15 +106,16 @@ class mainPageEleveState extends State<mainPageEleve> {
     }
   }
 
-   getImageProfil()async{
-     final SharedPreferences prefs = await SharedPreferences.getInstance();
-     
-     String base64Image=prefs.getString('profileImage');
-     if(base64Image==null)print("NULLLL");
-     else if(base64Image!=null)imageBytes=base64Decode(base64Image);
+  getImageProfil() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-     
-
+    String base64Image = prefs.getString('profileImage');
+    if (base64Image == null) {
+      imageProfil = AssetImage('assets/avatar.jpg');
+    } else if (base64Image != null) {
+      imageBytes = base64Decode(base64Image);
+      imageProfil = MemoryImage(imageBytes);
+    }
   }
 
   //Grosse méthode qui gère tout le calcul des pourcentages de la progression
@@ -390,7 +392,7 @@ class mainPageEleveState extends State<mainPageEleve> {
             : customDrawer(
                 userData: userData,
                 nouveauMessage: nouvMessages,
-                imageBytes: imageBytes,
+                imageProfil: imageProfil,
               ),
         appBar: AppBar(
           flexibleSpace: Container(

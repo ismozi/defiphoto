@@ -13,9 +13,9 @@ class customDrawer extends StatelessWidget {
   //Variable qui contient le nombre de nouveau message
   int nouveauMessage;
   
-  Uint8List imageBytes;
+  var imageProfil;
 
-  customDrawer({this.userData, this.nouveauMessage,this.imageBytes});
+  customDrawer({this.userData, this.nouveauMessage,this.imageProfil});
 
   //Fonction qui efface les données d'un utilisateur lors de sa déconnexion
   Future<Null> logout() async {
@@ -49,7 +49,7 @@ class customDrawer extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: CircleAvatar(
-                              backgroundImage: imageBytes==null?AssetImage('assets/avatar.jpg'):MemoryImage(imageBytes),
+                              backgroundImage: imageProfil,
                               radius: 55.0,
                             ),
                           ),
@@ -109,7 +109,7 @@ class customDrawer extends StatelessWidget {
                       title: Text('Poser des questions',
                           style: TextStyle(fontFamily: 'Arboria')),
                       onTap: () => {
-                        print(userData['profID']),
+                        Navigator.of(context).pop(),
                         Navigator.push(
                             context,
                             MaterialPageRoute(

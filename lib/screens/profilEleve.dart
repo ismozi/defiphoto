@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,7 +30,8 @@ class profilEleveState extends State<profilEleve> {
   Uint8List imageBytes;
 
   var users;
-  
+
+  var imageProfil;
 
   _setInfo() {
     idStudent = userData["givenId"];
@@ -46,9 +48,11 @@ class profilEleveState extends State<profilEleve> {
     profId = userData["profId"];
   }
 
-  pickImage() async {
+  pickImage(String source) async {
+    Navigator.of(context).pop();
     var image;
-    image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if(source=='gallerie'){image = await ImagePicker.pickImage(source: ImageSource.gallery,maxWidth: 640,maxHeight:480);}
+    if(source=='pellicule'){image = await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 640,maxHeight:480);}
     try {
       saveImageProfil(image);
     } catch (e) {}
@@ -71,9 +75,12 @@ class profilEleveState extends State<profilEleve> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     String base64Image = prefs.getString('profileImage');
-    if (base64Image == null)
-      print("NULLLL");
-    else if (base64Image != null) imageBytes = base64Decode(base64Image);
+    if (base64Image == null) {
+      imageProfil = AssetImage('assets/avatar.jpg');
+    } else if (base64Image != null) {
+      imageBytes = base64Decode(base64Image);
+      imageProfil = MemoryImage(imageBytes);
+    }
   }
 
   @override
@@ -122,13 +129,39 @@ class profilEleveState extends State<profilEleve> {
                       children: <Widget>[
                         Center(
                           child: MaterialButton(
-                              onPressed: () => pickImage(),
-                              child: CircleAvatar(
-                                backgroundImage: imageBytes == null
-                                    ? AssetImage('assets/avatar.jpg')
-                                    : MemoryImage(imageBytes),
-                                radius: (55.0),
-                              )),
+                                  onPressed: () {
+                                    return showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return SimpleDialog(
+                                            title: const Text(
+                                                'Choisir une option',style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                            children: <Widget>[
+                                              SimpleDialogOption(
+                                                onPressed: () async =>
+                                                    pickImage('gallerie'),
+                                                child: const Text(
+                                                    'À partir de la gallerie',style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                              ),
+                                              SimpleDialogOption(
+                                                onPressed: () async =>
+                                                    pickImage('pellicule'),
+                                                child: const Text(
+                                                    'À partir de la pellicule',style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                              ),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: CircleAvatar(
+                                    backgroundImage: imageProfil,
+                                    radius: (55.0),
+                                  ))
+                              
                         ),
                         SizedBox(height: 10),
                         Divider(
