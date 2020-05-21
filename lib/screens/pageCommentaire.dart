@@ -328,14 +328,14 @@ class pageCommentaireState extends State<pageCommentaire> {
   //Méthode qui permet d'ouvrir la gallerie pour envoyer une photo
   _ouvrirGallery() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-
+    if(image!=null)
     _envoyerImage(image.path);
   }
 
   //Méthode qui permet d'ouvrir la caméra pour envoyer une photo
   _ouvrirCamera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-
+    if(image!=null)
     _envoyerImage(image.path);
   }
 

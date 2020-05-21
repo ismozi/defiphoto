@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +12,10 @@ class customDrawer extends StatelessWidget {
   Map userData = {};
   //Variable qui contient le nombre de nouveau message
   int nouveauMessage;
+  
+  Uint8List imageBytes;
 
-  customDrawer({this.userData, this.nouveauMessage});
+  customDrawer({this.userData, this.nouveauMessage,this.imageBytes});
 
   //Fonction qui efface les données d'un utilisateur lors de sa déconnexion
   Future<Null> logout() async {
@@ -25,6 +29,7 @@ class customDrawer extends StatelessWidget {
     prefs.setString('stageName', null);
     prefs.setString('yearDebut', null);
     prefs.setString('yearFin', null);
+    prefs.setString('profileImage', null);
   }
 
   //Fonction qui construit l'aspect visuel de la page
@@ -44,7 +49,7 @@ class customDrawer extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: CircleAvatar(
-                              backgroundImage: AssetImage('assets/avatar.jpg'),
+                              backgroundImage: imageBytes==null?AssetImage('assets/avatar.jpg'):MemoryImage(imageBytes),
                               radius: 55.0,
                             ),
                           ),

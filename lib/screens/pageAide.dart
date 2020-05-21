@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class pageAide extends StatelessWidget {
   @override
+  //Méthode qui construit l'aspect visuel de la page d'aide
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,

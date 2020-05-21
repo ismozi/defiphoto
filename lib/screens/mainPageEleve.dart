@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -48,6 +49,7 @@ class mainPageEleveState extends State<mainPageEleve> {
 
   var users;
   
+  Uint8List imageBytes;
 
   bool isLoading = true;
   bool hasConnection;
@@ -101,6 +103,17 @@ class mainPageEleveState extends State<mainPageEleve> {
         commentairesMe.add(commentaires[i]);
       }
     }
+  }
+
+   getImageProfil()async{
+     final SharedPreferences prefs = await SharedPreferences.getInstance();
+     
+     String base64Image=prefs.getString('profileImage');
+     if(base64Image==null)print("NULLLL");
+     else if(base64Image!=null)imageBytes=base64Decode(base64Image);
+
+     
+
   }
 
   //Grosse méthode qui gère tout le calcul des pourcentages de la progression
@@ -302,6 +315,7 @@ class mainPageEleveState extends State<mainPageEleve> {
           _getCommentaires().then((data) {
             _getQuestions().then((data) {
               _updateCompteur();
+              
             });
           });
         });
@@ -357,6 +371,7 @@ class mainPageEleveState extends State<mainPageEleve> {
             });
           }
           _refresh();
+          getImageProfil();
         }
         if (!userData['connection']) isLoading = false;
 
@@ -375,6 +390,7 @@ class mainPageEleveState extends State<mainPageEleve> {
             : customDrawer(
                 userData: userData,
                 nouveauMessage: nouvMessages,
+                imageBytes: imageBytes,
               ),
         appBar: AppBar(
           flexibleSpace: Container(

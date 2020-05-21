@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../main.dart';
 import 'customDrawer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -22,8 +26,10 @@ class profilEleveState extends State<profilEleve> {
   String stageDesc;
   String role;
   String profId;
+  Uint8List imageBytes;
 
   var users;
+  
 
   _setInfo() {
     idStudent = userData["givenId"];
@@ -40,7 +46,35 @@ class profilEleveState extends State<profilEleve> {
     profId = userData["profId"];
   }
 
-  
+  pickImage() async {
+    var image;
+    image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    try {
+      saveImageProfil(image);
+    } catch (e) {}
+  }
+
+  saveImageProfil(var image) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (image != null) {
+      prefs.setString('profileImage', null);
+      String encodedImage = base64Encode(image.readAsBytesSync());
+      prefs.setString('profileImage', encodedImage);
+      setState(() {
+        RestartWidget.restartApp(context);
+      });
+    }
+  }
+
+  getImageProfil() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String base64Image = prefs.getString('profileImage');
+    if (base64Image == null)
+      print("NULLLL");
+    else if (base64Image != null) imageBytes = base64Decode(base64Image);
+  }
 
   @override
   void initState() {
@@ -49,7 +83,7 @@ class profilEleveState extends State<profilEleve> {
     Future.delayed(Duration(milliseconds: 100)).then((_) {
       setState(() {
         userData = ModalRoute.of(context).settings.arguments;
-        
+        getImageProfil();
         _setInfo();
       });
     });
@@ -87,10 +121,14 @@ class profilEleveState extends State<profilEleve> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Center(
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage('assets/avatar.jpg'),
-                            radius: (55.0),
-                          ),
+                          child: MaterialButton(
+                              onPressed: () => pickImage(),
+                              child: CircleAvatar(
+                                backgroundImage: imageBytes == null
+                                    ? AssetImage('assets/avatar.jpg')
+                                    : MemoryImage(imageBytes),
+                                radius: (55.0),
+                              )),
                         ),
                         SizedBox(height: 10),
                         Divider(
