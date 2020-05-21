@@ -27,6 +27,7 @@ class profilEleveState extends State<profilEleve> {
   String stageDesc;
   String role;
   String profId;
+  
   Uint8List imageBytes;
 
   var users;

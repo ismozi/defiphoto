@@ -37,7 +37,10 @@ class questionStageState extends State<questionStage> {
   List questionSectionTab = [];
   List commentaires = [{}];
   List commentairesMe = [{}];
+  List commentairesQuestion = [{}];
   var questionSection;
+
+  bool loadingDeleteQuestion = false;
 
   FlutterTts flutterTts;
 
@@ -65,6 +68,50 @@ class questionStageState extends State<questionStage> {
         commentairesMe.add(commentaires[i]);
       }
     }
+  }
+
+  deleteCommentairesEtQuestion(String questionId) async {
+    commentairesQuestion = [{}];
+
+    for (int i = 0; i < commentaires.length; i++) {
+      if (commentaires[i]['questionId'] == questionId) {
+        String id = commentaires[i]['_id'];
+        try {
+          var response = await http
+              .delete("https://defiphoto-api.herokuapp.com/comments/$id");
+          if (response.statusCode == 200 && this.mounted) {
+            setState(() {
+              print("deleted!");
+            });
+          }
+        } catch (e) {
+          if (e is SocketException) {}
+        }
+      }
+    }
+    deleteQuestion(questionId);
+  }
+
+  deleteQuestion(String questionId) async {
+    String id = questionId;
+    try {
+      var response = await http
+          .delete("https://defiphoto-api.herokuapp.com/questions/$id");
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          loadingDeleteQuestion = false;
+          _refresh();
+        });
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        setState(() {
+          loadingDeleteQuestion = false;
+        });
+      }
+    }
+    // _enleverCommentaire(message);
+    Navigator.of(context).pop();
   }
 
   _save() async {
@@ -366,10 +413,58 @@ class questionStageState extends State<questionStage> {
                                               }),
                                         ]),
                               contentPadding: EdgeInsets.all(20),
+                              onLongPress: () {
+                                return userData['role']=='P'?showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Avertissement',
+                                          style:
+                                              TextStyle(fontFamily: 'Arboria')),
+                                      content: SingleChildScrollView(
+                                        child: ListBody(
+                                          children: <Widget>[
+                                            Text(
+                                                'Voulez-vous enlevez cette question?',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          child: Text('Oui',
+                                              style: TextStyle(
+                                                  fontFamily: 'Arboria')),
+                                          onPressed: () async {
+                                            deleteCommentairesEtQuestion(
+                                                filteredQuestionTab[index]
+                                                    ["id"]);
+                                          },
+                                        ),
+                                        FlatButton(
+                                          child: Text('Non',
+                                              style: TextStyle(
+                                                  fontFamily: 'Arboria')),
+                                          onPressed: () {
+                                            if (this.mounted) {
+                                              setState(() {
+                                                Navigator.of(context).pop();
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ):null;
+                              },
                               onTap: () {
                                 !userData['connection']
                                     ? null
-                                    : goToPageCommentaire(filteredQuestionTab[index]);
+                                    : goToPageCommentaire(
+                                        filteredQuestionTab[index]);
                               },
                             ),
                           ));
@@ -423,11 +518,16 @@ class questionStageState extends State<questionStage> {
             _getQuestionSection();
             filteredQuestionTab = questionSectionTab;
             if (userData['role'] == 'P') {
-              isLoading = false;
+              _getCommentaires().then((data) {
+                setState(() {
+                  isLoading = false;
+                });  
+              });
             }
           });
           if (userData['role'] == 'S') {
             _getCommentaires().then((data) {
+              commentairesMe = [{}];
               _getCommentaireMe();
               isLoading = false;
             });

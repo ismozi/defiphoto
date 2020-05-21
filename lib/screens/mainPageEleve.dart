@@ -120,6 +120,7 @@ class mainPageEleveState extends State<mainPageEleve> {
 
   //Grosse méthode qui gère tout le calcul des pourcentages de la progression
   _updateCompteur() {
+    commentairesMe = [{}];
     _getCommentaireMe();
     bool skipQuestion = false;
     int i = 0;

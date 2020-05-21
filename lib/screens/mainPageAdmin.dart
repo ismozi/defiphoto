@@ -14,8 +14,7 @@ class mainPageAdmin extends StatefulWidget {
 }
 
 class _mainPageAdminState extends State<mainPageAdmin> {
- 
-  //Listes et Map pour stocker les informations 
+  //Listes et Map pour stocker les informations
   List users = [{}];
   List questions = [{}];
   List comments = [{}];
@@ -35,7 +34,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     prefs.setString('givenId', null);
     prefs.setString('password', null);
   }
-  
+
   //Méthode qui fait un appel à l'API pour obtenir les utilisateurs
   _getUsers() async {
     try {
@@ -52,7 +51,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
       }
     }
   }
-  
+
   //Méthode qui fait un appel à l'API pour obtenir les questions
   _getQuestions() async {
     try {
@@ -69,7 +68,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
       }
     }
   }
-  
+
   //Méthode qui fait un appel à l'API pour obtenir les commentaires
   _getComments() async {
     try {
@@ -89,11 +88,12 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
   //Méthode qui permet d'obtenir toutes les données nécessaires
   _getData() {
+    
     _getUsers();
     _getQuestions();
     _getComments();
   }
-  
+
   //Méthode qui permet d'obtenir le nom d'un utilisateur
   String _getUsername(String id) {
     String name = "";
@@ -137,7 +137,41 @@ class _mainPageAdminState extends State<mainPageAdmin> {
               child: SpinKitDoubleBounce(size: 40, color: Colors.white)));
     }
   }
-  
+
+  deleteCommentairesEtQuestion(String questionId) async {
+    for (int i = 0; i < comments.length; i++) {
+      if (comments[i]['questionId'] == questionId) {
+        String id = comments[i]['_id'];
+        try {
+          var response = await http
+              .delete("https://defiphoto-api.herokuapp.com/comments/$id");
+          if (response.statusCode == 200 && this.mounted) {
+            setState(() {
+              print("deleted!");
+            });
+          }
+        } catch (e) {
+          if (e is SocketException) {}
+        }
+      }
+    }
+    deleteQuestion(questionId);
+  }
+
+  deleteQuestion(String questionId) async {
+    String id = questionId;
+    try {
+      var response = await http
+          .delete("https://defiphoto-api.herokuapp.com/questions/$id");
+      if (response.statusCode == 200 && this.mounted) {
+        _getData();
+      }
+    } catch (e) {
+      if (e is SocketException) {}
+    }
+    // _enleverCommentaire(message);
+  }
+
   //Méthode qui créé la liste qui sera affiché dans le body
   _createList(dynamic array, bool isUser, bool isQuestion, bool isComment) {
     String url;
@@ -232,6 +266,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                         if (isUser) {}
                       },
                       onLongPress: () {
+                       
                         return showDialog<void>(
                           context: context,
                           barrierDismissible: false,
@@ -263,6 +298,10 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                       try {
                                         var response = await http.delete(
                                             "https://defiphoto-api.herokuapp.com/comments/$id");
+                                        if (response.statusCode == 200 &&
+                                            this.mounted) {
+                                          _getData();
+                                        }
                                       } catch (e) {
                                         if (e is SocketException) {}
                                       }
@@ -272,18 +311,17 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                       try {
                                         var response = await http.delete(
                                             "https://defiphoto-api.herokuapp.com/comments/$id");
+                                        if (response.statusCode == 200 &&
+                                            this.mounted) {
+                                          _getData();
+                                        }
                                       } catch (e) {
                                         if (e is SocketException) {}
                                       }
                                     }
                                     if (isQuestion) {
-                                      String id = array[index]['_id'];
-                                      try {
-                                        var response = await http.delete(
-                                            "https://defiphoto-api.herokuapp.com/questions/$id");
-                                      } catch (e) {
-                                        if (e is SocketException) {}
-                                      }
+                                      deleteCommentairesEtQuestion(
+                                          array[index]['_id']);
                                     }
 
                                     if (isUser) {
@@ -291,6 +329,10 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                                       try {
                                         var response = await http.delete(
                                             "https://defiphoto-api.herokuapp.com/users/$id");
+                                        if (response.statusCode == 200 &&
+                                            this.mounted) {
+                                          _getData();
+                                        }
                                         print('Done!');
                                       } catch (e) {
                                         if (e is SocketException) {}
@@ -343,13 +385,12 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                             fontFamily: 'Arboria')));
   }
 
-  //Méthode "stream" qui permet d'obtenir continuellement les données et de vérifier la connexion à internet
+  //Méthode "stream" qui permet de vérifier la connexion à internet
   _stream() async {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
     await for (int i in stream) {
       if (this.mounted) {
-        _getData();
         try {
           final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
@@ -390,6 +431,7 @@ class _mainPageAdminState extends State<mainPageAdmin> {
 
     _stream();
   }
+
   //Méthode qui construit l'affichage
   @override
   Widget build(BuildContext context) {
@@ -420,12 +462,11 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                    
-                         Text("Défi photo - Admin",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Arboria',
-                            )),
+                    Text("Défi photo - Admin",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontFamily: 'Arboria',
+                        )),
                     Opacity(
                       opacity: 0.5,
                       child: Text("Mode hors-ligne",
@@ -435,51 +476,56 @@ class _mainPageAdminState extends State<mainPageAdmin> {
                   ]),
       ),
       backgroundColor: Color(0xff141a24),
-      body: userData['connection']?_getBody(_selectedIndex):
-      Container(
-                      color: Color(0xff141a24),
-                      child: ListView(children: <Widget>[
-                        SizedBox(height: 200),
-                        Center(
-                            child: RichText(
-                                text: TextSpan(
-                                    text:
-                                        "Vous êtes en mode hors-ligne. \nVous devez vous connecter à\ninternet pour effectuer des actions.",
-                                    style: TextStyle(
-                                        color: Colors.blueGrey,
-                                        fontSize: 20,
-                                        fontFamily: 'Arboria')),
-                                textAlign: TextAlign.center)),
-                        SizedBox(height: 100)
-                      ])),
-      floatingActionButton: _selectedIndex != 0||!userData['connection']
+      body: userData['connection']
+          ? _getBody(_selectedIndex)
+          : Container(
+              color: Color(0xff141a24),
+              child: ListView(children: <Widget>[
+                SizedBox(height: 200),
+                Center(
+                    child: RichText(
+                        text: TextSpan(
+                            text:
+                                "Vous êtes en mode hors-ligne. \nVous devez vous connecter à\ninternet pour effectuer des actions.",
+                            style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 20,
+                                fontFamily: 'Arboria')),
+                        textAlign: TextAlign.center)),
+                SizedBox(height: 100)
+              ])),
+      floatingActionButton: _selectedIndex != 0 || !userData['connection']
           ? null
           : FloatingActionButton(
               onPressed: () =>
-                  {Navigator.of(context).pushNamed('/ajoutUtilisateur')},
+                  {Navigator.of(context).pushNamed('/ajoutUtilisateur').then((value) => _getData())},
               backgroundColor: Color(0xff444d5d),
               child: Icon(Icons.add, color: Colors.white)),
-      bottomNavigationBar: !userData['connection']?null:GradientBottomNavigationBar(
-        backgroundColorStart: Color(0xff141a24),
-        backgroundColorEnd: Color(0xFF2b3444),
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle), title: Text('Utilisateurs')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.assignment), title: Text('Questions')),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.chat_bubble_outline),
-              title: Text('Commentaires')),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+      bottomNavigationBar: !userData['connection']
+          ? null
+          : GradientBottomNavigationBar(
+              backgroundColorStart: Color(0xff141a24),
+              backgroundColorEnd: Color(0xFF2b3444),
+              items: <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.account_circle),
+                    title: Text('Utilisateurs')),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.assignment), title: Text('Questions')),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.chat_bubble_outline),
+                    title: Text('Commentaires')),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+            ),
     );
   }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+        _getData();
     });
   }
 }

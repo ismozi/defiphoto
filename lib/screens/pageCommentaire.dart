@@ -486,7 +486,7 @@ class pageCommentaireState extends State<pageCommentaire> {
                         Visibility(
                             visible: _isLoading ? false : true,
                             child: Container(
-                                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                 child: Card(
                                   color: Color(0xFF2b3444),
                                   child: Padding(
