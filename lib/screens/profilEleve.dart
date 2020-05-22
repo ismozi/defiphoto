@@ -9,12 +9,16 @@ import '../main.dart';
 import 'customDrawer.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+//Classe du profil d'un élève
 class profilEleve extends StatefulWidget {
   profilEleveState createState() => new profilEleveState();
 }
 
 class profilEleveState extends State<profilEleve> {
+  //Map contenant les informations de l'utilisateur
   Map userData = {};
+  
+  //Variables String contenant toutes les informations de la page profil
   String idStudent;
   String name;
   String lastName;
@@ -28,12 +32,13 @@ class profilEleveState extends State<profilEleve> {
   String role;
   String profId;
   
+  //Uint8List qui contiendra la photo de l'utilisateur décodé à partir du format base64
   Uint8List imageBytes;
 
-  var users;
-
+  //Variable qui contiendra la photo de l'utilisateur
   var imageProfil;
 
+  //Méthode permettant de définir les informations de l'utilisateur
   _setInfo() {
     idStudent = userData["givenId"];
     name = userData["firstName"];
@@ -48,7 +53,8 @@ class profilEleveState extends State<profilEleve> {
     role = userData["role"];
     profId = userData["profId"];
   }
-
+  
+  //Méthode permettant de choisir une image de profil
   pickImage(String source) async {
     Navigator.of(context).pop();
     var image;
@@ -58,7 +64,8 @@ class profilEleveState extends State<profilEleve> {
       saveImageProfil(image);
     } catch (e) {}
   }
-
+  
+  //Méthode permettant de sauvegarder une image de profil
   saveImageProfil(var image) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -71,7 +78,8 @@ class profilEleveState extends State<profilEleve> {
       });
     }
   }
-
+  
+  //Méthode permettant d'obtenir la photo de l'utlisateur à partir du stockage
   getImageProfil() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -83,7 +91,8 @@ class profilEleveState extends State<profilEleve> {
       imageProfil = MemoryImage(imageBytes);
     }
   }
-
+  
+  //Méthode qui est exécutée en premier
   @override
   void initState() {
     // TODO: implement initState
@@ -96,7 +105,8 @@ class profilEleveState extends State<profilEleve> {
       });
     });
   }
-
+ 
+  //Méthode qui constuit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(

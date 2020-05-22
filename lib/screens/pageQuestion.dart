@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:test_flutter/screens/pageCommentaire.dart';
 
+//Classe des question posées à l'enseignant
 class Questions extends StatefulWidget {
+  //Information sur l'enseignant et l'utilisateur
   String idProf;
   String id;
   String role;
@@ -21,10 +23,14 @@ class Questions extends StatefulWidget {
 }
 
 class _QuestionsState extends State<Questions> {
+  //Variable bool pour différents états de l'application
   bool isLoading = true;
   bool isEmpty;
+
+  //Liste qui contiendras les questions posées à l'enseignant
   List questions = [{}];
 
+  //Méthode qui fait un appel à l'api pour obtenir les questions posées à l'enseignant
   _getQuestions() async {
     var sender = widget.id;
     var reciever = widget.idProf;
@@ -51,6 +57,7 @@ class _QuestionsState extends State<Questions> {
     }
   }
 
+  //Stream pour obtenir les questions en continu
   _stream() async {
     Duration interval = Duration(milliseconds: 500);
     Stream<int> stream = Stream<int>.periodic(interval);
@@ -62,14 +69,16 @@ class _QuestionsState extends State<Questions> {
       }
     }
   }
-
+ 
+  //Première méthode qui est exécuté
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _stream();
   }
-
+  
+  //Méthode qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +169,10 @@ class _QuestionsState extends State<Questions> {
   }
 }
 
+//Classe de la fenêtre pour envoyer une question (utilisé par les élève et les enseignants)
 class creationQuestion extends StatefulWidget {
+  
+  //Variables string des informations de l'expéditeur et du destinataire
   String idSender;
   String idReceiver;
 
@@ -174,6 +186,14 @@ class creationQuestion extends StatefulWidget {
 }
 
 class _creationQuestionState extends State<creationQuestion> {
+  
+  //Controller pour le textField
+  TextEditingController questionText = new TextEditingController();
+  //Variable pour faire fonctionner les radio buttons
+  int _indexType;
+  List<String> types = ["M", "É", "T", "I", "E", "R"];
+
+  //Méthode pour envoyer une question
   _envoyerQuestion(String text, String type) async {
     if (text.trim().isNotEmpty) {
       var data = {
@@ -194,10 +214,8 @@ class _creationQuestionState extends State<creationQuestion> {
     }
   }
 
-  TextEditingController questionText = new TextEditingController();
-  int _indexType;
-  List<String> types = ["M", "É", "T", "I", "E", "R"];
-
+  
+  //Méthode qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -424,7 +442,9 @@ class _creationQuestionState extends State<creationQuestion> {
   }
 }
 
+//Classe de pour l'envoi de questions à plusieurs élèves
 class creationQuestionGroupe extends StatefulWidget {
+  //Variable contenant l'information de l'expéditeur et des destinataires
   String idSender;
   List idReceivers;
 
@@ -438,6 +458,14 @@ class creationQuestionGroupe extends StatefulWidget {
 }
 
 class _creationQuestionGroupeState extends State<creationQuestionGroupe> {
+  //Controller pour le textField
+  TextEditingController questionText = new TextEditingController();
+  //Variables pour faire fonctionner les radio buttons
+  int _indexType;
+  List<String> types = ["M", "É", "T", "I", "E", "R"];
+
+ 
+  //Méthode pour envoyer une question
   _envoyerQuestion(String text, String type) async {
     for (int index = 0; index < widget.idReceivers.length; index++) {
       if (text.trim().isNotEmpty) {
@@ -461,10 +489,7 @@ class _creationQuestionGroupeState extends State<creationQuestionGroupe> {
     }
   }
 
-  TextEditingController questionText = new TextEditingController();
-  int _indexType;
-  List<String> types = ["M", "É", "T", "I", "E", "R"];
-
+  //Méthode qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(

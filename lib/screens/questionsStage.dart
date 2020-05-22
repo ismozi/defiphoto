@@ -11,41 +11,46 @@ import 'package:flutter_tts/flutter_tts.dart';
 import '../models/database_helpers.dart';
 import 'mainPageEleve.dart';
 
+//C'est la classe dans laquelle on peut retouver les questions de stage de élève ainsi que les que
+//les questions posées à l'enseignant
 class questionStage extends StatefulWidget {
   questionStageState createState() => new questionStageState();
 }
 
 class questionStageState extends State<questionStage> {
-  Widget appBarTitle = Text('Matières et produits',
-      style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
-  mainPageEleveState mainInstance = new mainPageEleveState();
+ 
+  //Listes et Map pour qui contiendra les information des questions, utilisateurs, commentaires
   List questions = [{}];
   List users = [{}];
-  Map userData = {};
-  int _currentIndex = 0;
-  String type;
-  String section = 'M';
-  bool isSearching = false;
-  bool isLoading = true;
-  String nomEleve;
-  Text titreEnseignant = Text("Mes questions",
-      style: TextStyle(
-        fontFamily: 'Arboria',
-      ));
-
   List filteredQuestionTab = [];
   List questionSectionTab = [];
   List commentaires = [{}];
   List commentairesMe = [{}];
   List commentairesQuestion = [{}];
   var questionSection;
-
+  Map userData = {};
+  
+  //Variables booléenne des différents états de l'application
+  bool isSearching = false;
+  bool isLoading = true;
   bool loadingDeleteQuestion = false;
+ 
+  //Différentes initialisation de variable pour définir l'état initial de l'application
+  Text titreEnseignant = Text("Mes questions",
+      style: TextStyle(
+        fontFamily: 'Arboria',
+      ));
+  Widget appBarTitle = Text('Matières et produits',
+      style: TextStyle(fontFamily: 'Arboria', fontSize: 15));
+  String nomEleve;
+  String section = 'M';
+  int _currentIndex = 0;
 
+  //Instance du Text-to-speech et sa langue
   FlutterTts flutterTts;
-
   String language = 'fr-FR';
 
+  //Méthode qui fait un appel à l'api pour obtenir les commentaires
   _getCommentaires() async {
     if (userData['connection']) {
       try {
@@ -61,7 +66,8 @@ class questionStageState extends State<questionStage> {
       }
     }
   }
-
+  
+  //Méthode qui permet de filtrer les commentaires qui proviennent de l'utilisateur actif
   _getCommentaireMe() {
     for (int i = 0; i < commentaires.length; i++) {
       if (commentaires[i]['sender'] == userData['givenId']) {
@@ -69,7 +75,8 @@ class questionStageState extends State<questionStage> {
       }
     }
   }
-
+  
+  //Méthode qui permet de supprimer une question et ses commentaires
   deleteCommentairesEtQuestion(String questionId) async {
     commentairesQuestion = [{}];
 
@@ -91,7 +98,8 @@ class questionStageState extends State<questionStage> {
     }
     deleteQuestion(questionId);
   }
-
+  
+  //Méthode qui permet de supprimer une question
   deleteQuestion(String questionId) async {
     String id = questionId;
     try {
@@ -113,7 +121,8 @@ class questionStageState extends State<questionStage> {
     // _enleverCommentaire(message);
     Navigator.of(context).pop();
   }
-
+  
+  //Méthode qui permet de sauvegarder les questions dans la base de données locale
   _save() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     helper.deleteAll();
@@ -128,7 +137,8 @@ class questionStageState extends State<questionStage> {
     }
     _readDB();
   }
-
+  
+  //Méthode qui permet de lire le contenu de la base de donnée locale
   _readDB() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     List questionsLocales = await helper.queryAllRows();
@@ -136,7 +146,8 @@ class questionStageState extends State<questionStage> {
       print('YA RIEN');
     } else {}
   }
-
+  
+  //Méthode qui initialise le Text-to-speech
   initTts() {
     flutterTts = FlutterTts();
     flutterTts.setLanguage(language);
@@ -145,6 +156,7 @@ class questionStageState extends State<questionStage> {
     flutterTts.setPitch(1.0);
   }
 
+  //Méthode qui permet de vérifié si l'utilisateur à répondu à une question en particulier
   bool checkIfReplied(var question) {
     bool isAns = false;
     for (int i = 0; i < commentairesMe.length; i++) {
@@ -154,20 +166,23 @@ class questionStageState extends State<questionStage> {
     }
     return isAns;
   }
-
+  
+  //Méthode qui permet désactiver certaine choses lorsqu'on ferme la page
   @override
   void dispose() {
     super.dispose();
     flutterTts.stop();
   }
-
+  
+  //Méthode qui permet au text-to-speech de lire un text
   Future _read(String text) async {
     await flutterTts.stop();
     if (text != null && text.isNotEmpty) {
       await flutterTts.speak(text.toLowerCase());
     }
   }
-
+  
+  //Méthode qui permet d'obtenir les questions dans le mode hors-ligne
   _getDataOffline() async {
     DatabaseHelper helper = DatabaseHelper.instance;
     questions = await helper.queryAllRows();
@@ -176,7 +191,8 @@ class questionStageState extends State<questionStage> {
     } else {}
     isLoading = false;
   }
-
+  
+  //Méthode qui fait un appel à l'api pour permettre d'obtenir les questions dans le mode en-ligne
   _getDataOnline() async {
     String id = userData["givenId"];
     var response;
@@ -207,6 +223,7 @@ class questionStageState extends State<questionStage> {
     }
   }
 
+  //Méthode qui fait un appel à l'api pour obtenir les utilisateurs
   _getUser() async {
     try {
       var response =
@@ -220,7 +237,8 @@ class questionStageState extends State<questionStage> {
       if (e is SocketException) {}
     }
   }
-
+  
+  //Méthode qui permet d'obtenir le nom d'un utilisateur
   String _getUsername(String id) {
     String name = "";
     for (int i = 0; i < users.length; i++) {
@@ -230,7 +248,8 @@ class questionStageState extends State<questionStage> {
     }
     return name;
   }
-
+  
+  //Méthode qui permet de changer l'aspect visuel en fonction de l'onglet sélectionné
   void _selectedTab(int index) {
     setState(() {
       if (index == 0) {
@@ -274,7 +293,7 @@ class questionStageState extends State<questionStage> {
       }
     });
   }
-
+  //Méthode permettant d'obtenir les questions spécifiques à une section de l'acronyme MÉTIER
   _getQuestionSection() {
     questionSectionTab = new List();
     if (userData['connection'])
@@ -313,6 +332,7 @@ class questionStageState extends State<questionStage> {
     }
   }
 
+  //Méthode permettant d'aller à la page de conversation d'une question
   goToPageCommentaire(var filteredQuestionTab) async {
     await Navigator.pushNamed(context, '/pageCommentaire', arguments: {
       'questionId': filteredQuestionTab["id"],
@@ -325,7 +345,8 @@ class questionStageState extends State<questionStage> {
       'type': filteredQuestionTab['type'],
     }).then((value) => _refresh());
   }
-
+  
+  //Méthode permettant de construire l'aspect visuel de la liste des questions
   _getBody(int currentIndex) {
     return isLoading
         ? Container(
@@ -502,7 +523,8 @@ class questionStageState extends State<questionStage> {
                                 letterSpacing: 1.2,
                                 fontFamily: 'Arboria'))));
   }
-
+  
+  //Méthode permettant de refresh les informations
   Future<Null> _refresh() async {
     await Future.delayed(Duration(milliseconds: 500)).then((_) {
       setState(() {
@@ -548,7 +570,8 @@ class questionStageState extends State<questionStage> {
     });
     return null;
   }
-
+  
+  //Méthode permettant de filtrer les questions
   void _filterQuestions(value) {
     setState(() {
       // print(value);
@@ -561,6 +584,7 @@ class questionStageState extends State<questionStage> {
     });
   }
 
+  //Méthode qui est exécuté en premier
   @override
   void initState() {
     super.initState();
@@ -569,7 +593,8 @@ class questionStageState extends State<questionStage> {
 
     initTts();
   }
-
+  
+  //Méthode qui permet de construire l'aspect visuel de l'application.
   @override
   Widget build(BuildContext context) {
     if (userData['role'] == null) {

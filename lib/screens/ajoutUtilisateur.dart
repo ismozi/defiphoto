@@ -11,8 +11,13 @@ class ajoutUtilisateur extends StatefulWidget {
   _AjoutUtilisateurState createState() => _AjoutUtilisateurState();
 }
 
+//Classe qui permet à l'administrateur de créer un utilisateur 
 class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
+  
+  //Variable booléenne qui définie l'état de l'application
   bool _isLoading = false;
+
+  //Controllers pour obtenir le contenue des différents TextField
   TextEditingController givenIdController = new TextEditingController();
   TextEditingController passwdController = new TextEditingController();
   TextEditingController firstNameController = new TextEditingController();
@@ -27,13 +32,17 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
   TextEditingController roleController = new TextEditingController();
   TextEditingController profIdController = new TextEditingController();
 
+  //Variable pour les radio-buttons
   int _indexType = 0;
   List<String> types = ["S", "P", "A"];
-
+ 
+  //Instance de DateTime pour permettre la sélection de date facile
   DateTime selectedDate = DateTime.now();
 
+  //Variable booléenne qui défini si une adresse courriel est valide
   bool isValid=false;
-
+  
+  //Méthode permettant de créer un compte à partir des données remplises
   void signUp(
       String id,
       String prenom,
@@ -73,7 +82,8 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
       _isLoading = false;
     });
   }
-
+  
+  //Méthode permettant de sélectionner une date
   Future<Null> _selectDate(
       BuildContext context, TextEditingController controller) async {
     final DateTime picked = await showDatePicker(
@@ -88,7 +98,8 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
             "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
       });
   }
-
+  
+  //Méthode qui est exécutée en premier
   @override
   void initState() {
     // TODO: implement initState
@@ -97,7 +108,8 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
       _indexType = 0;
     });
   }
-
+  
+  //Méthode qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -223,6 +235,7 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                       )
                                     ]))
                               ])),
+                              //Pour créer un étudiant:
                       types[_indexType].toString() == 'S'
                           ? Padding(
                               padding: EdgeInsets.fromLTRB(12, 0, 12, 16),
@@ -791,12 +804,14 @@ class _AjoutUtilisateurState extends State<ajoutUtilisateur> {
                                   ),
                                 ),
                               ]))
+                              //Pour créer un enseignant ou un administrateur
                           : Padding(
                               padding: EdgeInsets.fromLTRB(12, 0, 12, 16),
                               child: Column(children: <Widget>[
                                 SizedBox(
                                   height: 20,
                                 ),
+                                
                                 types[_indexType].toString() == 'P'?
                                 Text(
                                   "Information sur l'enseignant :",
