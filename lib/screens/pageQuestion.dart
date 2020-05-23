@@ -29,6 +29,7 @@ class _QuestionsState extends State<Questions> {
 
   //Liste qui contiendras les questions posées à l'enseignant
   List questions = [{}];
+  List commentaires = [{}];
 
   //Méthode qui fait un appel à l'api pour obtenir les questions posées à l'enseignant
   _getQuestions() async {
@@ -43,6 +44,7 @@ class _QuestionsState extends State<Questions> {
       if (response.statusCode == 200 && this.mounted) {
         setState(() {
           questions = json.decode(response.body);
+
           if (questions.isEmpty) {
             isEmpty = true;
             isLoading = false;
@@ -57,27 +59,86 @@ class _QuestionsState extends State<Questions> {
     }
   }
 
-  //Stream pour obtenir les questions en continu
-  _stream() async {
-    Duration interval = Duration(milliseconds: 500);
-    Stream<int> stream = Stream<int>.periodic(interval);
-    await for (int i in stream) {
-      if (this.mounted) {
-        setState(() {
-          _getQuestions();
-        });
+  //Méthode qui fait un appel à l'api pour obtenir les commentaires
+  _getCommentaires() async {
+    try {
+      var response =
+          await http.get("https://defiphoto-api.herokuapp.com/comments");
+      if (response.statusCode == 200) {
+        commentaires = json.decode(response.body);
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        
       }
     }
   }
- 
+
   //Première méthode qui est exécuté
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _stream();
+    _refresh();
   }
-  
+
+  //Méthode qui permet de supprimer une question et ses commentaires
+  deleteCommentairesEtQuestion(String questionId) async {
+    Navigator.of(context).pop();
+
+    for (int i = 0; i < commentaires.length; i++) {
+      if (commentaires[i]['questionId'] == questionId) {
+        String id = commentaires[i]['_id'];
+        print(commentaires[i]['text']);
+        try {
+          var response = await http
+              .delete("https://defiphoto-api.herokuapp.com/comments/$id");
+
+          if (response.statusCode == 200 && this.mounted) {
+            setState(() {
+              print("deleted!");
+              isLoading = true;
+            });
+          }
+        } catch (e) {
+          if (e is SocketException) {}
+        }
+      }
+    }
+    deleteQuestion(questionId);
+  }
+
+  //Méthode qui permet de supprimer une question
+  deleteQuestion(String questionId) async {
+    String id = questionId;
+    try {
+      var response = await http
+          .delete("https://defiphoto-api.herokuapp.com/questions/$id");
+      if (response.statusCode == 200 && this.mounted) {
+        setState(() {
+          _refresh();
+        });
+      }
+    } catch (e) {
+      if (e is SocketException) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  //Méthode permettant de refresh les informations
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(milliseconds: 500)).then((_) {
+      setState(() {
+        _getQuestions();
+        _getCommentaires();
+      });
+    });
+    return null;
+  }
+
   //Méthode qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
@@ -138,6 +199,52 @@ class _QuestionsState extends State<Questions> {
                                   size: 40,
                                 ),
                                 contentPadding: EdgeInsets.all(20),
+                                onLongPress: () {
+                                  return showDialog<void>(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Text('Avertissement',
+                                            style: TextStyle(
+                                                fontFamily: 'Arboria')),
+                                        content: SingleChildScrollView(
+                                          child: ListBody(
+                                            children: <Widget>[
+                                              Text(
+                                                  'Voulez-vous enlevez cette question?',
+                                                  style: TextStyle(
+                                                      fontFamily: 'Arboria')),
+                                            ],
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text('Oui',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                            onPressed: () async {
+                                              deleteCommentairesEtQuestion(
+                                                  questions[index]["_id"]);
+                                            },
+                                          ),
+                                          FlatButton(
+                                            child: Text('Non',
+                                                style: TextStyle(
+                                                    fontFamily: 'Arboria')),
+                                            onPressed: () {
+                                              if (this.mounted) {
+                                                setState(() {
+                                                  Navigator.of(context).pop();
+                                                });
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
                                 onTap: () {
                                   Navigator.pushNamed(
                                       context, '/pageCommentaire',
@@ -148,7 +255,7 @@ class _QuestionsState extends State<Questions> {
                                         'givenId': widget.id.toString().trim(),
                                         'role': widget.role.toString().trim(),
                                         'text': questions[index]['text']
-                                      });
+                                      }).then((value) => _refresh());
                                 },
                               ),
                             ));
@@ -156,10 +263,11 @@ class _QuestionsState extends State<Questions> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      creationQuestion(widget.id, widget.idProf)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          creationQuestion(widget.id, widget.idProf)))
+              .then((value) => _refresh());
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.blueGrey,
@@ -171,7 +279,6 @@ class _QuestionsState extends State<Questions> {
 
 //Classe de la fenêtre pour envoyer une question (utilisé par les élève et les enseignants)
 class creationQuestion extends StatefulWidget {
-  
   //Variables string des informations de l'expéditeur et du destinataire
   String idSender;
   String idReceiver;
@@ -186,7 +293,6 @@ class creationQuestion extends StatefulWidget {
 }
 
 class _creationQuestionState extends State<creationQuestion> {
-  
   //Controller pour le textField
   TextEditingController questionText = new TextEditingController();
   //Variable pour faire fonctionner les radio buttons
@@ -214,7 +320,6 @@ class _creationQuestionState extends State<creationQuestion> {
     }
   }
 
-  
   //Méthode qui construit l'aspect visuel de l'application
   @override
   Widget build(BuildContext context) {
@@ -464,7 +569,6 @@ class _creationQuestionGroupeState extends State<creationQuestionGroupe> {
   int _indexType;
   List<String> types = ["M", "É", "T", "I", "E", "R"];
 
- 
   //Méthode pour envoyer une question
   _envoyerQuestion(String text, String type) async {
     for (int index = 0; index < widget.idReceivers.length; index++) {

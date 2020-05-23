@@ -426,6 +426,16 @@ class _mainPageAdminState extends State<mainPageAdmin> {
     }
   }
 
+  //Méthode permettant de refresh les informations
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(milliseconds: 500)).then((_) {
+      setState(() {
+        _getData();
+      });
+    });
+    return null;
+  }
+
   //Première fonction qui est appelée, fait les appels nécessaires pour obtenir les données
   //et initialise le stream
   @override
@@ -489,7 +499,8 @@ class _mainPageAdminState extends State<mainPageAdmin> {
       ),
       backgroundColor: Color(0xff141a24),
       body: userData['connection']
-          ? _getBody(_selectedIndex)
+          ? new RefreshIndicator(
+            child: _getBody(_selectedIndex), onRefresh: _refresh)
           : Container(
               color: Color(0xff141a24),
               child: ListView(children: <Widget>[

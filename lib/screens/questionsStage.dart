@@ -25,7 +25,6 @@ class questionStageState extends State<questionStage> {
   List questionSectionTab = [];
   List commentaires = [{}];
   List commentairesMe = [{}];
-  List commentairesQuestion = [{}];
   var questionSection;
   Map userData = {};
 
@@ -77,7 +76,7 @@ class questionStageState extends State<questionStage> {
 
   //Méthode qui permet de supprimer une question et ses commentaires
   deleteCommentairesEtQuestion(String questionId) async {
-    commentairesQuestion = [{}];
+   
 
     Navigator.of(context).pop();
 
