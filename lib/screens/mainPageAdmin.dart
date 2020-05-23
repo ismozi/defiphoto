@@ -147,11 +147,16 @@ class _mainPageAdminState extends State<mainPageAdmin> {
               .delete("https://defiphoto-api.herokuapp.com/comments/$id");
           if (response.statusCode == 200 && this.mounted) {
             setState(() {
+              isLoading=true;
               print("deleted!");
             });
           }
         } catch (e) {
-          if (e is SocketException) {}
+          if (e is SocketException) {
+            setState(() {
+              isLoading=false;
+            });
+          }
         }
       }
     }
@@ -164,10 +169,17 @@ class _mainPageAdminState extends State<mainPageAdmin> {
       var response = await http
           .delete("https://defiphoto-api.herokuapp.com/questions/$id");
       if (response.statusCode == 200 && this.mounted) {
-        _getData();
+        setState(() {
+          _getData();
+          isLoading=false;
+        });
       }
     } catch (e) {
-      if (e is SocketException) {}
+      if (e is SocketException) {
+        setState(() {
+          isLoading=false;
+        });
+      }
     }
     // _enleverCommentaire(message);
   }

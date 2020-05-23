@@ -18,7 +18,6 @@ class questionStage extends StatefulWidget {
 }
 
 class questionStageState extends State<questionStage> {
- 
   //Listes et Map pour qui contiendra les information des questions, utilisateurs, commentaires
   List questions = [{}];
   List users = [{}];
@@ -29,12 +28,12 @@ class questionStageState extends State<questionStage> {
   List commentairesQuestion = [{}];
   var questionSection;
   Map userData = {};
-  
+
   //Variables booléenne des différents états de l'application
   bool isSearching = false;
   bool isLoading = true;
   bool loadingDeleteQuestion = false;
- 
+
   //Différentes initialisation de variable pour définir l'état initial de l'application
   Text titreEnseignant = Text("Mes questions",
       style: TextStyle(
@@ -66,7 +65,7 @@ class questionStageState extends State<questionStage> {
       }
     }
   }
-  
+
   //Méthode qui permet de filtrer les commentaires qui proviennent de l'utilisateur actif
   _getCommentaireMe() {
     for (int i = 0; i < commentaires.length; i++) {
@@ -75,10 +74,12 @@ class questionStageState extends State<questionStage> {
       }
     }
   }
-  
+
   //Méthode qui permet de supprimer une question et ses commentaires
   deleteCommentairesEtQuestion(String questionId) async {
     commentairesQuestion = [{}];
+
+    Navigator.of(context).pop();
 
     for (int i = 0; i < commentaires.length; i++) {
       if (commentaires[i]['questionId'] == questionId) {
@@ -86,9 +87,11 @@ class questionStageState extends State<questionStage> {
         try {
           var response = await http
               .delete("https://defiphoto-api.herokuapp.com/comments/$id");
+
           if (response.statusCode == 200 && this.mounted) {
             setState(() {
               print("deleted!");
+              isLoading = true;
             });
           }
         } catch (e) {
@@ -98,7 +101,7 @@ class questionStageState extends State<questionStage> {
     }
     deleteQuestion(questionId);
   }
-  
+
   //Méthode qui permet de supprimer une question
   deleteQuestion(String questionId) async {
     String id = questionId;
@@ -114,14 +117,12 @@ class questionStageState extends State<questionStage> {
     } catch (e) {
       if (e is SocketException) {
         setState(() {
-          loadingDeleteQuestion = false;
+          isLoading = false;
         });
       }
     }
-    // _enleverCommentaire(message);
-    Navigator.of(context).pop();
   }
-  
+
   //Méthode qui permet de sauvegarder les questions dans la base de données locale
   _save() async {
     DatabaseHelper helper = DatabaseHelper.instance;
@@ -137,7 +138,7 @@ class questionStageState extends State<questionStage> {
     }
     _readDB();
   }
-  
+
   //Méthode qui permet de lire le contenu de la base de donnée locale
   _readDB() async {
     DatabaseHelper helper = DatabaseHelper.instance;
@@ -146,7 +147,7 @@ class questionStageState extends State<questionStage> {
       print('YA RIEN');
     } else {}
   }
-  
+
   //Méthode qui initialise le Text-to-speech
   initTts() {
     flutterTts = FlutterTts();
@@ -166,14 +167,14 @@ class questionStageState extends State<questionStage> {
     }
     return isAns;
   }
-  
+
   //Méthode qui permet désactiver certaine choses lorsqu'on ferme la page
   @override
   void dispose() {
     super.dispose();
     flutterTts.stop();
   }
-  
+
   //Méthode qui permet au text-to-speech de lire un text
   Future _read(String text) async {
     await flutterTts.stop();
@@ -181,7 +182,7 @@ class questionStageState extends State<questionStage> {
       await flutterTts.speak(text.toLowerCase());
     }
   }
-  
+
   //Méthode qui permet d'obtenir les questions dans le mode hors-ligne
   _getDataOffline() async {
     DatabaseHelper helper = DatabaseHelper.instance;
@@ -191,7 +192,7 @@ class questionStageState extends State<questionStage> {
     } else {}
     isLoading = false;
   }
-  
+
   //Méthode qui fait un appel à l'api pour permettre d'obtenir les questions dans le mode en-ligne
   _getDataOnline() async {
     String id = userData["givenId"];
@@ -218,7 +219,9 @@ class questionStageState extends State<questionStage> {
       }
     } catch (e) {
       if (e is SocketException) {
-        isLoading = false;
+        setState(() {
+          isLoading = false;
+        });
       }
     }
   }
@@ -237,7 +240,7 @@ class questionStageState extends State<questionStage> {
       if (e is SocketException) {}
     }
   }
-  
+
   //Méthode qui permet d'obtenir le nom d'un utilisateur
   String _getUsername(String id) {
     String name = "";
@@ -248,7 +251,7 @@ class questionStageState extends State<questionStage> {
     }
     return name;
   }
-  
+
   //Méthode qui permet de changer l'aspect visuel en fonction de l'onglet sélectionné
   void _selectedTab(int index) {
     setState(() {
@@ -293,6 +296,7 @@ class questionStageState extends State<questionStage> {
       }
     });
   }
+
   //Méthode permettant d'obtenir les questions spécifiques à une section de l'acronyme MÉTIER
   _getQuestionSection() {
     questionSectionTab = new List();
@@ -345,7 +349,7 @@ class questionStageState extends State<questionStage> {
       'type': filteredQuestionTab['type'],
     }).then((value) => _refresh());
   }
-  
+
   //Méthode permettant de construire l'aspect visuel de la liste des questions
   _getBody(int currentIndex) {
     return isLoading
@@ -435,51 +439,55 @@ class questionStageState extends State<questionStage> {
                                         ]),
                               contentPadding: EdgeInsets.all(20),
                               onLongPress: () {
-                                return userData['role']=='P'?showDialog<void>(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Avertissement',
-                                          style:
-                                              TextStyle(fontFamily: 'Arboria')),
-                                      content: SingleChildScrollView(
-                                        child: ListBody(
-                                          children: <Widget>[
-                                            Text(
-                                                'Voulez-vous enlevez cette question?',
+                                return userData['role'] == 'P'
+                                    ? showDialog<void>(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('Avertissement',
                                                 style: TextStyle(
                                                     fontFamily: 'Arboria')),
-                                          ],
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('Oui',
-                                              style: TextStyle(
-                                                  fontFamily: 'Arboria')),
-                                          onPressed: () async {
-                                            deleteCommentairesEtQuestion(
-                                                filteredQuestionTab[index]
-                                                    ["id"]);
-                                          },
-                                        ),
-                                        FlatButton(
-                                          child: Text('Non',
-                                              style: TextStyle(
-                                                  fontFamily: 'Arboria')),
-                                          onPressed: () {
-                                            if (this.mounted) {
-                                              setState(() {
-                                                Navigator.of(context).pop();
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ):null;
+                                            content: SingleChildScrollView(
+                                              child: ListBody(
+                                                children: <Widget>[
+                                                  Text(
+                                                      'Voulez-vous enlevez cette question?',
+                                                      style: TextStyle(
+                                                          fontFamily:
+                                                              'Arboria')),
+                                                ],
+                                              ),
+                                            ),
+                                            actions: <Widget>[
+                                              FlatButton(
+                                                child: Text('Oui',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Arboria')),
+                                                onPressed: () async {
+                                                  deleteCommentairesEtQuestion(
+                                                      filteredQuestionTab[index]
+                                                          ["id"]);
+                                                },
+                                              ),
+                                              FlatButton(
+                                                child: Text('Non',
+                                                    style: TextStyle(
+                                                        fontFamily: 'Arboria')),
+                                                onPressed: () {
+                                                  if (this.mounted) {
+                                                    setState(() {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    });
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    : null;
                               },
                               onTap: () {
                                 !userData['connection']
@@ -523,7 +531,7 @@ class questionStageState extends State<questionStage> {
                                 letterSpacing: 1.2,
                                 fontFamily: 'Arboria'))));
   }
-  
+
   //Méthode permettant de refresh les informations
   Future<Null> _refresh() async {
     await Future.delayed(Duration(milliseconds: 500)).then((_) {
@@ -543,7 +551,7 @@ class questionStageState extends State<questionStage> {
               _getCommentaires().then((data) {
                 setState(() {
                   isLoading = false;
-                });  
+                });
               });
             }
           });
@@ -570,7 +578,7 @@ class questionStageState extends State<questionStage> {
     });
     return null;
   }
-  
+
   //Méthode permettant de filtrer les questions
   void _filterQuestions(value) {
     setState(() {
@@ -593,7 +601,7 @@ class questionStageState extends State<questionStage> {
 
     initTts();
   }
-  
+
   //Méthode qui permet de construire l'aspect visuel de l'application.
   @override
   Widget build(BuildContext context) {
@@ -732,9 +740,11 @@ class questionStageState extends State<questionStage> {
           floatingActionButton: !userData['questionEleve']
               ? FloatingActionButton(
                   onPressed: () {
-                    Navigator.of(context).push(CupertinoPageRoute(
-                        builder: (context) => (creationQuestion(
-                            userData["givenId"], userData['idStudent']))));
+                    Navigator.of(context)
+                        .push(CupertinoPageRoute(
+                            builder: (context) => (creationQuestion(
+                                userData["givenId"], userData['idStudent']))))
+                        .then((value) => _refresh());
                   },
                   backgroundColor: Color(0xff444d5d),
                   child: Icon(Icons.add, color: Colors.white))
