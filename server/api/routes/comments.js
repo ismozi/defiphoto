@@ -1,23 +1,64 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const Comment = require('../models/comment');
 const multer = require('multer');
-const storage = multer.diskStorage({
-    destination : function(req,file,cb){
-        cb(null,'./uploads/');
-    },
-    filename : function(req,file,cb){
-        cb(null, file.originalname);
-    }
+const path = require('path');
+const crypto = require('crypto');
+const GridFsStorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
+
+
+const mongoURI = 'mongodb+srv://admin:admin@cluster0-mrqmr.azure.mongodb.net/test?retryWrites=true&w=majority';
+const conn = mongoose.createConnection(mongoURI,{ useNewUrlParser: true, useUnifiedTopology: true});
+
+let gfs;
+
+conn.once('open', () => {
+  gfs = Grid(conn.db, mongoose.mongo);
+  gfs.collection('comments');
 });
+
+let filename;
+const storage = new GridFsStorage({
+    url: mongoURI,
+    file: (req, file) => {
+      return new Promise((resolve, reject) => {
+        crypto.randomBytes(16, (err, buf) => {
+          if (err) {
+            return reject(err);
+          }
+           filename = buf.toString('hex') + path.extname(file.originalname);
+          const fileInfo = {
+            filename: filename,
+            bucketName: 'comments'
+
+          };
+          resolve(fileInfo);
+        });
+      });
+    }
+  });
 const upload = multer({storage : storage});
 
-const Comment = require('../models/comment');
+
+
+router.get('/file/:filename', (req, res) => {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
+      if (!file || file.length === 0) {
+        return res.status(404).json({
+          err: 'No file exists'
+        });
+      }
+        const readstream = gfs.createReadStream(file.filename);
+        readstream.pipe(res);
+    });
+  });
+
 
 
 router.get('/', (req,res,next)=> {
     Comment.find()
-    .select('_id text sender commentFile')
     .exec()
     .then(docs => {
         console.log(docs);
@@ -30,13 +71,42 @@ router.get('/', (req,res,next)=> {
 });
 
 
+
 router.post('/',upload.single('commentFile') ,(req,res,next)=> {
+    console.log(req.file);
+    const comment = new Comment({
+        _id : new mongoose.Types.ObjectId(),
+        sender : req.body.sender,
+        questionId : req.body.questionId,
+        commentFile: req.file.path,
+        role : req.body.role,
+        fileName : filename
+
+    });
+    comment.save()
+    .then(result => {
+        console.log(result);
+        res.status(200).json({
+            message : 'POSTed a Comment',
+            comment : comment,
+            fileInfo :filename
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({error : err})
+    });
+});
+
+router.post('/noFile' ,(req,res,next)=> {
     console.log(req.file);
     const comment = new Comment({
         _id : new mongoose.Types.ObjectId(),
         text : req.body.text,
         sender : req.body.sender,
-        commentFile: req.file.path
+        questionId : req.body.questionId,
+        role : req.body.role
+        
     });
     comment.save()
     .then(result => {
@@ -56,7 +126,6 @@ router.post('/',upload.single('commentFile') ,(req,res,next)=> {
 router.get('/:questionId',(req,res,next)=>{
     const id = req.params.questionId;
     Comment.find({questionId :id})
-    .select('_id text type sender commentFile')
     .exec()
     .then(doc => {
         console.log(doc);
@@ -72,27 +141,6 @@ router.get('/:questionId',(req,res,next)=>{
     });
 });
 
-
-// router.patch('/:commentId',(req,res,next)=>{
-//     const id = req.params.commentId;
-//     const updateOps = {};
-//     for (const ops of req.body){
-//         updateOps[ops.propName] = ops.value;
-//     }
-//     Comment.update({_id : id}, {$set : updateOps })
-//     .exec()
-//     .then( result => {
-//         console.log(result);
-//         res.status(200).json({
-//             commentUpdated : id,
-//             Updated : "yes",
-//         });
-//         })
-//     .catch(err => {
-//         console.log(err);
-//         res.status(500).json({error : err})
-//     });
-// });
 
 
 
@@ -115,4 +163,6 @@ router.delete('/:commentId',(req,res,next)=>{
 
 
 module.exports = router;
+
+
 

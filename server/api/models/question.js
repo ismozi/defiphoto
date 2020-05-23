@@ -5,10 +5,8 @@ const questionSchema = mongoose.Schema({
     text : {type : String, required : true},
     type : {type : String, required : true},
     sender : {type : String, required : true},
-    reciever : {type : String, required : false},
-    recievers : {type : [String], required : false},
-  
-    //could add date and time
+    recievers : {type : [String], required : true},
+    isAns : {type : Boolean, default : false ,required : true},
 });
 
 module.exports = mongoose.model('Question', questionSchema)
