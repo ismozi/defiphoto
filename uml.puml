@@ -87,6 +87,7 @@ class "test_flutter::screens::ajoutUtilisateur.dart::_AjoutUtilisateurState" {
 class "test_flutter::screens::customDrawer.dart::customDrawer" {
   +Map userData
   +int nouveauMessage
+  +dynamic imageProfil
   +Future logout()
   +Widget build()
 }
@@ -125,11 +126,14 @@ class "test_flutter::screens::mainPageAdmin.dart::mainPageAdmin" {
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::mainPageAdmin.dart::mainPageAdmin"
 
 class "test_flutter::screens::mainPageAdmin.dart::_mainPageAdminState" {
-  -int _selectedIndex
   +List users
   +List questions
   +List comments
   +Map userData
+  -int _selectedIndex
+  +bool hasConnection
+  +bool isSearching
+  +bool isLoading
   +Future logout()
   -dynamic _getUsers()
   -dynamic _getQuestions()
@@ -138,8 +142,11 @@ class "test_flutter::screens::mainPageAdmin.dart::_mainPageAdminState" {
   -String _getUsername()
   -String _getQuestionname()
   -Widget _getBody()
+  +dynamic deleteCommentairesEtQuestion()
+  +dynamic deleteQuestion()
   -dynamic _createList()
   -dynamic _stream()
+  -Future _refresh()
   +void initState()
   +Widget build()
   -void _onItemTapped()
@@ -179,13 +186,19 @@ class "test_flutter::screens::mainPageEleve.dart::mainPageEleveState" {
   +List commentaires
   +List questions
   +List commentairesMe
+  +dynamic users
+  +dynamic imageProfil
+  +Uint8List imageBytes
   +bool isLoading
   +bool hasConnection
   +int nouvMessages
   -dynamic _getCommentaires()
   -dynamic _getQuestions()
   -dynamic _getCommentaireMe()
+  +dynamic getImageProfil()
   -dynamic _updateCompteur()
+  -dynamic _getUsers()
+  -dynamic _getUserName()
   -Future _refresh()
   +dynamic refresh2()
   +void stream()
@@ -193,6 +206,7 @@ class "test_flutter::screens::mainPageEleve.dart::mainPageEleveState" {
   +Widget build()
 }
 
+"test_flutter::screens::mainPageEleve.dart::mainPageEleveState" o-- "dart::typed_data::Uint8List"
 "flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::mainPageEleve.dart::mainPageEleveState"
 
 class "test_flutter::screens::mainPageProf.dart::mainPageProf" {
@@ -211,6 +225,7 @@ class "test_flutter::screens::mainPageProf.dart::mainPageProfState" {
   +bool hasConnection
   +bool selectionState
   +bool isSearching
+  +bool isLoading
   +dynamic eleve
   -dynamic _getUsers()
   -dynamic _getEleve()
@@ -220,6 +235,7 @@ class "test_flutter::screens::mainPageProf.dart::mainPageProfState" {
   -dynamic _createList()
   +void initState()
   +dynamic resetSelected()
+  -Future _refresh()
   +Widget build()
 }
 
@@ -240,28 +256,24 @@ class "test_flutter::screens::pageCommentaire.dart::pageCommentaire" {
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::pageCommentaire.dart::pageCommentaire"
 
 class "test_flutter::screens::pageCommentaire.dart::pageCommentaireState" {
-  +dynamic imageFile
-  +TextEditingController messageSend
   +Map questionData
   +List commentaires
+  +bool canScroll
+  +bool isPlaying
+  -bool _isRecording
   -bool _isLoading
   -ScrollController _scrollController
-  +bool canScroll
-  +bool messageBuilt
+  +TextEditingController messageSend
+  +dynamic imageFile
   +int currentMessageLenght
   +int previousMessageLenght
   -Recording _recording
-  -bool _isRecording
-  +Random random
   +AudioPlayer audioPlayer
-  +bool isPlaying
-  +Color couleurPlay
   +dynamic play()
   -dynamic _getCommentaires()
-  -dynamic _start()
-  -dynamic _stop()
+  -dynamic _startRecording()
+  -dynamic _stopRecording()
   -dynamic _enleverCommentaire()
-  -dynamic _makePatchRequest()
   -dynamic _buildCommentaire()
   -dynamic _ouvrirGallery()
   -dynamic _ouvrirCamera()
@@ -274,12 +286,10 @@ class "test_flutter::screens::pageCommentaire.dart::pageCommentaireState" {
   +Widget build()
 }
 
-"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
 "test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "flutter::src::widgets::scroll_controller.dart::ScrollController"
+"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
 "test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "audio_recorder::audio_recorder.dart::Recording"
-"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "dart::math::Random"
 "test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "audioplayers::audioplayers.dart::AudioPlayer"
-"test_flutter::screens::pageCommentaire.dart::pageCommentaireState" o-- "dart::ui::Color"
 "flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::pageCommentaire.dart::pageCommentaireState"
 
 class "test_flutter::screens::pageCommentaire.dart::imagePage" {
@@ -308,9 +318,13 @@ class "test_flutter::screens::pageQuestion.dart::_QuestionsState" {
   +bool isLoading
   +bool isEmpty
   +List questions
+  +List commentaires
   -dynamic _getQuestions()
-  -dynamic _stream()
+  -dynamic _getCommentaires()
   +void initState()
+  +dynamic deleteCommentairesEtQuestion()
+  +dynamic deleteQuestion()
+  -Future _refresh()
   +Widget build()
 }
 
@@ -366,22 +380,25 @@ class "test_flutter::screens::profilEleve.dart::profilEleveState" {
   +String name
   +String lastName
   +String stage
-  +String yearDebut
-  +String yearFin
+  +String stageDebut
+  +String stageFin
   +String mail
   +String schoolYearBegin
   +String schoolYearEnd
   +String stageDesc
   +String role
   +String profId
-  +dynamic users
+  +Uint8List imageBytes
+  +dynamic imageProfil
   -dynamic _setInfo()
-  -dynamic _getUsers()
-  -dynamic _getUserName()
+  +dynamic pickImage()
+  +dynamic saveImageProfil()
+  +dynamic getImageProfil()
   +void initState()
   +Widget build()
 }
 
+"test_flutter::screens::profilEleve.dart::profilEleveState" o-- "dart::typed_data::Uint8List"
 "flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::profilEleve.dart::profilEleveState"
 
 class "test_flutter::screens::questionsStage.dart::questionStage" {
@@ -391,25 +408,32 @@ class "test_flutter::screens::questionsStage.dart::questionStage" {
 "flutter::src::widgets::framework.dart::StatefulWidget" <|-- "test_flutter::screens::questionsStage.dart::questionStage"
 
 class "test_flutter::screens::questionsStage.dart::questionStageState" {
-  +mainPageEleveState mainInstance
   +List questions
   +List users
-  +Map userData
-  -int _currentIndex
-  +String type
-  +String section
-  +bool isSearching
-  +bool isLoading
-  +String nomEleve
-  +Text titreEnseignant
   +List filteredQuestionTab
   +List questionSectionTab
+  +List commentaires
+  +List commentairesMe
   +dynamic questionSection
+  +Map userData
+  +bool isSearching
+  +bool isLoading
+  +bool loadingDeleteQuestion
+  +Text titreEnseignant
+  +Widget appBarTitle
+  +String nomEleve
+  +String section
+  -int _currentIndex
   +FlutterTts flutterTts
   +String language
+  -dynamic _getCommentaires()
+  -dynamic _getCommentaireMe()
+  +dynamic deleteCommentairesEtQuestion()
+  +dynamic deleteQuestion()
   -dynamic _save()
   -dynamic _readDB()
   +dynamic initTts()
+  +bool checkIfReplied()
   +void dispose()
   -Future _read()
   -dynamic _getDataOffline()
@@ -418,6 +442,7 @@ class "test_flutter::screens::questionsStage.dart::questionStageState" {
   -String _getUsername()
   -void _selectedTab()
   -dynamic _getQuestionSection()
+  +dynamic goToPageCommentaire()
   -dynamic _getBody()
   -Future _refresh()
   -void _filterQuestions()
@@ -425,8 +450,8 @@ class "test_flutter::screens::questionsStage.dart::questionStageState" {
   +Widget build()
 }
 
-"test_flutter::screens::questionsStage.dart::questionStageState" o-- "test_flutter::screens::mainPageEleve.dart::mainPageEleveState"
 "test_flutter::screens::questionsStage.dart::questionStageState" o-- "flutter::src::widgets::text.dart::Text"
+"test_flutter::screens::questionsStage.dart::questionStageState" o-- "flutter::src::widgets::framework.dart::Widget"
 "test_flutter::screens::questionsStage.dart::questionStageState" o-- "flutter_tts::flutter_tts.dart::FlutterTts"
 "flutter::src::widgets::framework.dart::State<T>" <|-- "test_flutter::screens::questionsStage.dart::questionStageState"
 
