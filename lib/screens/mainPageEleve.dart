@@ -376,7 +376,10 @@ class mainPageEleveState extends State<mainPageEleve> {
           _refresh();
           getImageProfil();
         }
-        if (!userData['connection']) isLoading = false;
+        if (!userData['connection']){
+          isLoading = false;
+          getImageProfil();
+        } 
 
         if (!userData['isTeacher']) stream();
       });

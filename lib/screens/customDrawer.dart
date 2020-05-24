@@ -158,7 +158,7 @@ class customDrawer extends StatelessWidget {
                                 alignment: Alignment.centerRight,
                                 child: CircleAvatar(
                                   backgroundImage:
-                                      AssetImage('assets/avatar.jpg'),
+                                      imageProfil,
                                   radius: 55.0,
                                 ),
                               ),
