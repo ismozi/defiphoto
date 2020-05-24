@@ -139,6 +139,12 @@ class mainPageEleveState extends State<mainPageEleve> {
     compteurE1tot = 0;
     compteurRtot = 0;
     compteurTOT = 0;
+    percentageM = 0;
+    percentageE1 = 0;
+    percentageT = 0;
+    percentageI = 0;
+    percentageE2 = 0;
+    percentageR = 0;
 
     //Boucle for pour compter le nombre de question total de chq catégorie
     for (int z = 0; z < questions.length; z++) {
