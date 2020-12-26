@@ -1,4 +1,6 @@
 # Défi photo
+Ce projet a été effectué en collaboration avec la Commission scolaire de la Pointe de l’île. Cette application permettra aux enseignants et enseignantes de cette Commission scolaire de faire un suivi avec leurs élèves lors de leur stage au cours de leur parcours scolaire et ainsi évaluer leur progression dans leur milieu de travail.
+
 
 A new Flutter project.
 
