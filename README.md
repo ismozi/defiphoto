@@ -90,7 +90,6 @@ Cette page montre les informations de l’étudiant. Celui-ci peut voir son :
 ##### •	Stage (Domaine du stage)
 ##### •	Année scolaire en cours
 ##### •	Année de stage Courriel
-##
 
 Sur cette page, l’élève peut aussi choisir sa photo de profil en appuyant sur l’avatar au fond vert. Toutefois, cette photo est seulement là pour permettre à l’élève de personnaliser son application. Ainsi, elle est seulement stocker en local, elle n’est pas visible par son enseignant et elle s’efface lors de la déconnexion de l’élève.
 
@@ -104,7 +103,71 @@ Sur la page « Fonctionnement », l’étudiant peut facilement apprendre à uti
 
 <img src="image/Picture9.png" height="301">
 
-##
+## Les différentes vues de l'étudiant
+
+### Connexion : 
+
+Tout d’abord, pour se connecter, l’enseignant recevra un compte de l’administrateur avec toutes les configurations (associations avec les élèves) nécessaires.
+
+<img src="image/Picture10.jpg" height="301">
+
+### Page d'accueil :
+
+Une fois sur la page d’accueil, celui-ci pourra voir sa liste d’élèves complète. Il aura 3 options; tout d’abord, il peut cliquer sur l’icône profil (le plus à droite) pour accéder aux informations de l’élève voulu (voir page suivante). 
+
+Ensuite, il peut appuyer sur l’icône de progression à gauche de l’icône profil pour accéder à la progression de l’élève (voir page suivante). 
+
+De plus, il peut afficher les questions et les messages textes avec ce même élève en cliquant sur la carte de l’élève voulu (voir page suivante). 
+
+Toutefois, lorsque l’enseignant appuie sur la carte d’un élève pendant quelques secondes, il pourra sélectionner plusieurs élèves pour leur envoyer un message commun. Finalement, l’option de recherche permet de chercher le nom ou le prénom d’un élève voulu. 
+
+
+<img src="image/Picture11.jpg" height="301">
+
+### Progression et profil : 
+
+Voici les deux pages sur lesquelles l’enseignant est dirigé en appuyant sur les icônes de profil et de progression.
+
+<img src="image/Picture12.jpg" height="301">
+
+<img src="image/Picture13.jpg" height="301">
+
+### Mes questions
+
+Comme mentionné plus haut, c’est vers cette page que l’enseignant est dirigé s’il appuie sur la carte d’un élève. Dans cette page, l’enseignant peut voir toutes les questions qu’il a posées à l’élève en particulier. Toutes les questions sont classées selon l’acronyme M.É.T.I.E.R afin de rendre l’expérience mieux organisée. S’il désire voir la réponse de l’élève à une question, il doit appuyer sur celle-ci. Dans ce cas, comme pour l’élève, une page de conversation s’affichera (voir menu messagerie page suivante). 
+
+De plus, il peut poser une question à l’élève en appuyant sur le bouton « + ». Ensuite, comme pour l’élève, il devra entrer sa question et choisir la catégorie désirée (voir vue élève). S’il désire supprimer une question, car elle a été répondue par l’élève, l’enseignant n’a qu’à appuyer et maintenir la question de son choix, une fenêtre apparaîtra ensuite pour lui demander de confirmer son choix.
+
+
+<img src="image/Picture14.jpg" height="301">
+
+### Menu messagerie
+
+Le menu de messagerie permet à l’enseignant de communiquer avec ses élèves sous format conversation de clavardage et ainsi évaluer leur progression en tant que stagiaire. 
+
+Sur cette page, la question de l’enseignant ou de l’élève est affichée au haut de la conversation. L’échange peut se faire sous forme de textes, de messages vocaux ou bien en envoyant des images (prises directement à partir de l’application ou choisi de la galerie photo de l’appareil). 
+
+Pour le fonctionnement de l’envoi des différents types de messages, c’est le même principe que pour la vue de l’élève.
+
+
+<img src="image/Picture15.jpg" height="301">
+
+### Menu hamburger
+
+Le menu « hamburger » est un menu qui peut être accédé en appuyant sur les trois lignes superposées dans le coin supérieur gauche. Il permet d’accéder aux différentes sections du compte de l’enseignant, soit : 
+
+##### 1- Mes élèves
+##### 2- Questions d’élèves
+##### 3- Se déconnecter (ramène au menu Connexion)
+
+
+<img src="image/Picture16.jpg" height="301">
+
+### Question d'élèves
+
+Dans la page « Questions d’élèves », l’enseignant peut voir toutes les questions que ses élèves ont envoyées. S’il clique sur une question, il accèdera ensuite à la page de conversation entre lui et l’élève concerné (menu messagerie page précédente).
+
+<img src="image/Picture17.jpg" height="301">
 
 ## Les classes de l'application
 
