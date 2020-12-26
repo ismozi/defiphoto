@@ -34,6 +34,78 @@ Pour sa part, l’enseignant pourra gérer les élèves de sa classe. Plus préc
 
 Finalement, l’administrateur a accès à tous les commentaires, questions et profils des élèves ainsi que celui des professeurs. Il a aussi la possibilité de créer de nouveaux comptes.
 
+## Les différentes vues de l'étudiant
+
+### Progression:
+La page de progression est la première page que l’étudiant voit lorsqu’il se connecte sur l’application.
+Cette page montre à l’étudiant sa progression pour chaque catégorie (M.E.T.I.E.R). Une barre de couleur augmente plus la note est haute. Le pourcentage total des questions répondues est disponible au bas de la page.
+
+<img src="image/Picture2.jpg" height="340">
+
+### Menu « Hamburger » :
+Ce menu qui est disponible en haut à gauche de l’écran permet à l’élève de naviguer dans les différentes pages de l’application. En premier lieu, il peut accéder à ses questions de stage. Comme on peut le remarquer dans la photo, un petit rond bleu avec le chiffre deux est visible à côté de cette option, ce qui veut dire que l’élève a deux questions auxquelles il n’a pas répondu. Une fois que ces questions seront répondues, ce cercle disparaîtra. De plus, il peut naviguer vers une page pour poser des questions, vers son profil, vers la page d’aide ou il peut se déconnecter.
+
+<img src="image/Picture3.jpg" height="340">
+
+### Question de stage:
+Cette fenêtre est la page où l’étudiant peut voir les questions posées par l’enseignant.
+#### Questions de l’enseignant : 
+##### Les questions du professeur sont affichées au milieu de l’écran. Il est possible de glisser l’écran s’il y a plusieurs questions.
+#### Recherche : 
+##### Il est possible de filtrer les questions pour retrouver celle nécessaire. 
+#### Audio : 
+##### Il est possible d'écouter les questions posées par l’enseignant grâce à la synthèse vocale. Cette option permet une communication plus fluide entre l’enseignant et certains élèves ayant de la difficulté à lire.
+#### (M.É.T.I.E.R) : 
+##### Le tableau de bord est divisé en 6 catégories sous l’acronyme « MÉTIER » :
+#### Notification : 
+##### Comme on peut le voir sur la photo, certaines questions ont un petit rond bleu à droite. Ceci veut dire que la question n’a pas encore été répondue. Une fois que l’élève y répondra, le rond bleu disparaîtra.
+
+<img src="image/Picture4.jpg" height="340">
+
+### Communication:
+En appuyant sur une question de l’enseignant, l’élève peut répondre à la question. Chaque question a sa propre conversation pour faciliter la communication. Sur cette page, la question de l’enseignant est affichée au haut de l’écran.
+Selon le type de question demandé par le professeur, l’élève pourra répondre aux questions à l’aide de messages textes, de messages vocaux et de photos.
+Pour envoyer un message vocal, l’utilisateur doit appuyer sur le bouton de microphone. Lorsqu’activé, celui-ci deviendra rouge. Pour mettre fin au message, l’utilisateur doit appuyer une deuxième fois sur le bouton, celui-ci redeviendra gris et le message s’enverra
+
+<img src="image/Picture5.jpg" height="340">
+
+### Mes questions:
+Cette fenêtre est la page où l’étudiant peut poser ses questions. L’élève peut voir la liste des questions qu’il a envoyée et en poser des nouvelles. En appuyant sur l’icône de « + », l’étudiant peut composer sa question. 
+
+De plus, si l’enseignant a répondu à sa question, l’étudiant peut supprimer celle-ci en appuyant et maintenant la question de son choix, une fenêtre apparaîtra ensuite pour lui demander de confirmer son choix.
+
+<img src="image/Picture6.jpg" height="340">
+
+### Poser une question:
+S’il veut poser une question, il devra l’écrire dans la case assignée à cette fin, et choisira la catégorie à laquelle la question correspond (Catégories venant de l’acronyme MÉTIER). 
+
+<img src="image/Picture7.jpg" height="340">
+
+### Page du profil:
+Cette page montre les informations de l’étudiant. Celui-ci peut voir son :
+##### •	ID (Propre à chaque utilisateur) 
+##### •	Prénom 
+##### •	Nom
+##### •	Enseignant
+##### •	Stage (Domaine du stage)
+##### •	Année scolaire en cours
+##### •	Année de stage Courriel
+##
+
+Sur cette page, l’élève peut aussi choisir sa photo de profil en appuyant sur l’avatar au fond vert. Toutefois, cette photo est seulement là pour permettre à l’élève de personnaliser son application. Ainsi, elle est seulement stocker en local, elle n’est pas visible par son enseignant et elle s’efface lors de la déconnexion de l’élève.
+
+<img src="image/Picture8.jpg" height="340">
+
+### Page d’aide:
+L’étudiant peut accéder à la page d’aide s’il a besoin de plus d’information. Il peut se renseigner sur l’acronyme (M.É.T.I.E.R) ainsi que le fonctionnement de l’application.
+Sur la page « MÉTIER », il y a des informations additionnelles sur chaque catégorie.
+Sur la page « Fonctionnement », l’étudiant peut facilement apprendre à utiliser les différentes fonctionnalités implantées dans l’application.
+
+
+<img src="image/Picture9.png" height="301">
+
+##
+
 ## Les classes de l'application
 
 Flutter est un environnement de développement d’applications mobile qui utilise le langage Dart. Dans cet outil, tout ce qui fait partie de la vue de l’application est un “widget”. Si vous désirez visualiser toutes nos classes dans un diagramme UML, vous pourrez y accéder dans le dossier de remise de la documentation ou sur GitHub, le fichier se nomme diagrammeUML.png. 
@@ -65,73 +137,5 @@ De plus, tout au long du développement, nous avons réutilisé des classes en l
 
 •	ajoutUtilisateur : C’est une page qui est seulement accessible par l’administrateur pour ajouter des nouveaux utilisateurs à la plateforme.
 
-## Les différentes vues de l'étudiant
 
-### Progression:
-La page de progression est la première page que l’étudiant voit lorsqu’il se connecte sur l’application.
-Cette page montre à l’étudiant sa progression pour chaque catégorie (M.E.T.I.E.R). Une barre de couleur augmente plus la note est haute. Le pourcentage total des questions répondues est disponible au bas de la page.
-
-<img src="image/Picture2.jpg" height="340">
-
-### Menu « Hamburger » :
-Ce menu qui est disponible en haut à gauche de l’écran permet à l’élève de naviguer dans les différentes pages de l’application. En premier lieu, il peut accéder à ses questions de stage. Comme on peut le remarquer dans la photo, un petit rond bleu avec le chiffre deux est visible à côté de cette option, ce qui veut dire que l’élève a deux questions auxquelles il n’a pas répondu. Une fois que ces questions seront répondues, ce cercle disparaîtra. De plus, il peut naviguer vers une page pour poser des questions, vers son profil, vers la page d’aide ou il peut se déconnecter.
-
-<img src="image/Picture3.jpg" height="340">
-
-### Question de stage:
-Cette fenêtre est la page où l’étudiant peut voir les questions posées par l’enseignant.
-#### Questions de l’enseignant : 
-Les questions du professeur sont affichées au milieu de l’écran. Il est possible de glisser l’écran s’il y a plusieurs questions.
-#### Recherche : 
-Il est possible de filtrer les questions pour retrouver celle nécessaire. 
-#### Audio : 
-Il est possible d'écouter les questions posées par l’enseignant grâce à la synthèse vocale. Cette option permet une communication plus fluide entre l’enseignant et certains élèves ayant de la difficulté à lire.
-#### (M.É.T.I.E.R) : 
-Le tableau de bord est divisé en 6 catégories sous l’acronyme « MÉTIER » :
-#### Notification : 
-Comme on peut le voir sur la photo, certaines questions ont un petit rond bleu à droite. Ceci veut dire que la question n’a pas encore été répondue. Une fois que l’élève y répondra, le rond bleu disparaîtra.
-
-<img src="image/Picture4.jpg" height="340">
-
-### Communication:
-En appuyant sur une question de l’enseignant, l’élève peut répondre à la question. Chaque question a sa propre conversation pour faciliter la communication. Sur cette page, la question de l’enseignant est affichée au haut de l’écran.
-Selon le type de question demandé par le professeur, l’élève pourra répondre aux questions à l’aide de messages textes, de messages vocaux et de photos.
-Pour envoyer un message vocal, l’utilisateur doit appuyer sur le bouton de microphone. Lorsqu’activé, celui-ci deviendra rouge. Pour mettre fin au message, l’utilisateur doit appuyer une deuxième fois sur le bouton, celui-ci redeviendra gris et le message s’enverra
-
-<img src="image/Picture5.jpg" height="340">
-
-### Mes questions:
-Cette fenêtre est la page où l’étudiant peut poser ses questions. L’élève peut voir la liste des questions qu’il a envoyée et en poser des nouvelles. En appuyant sur l’icône de « + », l’étudiant peut composer sa question. 
-
-De plus, si l’enseignant a répondu à sa question, l’étudiant peut supprimer celle-ci en appuyant et maintenant la question de son choix, une fenêtre apparaîtra ensuite pour lui demander de confirmer son choix.
-
-<img src="image/Picture6.jpg" height="340">
-
-### Poser une question:
-S’il veut poser une question, il devra l’écrire dans la case assignée à cette fin, et choisira la catégorie à laquelle la question correspond (Catégories venant de l’acronyme MÉTIER). 
-
-<img src="image/Picture7.jpg" height="340">
-
-### Page du profil:
-Cette page montre les informations de l’étudiant. Celui-ci peut voir son :
-#### •	ID (Propre à chaque utilisateur) 
-#### •	Prénom 
-#### •	Nom
-#### •	Enseignant
-#### •	Stage (Domaine du stage)
-#### •	Année scolaire en cours
-#### •	Année de stage
-#### •	Courriel
-
-Sur cette page, l’élève peut aussi choisir sa photo de profil en appuyant sur l’avatar au fond vert. Toutefois, cette photo est seulement là pour permettre à l’élève de personnaliser son application. Ainsi, elle est seulement stocker en local, elle n’est pas visible par son enseignant et elle s’efface lors de la déconnexion de l’élève.
-
-<img src="image/Picture8.jpg" height="340">
-
-### Page d’aide:
-L’étudiant peut accéder à la page d’aide s’il a besoin de plus d’information. Il peut se renseigner sur l’acronyme (M.É.T.I.E.R) ainsi que le fonctionnement de l’application.
-Sur la page « MÉTIER », il y a des informations additionnelles sur chaque catégorie.
-Sur la page « Fonctionnement », l’étudiant peut facilement apprendre à utiliser les différentes fonctionnalités implantées dans l’application.
-
-
-<img src="image/Picture9.png" height="301">
 
