@@ -20,9 +20,10 @@ Du côté de l’étudiant, sur sa page d’accueil, il peut voir sa progression
 Pour chaque catégorie, le stagiaire recevra des questions de son enseignant. 
 
 En cliquant sur une question quelconque, il se dirigera vers une page de conversation qui lui permettra d’ajouter une réponse. Il devra répondre aux questions de son enseignant à l’aide des moyens suivants : 
-·         Photos 
-·         Messages vocaux 
-·         Messages textes 
+-  Photos 
+-  Messages vocaux 
+-  Messages textes 
+
 Il pourra ajouter une photo, en la choisissant de sa galerie ou bien en la prenant directement à partir de sa pellicule. Il pourra aussi envoyer un message vocal ou un message texte. Les multiples options de réponses permettent une communication plus fluide entre l’enseignant et l’élève. Ceci permettra donc à l’enseignant de superviser et faire un suivi détaillé sur les 6 catégories qui entourent le stage de l’élève. 
  
 En cliquant sur le « Menu Hamburger » l’élève peut accéder à plusieurs fonctions, soit, aller à sa page d’accueil de progression, accéder à ses questions de stage, accéder à une page dans laquelle il pourra poser une question à son enseignant, voir son profil, se rendre vers la page d’aide ou bien se déconnecter.
@@ -50,15 +51,15 @@ Ce menu qui est disponible en haut à gauche de l’écran permet à l’élève
 
 ### Question de stage:
 Cette fenêtre est la page où l’étudiant peut voir les questions posées par l’enseignant.
-#### Questions de l’enseignant : 
+- Questions de l’enseignant : 
 Les questions du professeur sont affichées au milieu de l’écran. Il est possible de glisser l’écran s’il y a plusieurs questions.
-#### Recherche : 
+- Recherche : 
 Il est possible de filtrer les questions pour retrouver celle nécessaire. 
-#### Audio : 
+- Audio : 
 Il est possible d'écouter les questions posées par l’enseignant grâce à la synthèse vocale. Cette option permet une communication plus fluide entre l’enseignant et certains élèves ayant de la difficulté à lire.
-#### (M.É.T.I.E.R) : 
+- (M.É.T.I.E.R) : 
 Le tableau de bord est divisé en 6 catégories sous l’acronyme « MÉTIER »
-#### Notification : 
+- Notification : 
 Comme on peut le voir sur la photo, certaines questions ont un petit rond bleu à droite. Ceci veut dire que la question n’a pas encore été répondue. Une fois que l’élève y répondra, le rond bleu disparaîtra.
 
 <img src="image/Picture4.jpg" height="340">
