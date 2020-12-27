@@ -10,12 +10,13 @@ Dans un premier temps, l’utilisateur peut se connecter à l’application par 
 ### Étudiant
 
 Du côté de l’étudiant, sur sa page d’accueil, il peut voir sa progression sur chaque section. Cette page sera divisée en 6 catégories sous l’acronyme ‘’MÉTIER’’ : 
-·         M : Matière et produits 
-·         É : Équipements 
-·         T : Tâches 
-·          I : Individu 
-·         E : Environnement 
-·         R : Ressource humaine. 
+-  M : Matière et produits 
+-  É : Équipements 
+-  T : Tâches 
+-  I : Individu 
+-  E : Environnement 
+-  R : Ressource humaine. 
+
 Pour chaque catégorie, le stagiaire recevra des questions de son enseignant. 
 
 En cliquant sur une question quelconque, il se dirigera vers une page de conversation qui lui permettra d’ajouter une réponse. Il devra répondre aux questions de son enseignant à l’aide des moyens suivants : 
@@ -50,15 +51,15 @@ Ce menu qui est disponible en haut à gauche de l’écran permet à l’élève
 ### Question de stage:
 Cette fenêtre est la page où l’étudiant peut voir les questions posées par l’enseignant.
 #### Questions de l’enseignant : 
-##### Les questions du professeur sont affichées au milieu de l’écran. Il est possible de glisser l’écran s’il y a plusieurs questions.
+Les questions du professeur sont affichées au milieu de l’écran. Il est possible de glisser l’écran s’il y a plusieurs questions.
 #### Recherche : 
-##### Il est possible de filtrer les questions pour retrouver celle nécessaire. 
+Il est possible de filtrer les questions pour retrouver celle nécessaire. 
 #### Audio : 
-##### Il est possible d'écouter les questions posées par l’enseignant grâce à la synthèse vocale. Cette option permet une communication plus fluide entre l’enseignant et certains élèves ayant de la difficulté à lire.
+Il est possible d'écouter les questions posées par l’enseignant grâce à la synthèse vocale. Cette option permet une communication plus fluide entre l’enseignant et certains élèves ayant de la difficulté à lire.
 #### (M.É.T.I.E.R) : 
-##### Le tableau de bord est divisé en 6 catégories sous l’acronyme « MÉTIER » :
+Le tableau de bord est divisé en 6 catégories sous l’acronyme « MÉTIER »
 #### Notification : 
-##### Comme on peut le voir sur la photo, certaines questions ont un petit rond bleu à droite. Ceci veut dire que la question n’a pas encore été répondue. Une fois que l’élève y répondra, le rond bleu disparaîtra.
+Comme on peut le voir sur la photo, certaines questions ont un petit rond bleu à droite. Ceci veut dire que la question n’a pas encore été répondue. Une fois que l’élève y répondra, le rond bleu disparaîtra.
 
 <img src="image/Picture4.jpg" height="340">
 
@@ -83,13 +84,13 @@ S’il veut poser une question, il devra l’écrire dans la case assignée à c
 
 ### Page du profil:
 Cette page montre les informations de l’étudiant. Celui-ci peut voir son :
-##### •	ID (Propre à chaque utilisateur) 
-##### •	Prénom 
-##### •	Nom
-##### •	Enseignant
-##### •	Stage (Domaine du stage)
-##### •	Année scolaire en cours
-##### •	Année de stage Courriel
+-  ID (Propre à chaque utilisateur) 
+- Prénom 
+- Nom
+- Enseignant
+- 	Stage (Domaine du stage)
+- 	Année scolaire en cours
+- Année de stage Courriel
 
 Sur cette page, l’élève peut aussi choisir sa photo de profil en appuyant sur l’avatar au fond vert. Toutefois, cette photo est seulement là pour permettre à l’élève de personnaliser son application. Ainsi, elle est seulement stocker en local, elle n’est pas visible par son enseignant et elle s’efface lors de la déconnexion de l’élève.
 
@@ -156,9 +157,9 @@ Pour le fonctionnement de l’envoi des différents types de messages, c’est l
 
 Le menu « hamburger » est un menu qui peut être accédé en appuyant sur les trois lignes superposées dans le coin supérieur gauche. Il permet d’accéder aux différentes sections du compte de l’enseignant, soit : 
 
-##### 1- Mes élèves
-##### 2- Questions d’élèves
-##### 3- Se déconnecter (ramène au menu Connexion)
+- Mes élèves
+- Questions d’élèves
+- Se déconnecter (ramène au menu Connexion)
 
 
 <img src="image/Picture16.jpg" height="301">
