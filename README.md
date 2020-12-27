@@ -103,7 +103,7 @@ Sur la page « Fonctionnement », l’étudiant peut facilement apprendre à uti
 
 <img src="image/Picture9.png" height="301">
 
-## Les différentes vues de l'étudiant
+## Les différentes vues de l'enseignant
 
 ### Connexion : 
 
@@ -168,6 +168,67 @@ Le menu « hamburger » est un menu qui peut être accédé en appuyant sur les 
 Dans la page « Questions d’élèves », l’enseignant peut voir toutes les questions que ses élèves ont envoyées. S’il clique sur une question, il accèdera ensuite à la page de conversation entre lui et l’élève concerné (menu messagerie page précédente).
 
 <img src="image/Picture17.jpg" height="301">
+
+## Les différentes vues de l'administrateur
+
+### Page connexion :
+Tout d’abord, pour se connecter, l’utilisateur recevra un compte de l’administrateur avec toutes les configurations nécessaires. 
+
+<img src="image/Picture18.jpg" height="340">
+
+
+
+
+
+### Page utilisateurs :
+Lorsqu’il se connecte, la première page sur laquelle l’administrateur va tomber est la page des utilisateurs. Celle-ci lui permettra d’afficher la liste de tous les étudiants et les enseignants qui sont enregistrés sur le service, ainsi que leur ID. Il n’a par exemple pas accès à la liste des autres administrateurs. S’il le désire, l’admin peut retirer la carte d’un utilisateur en appuyant et maintenant la carte pour afficher l’option de l’effacer. Si au contraire, il désire en ajouter un, il peut cliquer sur le petit « + » en bas à droite. De plus, s’il veut se déconnecter, l’administrateur peut cliquer sur l’icône en haut à gauche. Ceci le ramènera donc à la page de connexion.
+
+<img src="image/Picture19.jpg" height="340">
+ 
+
+### Page création d’utilisateur(s) (« + ») :
+Une fois sur ce menu, l’administrateur peut créer des utilisateurs que ça soit un étudiant, un enseignant ou bien un administrateur. 
+
+#### Création d’un étudiant :
+S’il veut créer un étudiant, il devra entrer les informations suivantes :
+-	ID
+-	Prénom
+-	Nom
+-	Courriel
+-	Mot de passe
+-	ID du prof
+-	Date début d’année
+-	Date de fin d’année
+-	Nom du stage
+-	Description du stage
+-	Date début du stage
+-	Date de fin du stage
+#### Une fois complété, il cliquera sur « Créer le compte » afin d’enregistrer le tout.
+#### Création Enseignant/Administrateur :
+S’il veut créer un compte d’enseignant ou d’administrateur, il devra entrer les informations suivantes :
+-	ID
+-	Prénom
+-	Nom
+-	Courriel
+-	Mot de passe
+-	Date début d’année
+-	Date de fin d’année
+#### Au final, cliquer sur « Créer le compte » pour enregistrer le tout.
+ <img src="image/Picture20.png" height="450">
+
+### Onglet questions :
+Ce menu permet à l’administrateur de voir toutes les questions posées, leur destinataire, leur expéditeur et le type de la question, donc à quelle catégorie de l’acronyme M.É.T.I.E.R. Pour effacer une question, il faut appuyer et maintenir la question voulue. Cliquer « oui » lorsque la fenêtre d’avertissement avec la question suivante apparait :
+« Voulez-vous enlever cette question? »
+
+<img src="image/Picture21.jpg" height="340">
+
+
+
+### Onglet commentaires :
+Ce dernier menu permet à l’administrateur de voir les différents commentaires que les élèves ont envoyés à leur prof. De plus, on peut voir l’expéditeur ainsi que la question à laquelle le commentaire a été ajouté. Le commentaire peut aussi être effacé, de la même manière qu’on efface une question.
+
+<img src="image/Picture22.jpg" height="340">
+
 
 ## Les classes de l'application
 
