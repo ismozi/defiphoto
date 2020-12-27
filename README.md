@@ -214,7 +214,7 @@ S’il veut créer un compte d’enseignant ou d’administrateur, il devra entr
 -	Date début d’année
 -	Date de fin d’année
 #### Au final, cliquer sur « Créer le compte » pour enregistrer le tout.
- <img src="image/Picture20.png" height="450">
+ <img src="image/Picture20.PNG" height="450">
 
 ### Onglet questions :
 Ce menu permet à l’administrateur de voir toutes les questions posées, leur destinataire, leur expéditeur et le type de la question, donc à quelle catégorie de l’acronyme M.É.T.I.E.R. Pour effacer une question, il faut appuyer et maintenir la question voulue. Cliquer « oui » lorsque la fenêtre d’avertissement avec la question suivante apparait :
